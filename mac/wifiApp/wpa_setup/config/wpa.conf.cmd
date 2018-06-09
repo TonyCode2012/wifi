@@ -1,0 +1,20 @@
+#
+#   eapol_test -c ttls-eapmd5.conf -s testing123
+#
+
+
+#ctrl_interface=/var/run/wpa_supplicant
+
+network={
+        ssid="bct"
+        key_mgmt=WPA-EAP
+        eap=TTLS
+        identity="bob"
+        anonymous_identity="anonymous"
+        password="hello"
+        phase2="autheap=MD5"
+
+	#
+	#  Uncomment the following to perform server certificate validation.
+#	ca_cert="/etc/raddb/certs/ca.der"
+}

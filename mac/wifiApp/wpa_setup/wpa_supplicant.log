@@ -1,0 +1,1834 @@
+wpa_supplicant v2.4
+random: Trying to read entropy from /dev/random
+Successfully initialized wpa_supplicant
+Initializing interface 'wlx70f11c0ddc2a' conf 'config/wpa.conf.cmd' driver 'default' ctrl_interface 'N/A' bridge 'N/A'
+Configuration file 'config/wpa.conf.cmd' -> '/mnt/hgfs/wifiApp/wpa_setup/config/wpa.conf.cmd'
+Reading configuration file '/mnt/hgfs/wifiApp/wpa_setup/config/wpa.conf.cmd'
+Priority group 0
+   id=0 ssid='cbct'
+rfkill: initial event: idx=2 type=2 op=0 soft=0 hard=0
+rfkill: initial event: idx=10 type=1 op=0 soft=0 hard=0
+nl80211: Supported cipher 00-0f-ac:1
+nl80211: Supported cipher 00-0f-ac:5
+nl80211: Supported cipher 00-0f-ac:2
+nl80211: Supported cipher 00-0f-ac:4
+nl80211: Supported cipher 00-0f-ac:10
+nl80211: Supported cipher 00-0f-ac:8
+nl80211: Supported cipher 00-0f-ac:9
+nl80211: Using driver-based off-channel TX
+nl80211: interface wlx70f11c0ddc2a in phy phy8
+nl80211: Set mode ifindex 11 iftype 2 (STATION)
+nl80211: Subscribe to mgmt frames with non-AP handle 0x5583a71f14a0
+nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x5583a71f14a0 match=06
+nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+nl80211: Register frame match - hexdump(len=1): 06
+nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x5583a71f14a0 match=0a07
+nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+nl80211: Register frame match - hexdump(len=2): 0a 07
+nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x5583a71f14a0 match=0a11
+nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+nl80211: Register frame match - hexdump(len=2): 0a 11
+nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x5583a71f14a0 match=1101
+nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+nl80211: Register frame match - hexdump(len=2): 11 01
+nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x5583a71f14a0 match=1102
+nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+nl80211: Register frame match - hexdump(len=2): 11 02
+nl80211: Register frame type=0xd0 (WLAN_FC_STYPE_ACTION) nl_handle=0x5583a71f14a0 match=0505
+nl80211: Register frame command failed (type=208): ret=-114 (Operation already in progress)
+nl80211: Register frame match - hexdump(len=2): 05 05
+nl80211: Failed to register Action frame processing - ignore for now
+netlink: Operstate: ifindex=11 linkmode=1 (userspace-control), operstate=5 (IF_OPER_DORMANT)
+nl80211: driver param='(null)'
+Add interface wlx70f11c0ddc2a to a new radio phy8
+nl80211: Regulatory information - country=00
+nl80211: 2402-2472 @ 40 MHz 20 mBm
+nl80211: 2457-2482 @ 20 MHz 20 mBm (no IR)
+nl80211: 2474-2494 @ 20 MHz 20 mBm (no OFDM) (no IR)
+nl80211: 5170-5250 @ 80 MHz 20 mBm (no IR)
+nl80211: 5250-5330 @ 80 MHz 20 mBm (DFS) (no IR)
+nl80211: 5490-5730 @ 160 MHz 20 mBm (DFS) (no IR)
+nl80211: 5735-5835 @ 80 MHz 20 mBm (no IR)
+nl80211: 57240-63720 @ 2160 MHz 0 mBm
+nl80211: Added 802.11b mode based on 802.11g information
+wlx70f11c0ddc2a: Own MAC address: 70:f1:1c:0d:dc:2a
+wpa_driver_nl80211_set_key: ifindex=11 (wlx70f11c0ddc2a) alg=0 addr=(nil) key_idx=0 set_tx=0 seq_len=0 key_len=0
+wpa_driver_nl80211_set_key: ifindex=11 (wlx70f11c0ddc2a) alg=0 addr=(nil) key_idx=1 set_tx=0 seq_len=0 key_len=0
+wpa_driver_nl80211_set_key: ifindex=11 (wlx70f11c0ddc2a) alg=0 addr=(nil) key_idx=2 set_tx=0 seq_len=0 key_len=0
+wpa_driver_nl80211_set_key: ifindex=11 (wlx70f11c0ddc2a) alg=0 addr=(nil) key_idx=3 set_tx=0 seq_len=0 key_len=0
+wlx70f11c0ddc2a: RSN: flushing PMKID list in the driver
+nl80211: Flush PMKIDs
+wlx70f11c0ddc2a: Setting scan request: 0.100000 sec
+ENGINE: Loading dynamic engine
+ENGINE: Loading dynamic engine
+EAPOL: SUPP_PAE entering state DISCONNECTED
+EAPOL: Supplicant port status: Unauthorized
+nl80211: Skip set_supp_port(unauthorized) while not associated
+EAPOL: KEY_RX entering state NO_KEY_RECEIVE
+EAPOL: SUPP_BE entering state INITIALIZE
+EAP: EAP entering state DISABLED
+wlx70f11c0ddc2a: Added interface wlx70f11c0ddc2a
+wlx70f11c0ddc2a: State: DISCONNECTED -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+random: Got 20/20 bytes from /dev/random
+RTM_NEWLINK: ifi_index=11 ifname= operstate=2 linkmode=1 ifi_family=0 ifi_flags=0x1003 ([UP])
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a7213c80
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a7213c80 after 0.000109 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+nl80211: Scan trigger failed: ret=-16 (Device or resource busy)
+wlx70f11c0ddc2a: State: SCANNING -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: CTRL-EVENT-SCAN-FAILED ret=-16 retry=1
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a7213c80 done in 0.000841 seconds
+wlx70f11c0ddc2a: Setting scan request: 1.000000 sec
+EAPOL: disable timer tick
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a7213c80
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a7213c80 after 0.000118 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+nl80211: Scan trigger failed: ret=-16 (Device or resource busy)
+wlx70f11c0ddc2a: State: SCANNING -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: CTRL-EVENT-SCAN-FAILED ret=-16 retry=1
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a7213c80 done in 0.000947 seconds
+wlx70f11c0ddc2a: Setting scan request: 1.000000 sec
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a7213c80
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a7213c80 after 0.000109 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+nl80211: Scan trigger failed: ret=-16 (Device or resource busy)
+wlx70f11c0ddc2a: State: SCANNING -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: CTRL-EVENT-SCAN-FAILED ret=-16 retry=1
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a7213c80 done in 0.001022 seconds
+wlx70f11c0ddc2a: Setting scan request: 1.000000 sec
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 1
+wlx70f11c0ddc2a: BSS: Add new id 0 BSSID 68:9c:e2:a0:00:fd SSID 'cbct'
+wlx70f11c0ddc2a: BSS: Add new id 1 BSSID 68:9c:e2:a0:05:c5 SSID 'bct'
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=0)
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a:    selected based on RSN IE
+wlx70f11c0ddc2a:    selected BSS 68:9c:e2:a0:00:fd ssid='cbct'
+wlx70f11c0ddc2a: Considering connect request: reassociate: 0  selected: 68:9c:e2:a0:00:fd  bssid: 00:00:00:00:00:00  pending: 00:00:00:00:00:00  wpa_state: DISCONNECTED  ssid=0x5583a71f0f40  current_ssid=(nil)
+wlx70f11c0ddc2a: Request association with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Add radio work 'sme-connect'@0x5583a7218250
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'sme-connect'@0x5583a7218250 after 0.000144 second wait
+wlx70f11c0ddc2a: Automatic auth_alg selection: 0x1
+RSN: PMKSA cache search - network_ctx=(nil) try_opportunistic=0
+RSN: Search for BSSID 68:9c:e2:a0:00:fd
+RSN: No PMKSA cache entry found
+wlx70f11c0ddc2a: RSN: using IEEE 802.11i/D9.0
+wlx70f11c0ddc2a: WPA: Selected cipher suites: group 16 pairwise 16 key_mgmt 1 proto 2
+wlx70f11c0ddc2a: WPA: clearing AP WPA IE
+WPA: set AP RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 8c 00
+wlx70f11c0ddc2a: WPA: using GTK CCMP
+wlx70f11c0ddc2a: WPA: using PTK CCMP
+wlx70f11c0ddc2a: WPA: using KEY_MGMT 802.1X
+WPA: Set own WPA IE default - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+RRM: Determining whether RRM can be used - device support: 0x0
+RRM: No RRM in network
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: SME: Trying to authenticate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: DISCONNECTED -> AUTHENTICATING
+EAPOL: External notification - EAP success=0
+EAPOL: External notification - EAP fail=0
+EAPOL: External notification - portControl=Auto
+nl80211: Authenticate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=0): [NULL]
+  * Auth Type 0
+nl80211: Authentication request send successfully
+nl80211: Drv Event 19 (NL80211_CMD_NEW_STATION) received for wlx70f11c0ddc2a
+nl80211: New station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 37 (NL80211_CMD_AUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Authenticate event
+wlx70f11c0ddc2a: Event AUTH (11) received
+wlx70f11c0ddc2a: SME: Authentication response: peer=68:9c:e2:a0:00:fd auth_type=0 auth_transaction=2 status_code=0
+wlx70f11c0ddc2a: Trying to associate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: AUTHENTICATING -> ASSOCIATING
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WPA: set own WPA/RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+nl80211: Associate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=32): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00 7f 08 00 00 00 00 00 00 00 40
+  * WPA Versions 0x2
+  * pairwise=0xfac04
+  * group=0xfac04
+  * akm=0xfac01
+nl80211: Association request send successfully
+l2_packet_receive: src=68:9c:e2:a0:00:fd len=9
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Not associated - Delay processing of received EAPOL frame (state=ASSOCIATING bssid=00:00:00:00:00:00)
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= operstate=5 linkmode=1 ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+nl80211: Drv Event 38 (NL80211_CMD_ASSOCIATE) received for wlx70f11c0ddc2a
+nl80211: Associate event
+wlx70f11c0ddc2a: Event ASSOC (0) received
+wlx70f11c0ddc2a: Association info event
+resp_ies - hexdump(len=115): 01 08 82 84 8b 96 24 30 48 6c 32 04 0c 12 18 60 2d 1a bc 18 1b ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 3d 16 01 08 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 7f 08 00 00 08 00 00 00 00 40 dd 09 00 10 18 02 00 00 0c 00 00 dd 18 00 50 f2 02 01 01 80 00 03 a4 00 00 27 a4 00 00 42 43 5e 00 62 32 2f 00
+wlx70f11c0ddc2a: freq=2412 MHz
+wlx70f11c0ddc2a: State: ASSOCIATING -> ASSOCIATED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: Associated to a new BSS: BSSID=68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Associated with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: WPA: Association event - clear replay counter
+wlx70f11c0ddc2a: WPA: Clear old PTK
+EAPOL: External notification - portEnabled=0
+EAPOL: External notification - portValid=0
+EAPOL: External notification - portEnabled=1
+EAPOL: SUPP_PAE entering state CONNECTING
+EAPOL: enable timer tick
+EAPOL: SUPP_BE entering state IDLE
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+wlx70f11c0ddc2a: Setting authentication timeout: 10 sec 0 usec
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: Process pending EAPOL frame that was received just before association notification
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Setting authentication timeout: 70 sec 0 usec
+EAPOL: Received EAP-Packet frame
+EAPOL: SUPP_PAE entering state RESTART
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_PAE entering state AUTHENTICATING
+EAPOL: SUPP_BE entering state REQUEST
+EAPOL: getSuppRsp
+EAP: EAP entering state RECEIVED
+EAP: Received EAP-Request id=0 method=1 vendor=0 vendorMethod=0
+EAP: EAP entering state IDENTITY
+wlx70f11c0ddc2a: CTRL-EVENT-EAP-STARTED EAP authentication started
+EAP: Status notification: started (param=)
+EAP: EAP-Request Identity data - hexdump_ascii(len=0):
+EAP: using anonymous identity - hexdump_ascii(len=9):
+     61 6e 6f 6e 79 6d 6f 75 73                        anonymous       
+EAP: EAP entering state SEND_RESPONSE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_BE entering state RESPONSE
+EAPOL: txSuppRsp
+TX EAPOL: dst=68:9c:e2:a0:00:fd
+EAPOL: SUPP_BE entering state RECEIVE
+WMM AC: AC mandatory: AC_BE=0 AC_BK=0 AC_VI=0 AC_VO=0
+WMM AC: U-APSD queues=0x0
+WMM AC: Valid WMM association, WMM AC is enabled
+nl80211: Drv Event 46 (NL80211_CMD_CONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore connect event (cmd=46) when using userspace SME
+nl80211: Drv Event 20 (NL80211_CMD_DEL_STATION) received for wlx70f11c0ddc2a
+nl80211: Delete station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 39 (NL80211_CMD_DEAUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Deauthenticate event
+wlx70f11c0ddc2a: Event DEAUTH (12) received
+wlx70f11c0ddc2a: Deauthentication notification
+wlx70f11c0ddc2a:  * reason 3 (locally generated)
+wlx70f11c0ddc2a:  * address 68:9c:e2:a0:00:fd
+Deauthentication frame IE(s) - hexdump(len=0): [NULL]
+wlx70f11c0ddc2a: CTRL-EVENT-DISCONNECTED bssid=68:9c:e2:a0:00:fd reason=3 locally_generated=1
+wlx70f11c0ddc2a: Auto connect enabled: try to reconnect (wps=0/0 wpa_state=6)
+wlx70f11c0ddc2a: Setting scan request: 0.100000 sec
+wlx70f11c0ddc2a: Radio work 'sme-connect'@0x5583a7218250 done in 0.824075 seconds
+Added BSSID 68:9c:e2:a0:00:fd into blacklist
+wlx70f11c0ddc2a: Blacklist count 1 --> request scan in 100 ms
+wlx70f11c0ddc2a: Ignore new scan request for 0.100000 sec since an earlier request is scheduled to trigger sooner
+wlx70f11c0ddc2a: WPA: Clear old PMK and PTK
+wlx70f11c0ddc2a: Disconnect event - remove keys
+wlx70f11c0ddc2a: State: ASSOCIATED -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WMM AC: WMM AC is disabled
+EAPOL: External notification - portEnabled=0
+EAPOL: SUPP_PAE entering state DISCONNECTED
+EAPOL: Supplicant port status: Unauthorized
+nl80211: Skip set_supp_port(unauthorized) while not associated
+EAPOL: SUPP_BE entering state INITIALIZE
+EAP: EAP entering state DISABLED
+EAPOL: External notification - portValid=0
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 48 (NL80211_CMD_DISCONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore disconnect event when using userspace SME
+nl80211: Drv Event 36 (NL80211_CMD_REG_CHANGE) received for wlx70f11c0ddc2a
+nl80211: Regulatory domain change
+ * initiator=0
+ * type=1
+wlx70f11c0ddc2a: Event CHANNEL_LIST_CHANGED (28) received
+wlx70f11c0ddc2a: CTRL-EVENT-REGDOM-CHANGE init=CORE type=WORLD
+nl80211: Regulatory information - country=00
+nl80211: 2402-2472 @ 40 MHz 20 mBm
+nl80211: 2457-2482 @ 20 MHz 20 mBm (no IR)
+nl80211: 2474-2494 @ 20 MHz 20 mBm (no OFDM) (no IR)
+nl80211: 5170-5250 @ 80 MHz 20 mBm (no IR)
+nl80211: 5250-5330 @ 80 MHz 20 mBm (DFS) (no IR)
+nl80211: 5490-5730 @ 160 MHz 20 mBm (DFS) (no IR)
+nl80211: 5735-5835 @ 80 MHz 20 mBm (no IR)
+nl80211: 57240-63720 @ 2160 MHz 0 mBm
+nl80211: Added 802.11b mode based on 802.11g information
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 0.000576 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.000729 seconds
+RTM_NEWLINK: ifi_index=11 ifname= operstate=2 linkmode=1 ifi_family=0 ifi_flags=0x1003 ([UP])
+EAPOL: startWhen --> 0
+EAPOL: disable timer tick
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.164981 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 2
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 3.402001 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-73
+wlx70f11c0ddc2a:    skip - blacklisted (count=1 limit=0)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-85
+wlx70f11c0ddc2a:    skip - SSID mismatch
+wlx70f11c0ddc2a: No APs found - clear blacklist and try again
+Removed BSSID 68:9c:e2:a0:00:fd from blacklist (clear)
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-73
+wlx70f11c0ddc2a:    selected based on RSN IE
+wlx70f11c0ddc2a:    selected BSS 68:9c:e2:a0:00:fd ssid='cbct'
+wlx70f11c0ddc2a: Considering connect request: reassociate: 0  selected: 68:9c:e2:a0:00:fd  bssid: 00:00:00:00:00:00  pending: 00:00:00:00:00:00  wpa_state: SCANNING  ssid=0x5583a71f0f40  current_ssid=(nil)
+wlx70f11c0ddc2a: Request association with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Re-association to the same ESS
+wlx70f11c0ddc2a: Add radio work 'sme-connect'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'sme-connect'@0x5583a721e650 after 0.000097 second wait
+wlx70f11c0ddc2a: Automatic auth_alg selection: 0x1
+RSN: PMKSA cache search - network_ctx=(nil) try_opportunistic=0
+RSN: Search for BSSID 68:9c:e2:a0:00:fd
+RSN: No PMKSA cache entry found
+wlx70f11c0ddc2a: RSN: using IEEE 802.11i/D9.0
+wlx70f11c0ddc2a: WPA: Selected cipher suites: group 16 pairwise 16 key_mgmt 1 proto 2
+wlx70f11c0ddc2a: WPA: clearing AP WPA IE
+WPA: set AP RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 8c 00
+wlx70f11c0ddc2a: WPA: using GTK CCMP
+wlx70f11c0ddc2a: WPA: using PTK CCMP
+wlx70f11c0ddc2a: WPA: using KEY_MGMT 802.1X
+WPA: Set own WPA IE default - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+RRM: Determining whether RRM can be used - device support: 0x0
+RRM: No RRM in network
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: SME: Trying to authenticate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: SCANNING -> AUTHENTICATING
+EAPOL: External notification - EAP success=0
+EAPOL: External notification - EAP fail=0
+EAPOL: External notification - portControl=Auto
+nl80211: Authenticate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=0): [NULL]
+  * Auth Type 0
+nl80211: Authentication request send successfully
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+nl80211: Drv Event 19 (NL80211_CMD_NEW_STATION) received for wlx70f11c0ddc2a
+nl80211: New station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 35 (NL80211_CMD_SCAN_ABORTED) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan aborted
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 0.001689 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 3
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+nl80211: Drv Event 37 (NL80211_CMD_AUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Authenticate event
+wlx70f11c0ddc2a: Event AUTH (11) received
+wlx70f11c0ddc2a: SME: Authentication response: peer=68:9c:e2:a0:00:fd auth_type=0 auth_transaction=2 status_code=0
+wlx70f11c0ddc2a: Trying to associate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: AUTHENTICATING -> ASSOCIATING
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WPA: set own WPA/RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+nl80211: Associate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=32): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00 7f 08 00 00 00 00 00 00 00 40
+  * WPA Versions 0x2
+  * pairwise=0xfac04
+  * group=0xfac04
+  * akm=0xfac01
+nl80211: Association request send successfully
+l2_packet_receive: src=68:9c:e2:a0:00:fd len=9
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Not associated - Delay processing of received EAPOL frame (state=ASSOCIATING bssid=00:00:00:00:00:00)
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= operstate=5 linkmode=1 ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+nl80211: Drv Event 38 (NL80211_CMD_ASSOCIATE) received for wlx70f11c0ddc2a
+nl80211: Associate event
+wlx70f11c0ddc2a: Event ASSOC (0) received
+wlx70f11c0ddc2a: Association info event
+resp_ies - hexdump(len=115): 01 08 82 84 8b 96 24 30 48 6c 32 04 0c 12 18 60 2d 1a bc 18 1b ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 3d 16 01 08 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 7f 08 00 00 08 00 00 00 00 40 dd 09 00 10 18 02 00 00 0c 00 00 dd 18 00 50 f2 02 01 01 80 00 03 a4 00 00 27 a4 00 00 42 43 5e 00 62 32 2f 00
+wlx70f11c0ddc2a: freq=2412 MHz
+wlx70f11c0ddc2a: State: ASSOCIATING -> ASSOCIATED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: Associated to a new BSS: BSSID=68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Associated with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: WPA: Association event - clear replay counter
+wlx70f11c0ddc2a: WPA: Clear old PTK
+EAPOL: External notification - portEnabled=0
+EAPOL: External notification - portValid=0
+EAPOL: External notification - portEnabled=1
+EAPOL: SUPP_PAE entering state CONNECTING
+EAPOL: enable timer tick
+EAPOL: SUPP_BE entering state IDLE
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+wlx70f11c0ddc2a: Setting authentication timeout: 10 sec 0 usec
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: Process pending EAPOL frame that was received just before association notification
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Setting authentication timeout: 70 sec 0 usec
+EAPOL: Received EAP-Packet frame
+EAPOL: SUPP_PAE entering state RESTART
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_PAE entering state AUTHENTICATING
+EAPOL: SUPP_BE entering state REQUEST
+EAPOL: getSuppRsp
+EAP: EAP entering state RECEIVED
+EAP: Received EAP-Request id=0 method=1 vendor=0 vendorMethod=0
+EAP: EAP entering state IDENTITY
+wlx70f11c0ddc2a: CTRL-EVENT-EAP-STARTED EAP authentication started
+EAP: Status notification: started (param=)
+EAP: EAP-Request Identity data - hexdump_ascii(len=0):
+EAP: using anonymous identity - hexdump_ascii(len=9):
+     61 6e 6f 6e 79 6d 6f 75 73                        anonymous       
+EAP: EAP entering state SEND_RESPONSE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_BE entering state RESPONSE
+EAPOL: txSuppRsp
+TX EAPOL: dst=68:9c:e2:a0:00:fd
+EAPOL: SUPP_BE entering state RECEIVE
+WMM AC: AC mandatory: AC_BE=0 AC_BK=0 AC_VI=0 AC_VO=0
+WMM AC: U-APSD queues=0x0
+WMM AC: Valid WMM association, WMM AC is enabled
+nl80211: Drv Event 46 (NL80211_CMD_CONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore connect event (cmd=46) when using userspace SME
+nl80211: Drv Event 20 (NL80211_CMD_DEL_STATION) received for wlx70f11c0ddc2a
+nl80211: Delete station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 39 (NL80211_CMD_DEAUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Deauthenticate event
+wlx70f11c0ddc2a: Event DEAUTH (12) received
+wlx70f11c0ddc2a: Deauthentication notification
+wlx70f11c0ddc2a:  * reason 3 (locally generated)
+wlx70f11c0ddc2a:  * address 68:9c:e2:a0:00:fd
+Deauthentication frame IE(s) - hexdump(len=0): [NULL]
+wlx70f11c0ddc2a: CTRL-EVENT-DISCONNECTED bssid=68:9c:e2:a0:00:fd reason=3 locally_generated=1
+wlx70f11c0ddc2a: Auto connect enabled: try to reconnect (wps=0/0 wpa_state=6)
+wlx70f11c0ddc2a: Setting scan request: 0.100000 sec
+wlx70f11c0ddc2a: Radio work 'sme-connect'@0x5583a721e650 done in 1.001033 seconds
+Added BSSID 68:9c:e2:a0:00:fd into blacklist
+wlx70f11c0ddc2a: Blacklist count 2 --> request scan in 500 ms
+wlx70f11c0ddc2a: Ignore new scan request for 0.500000 sec since an earlier request is scheduled to trigger sooner
+wlx70f11c0ddc2a: WPA: Clear old PMK and PTK
+wlx70f11c0ddc2a: Disconnect event - remove keys
+wlx70f11c0ddc2a: State: ASSOCIATED -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WMM AC: WMM AC is disabled
+EAPOL: External notification - portEnabled=0
+EAPOL: SUPP_PAE entering state DISCONNECTED
+EAPOL: Supplicant port status: Unauthorized
+nl80211: Skip set_supp_port(unauthorized) while not associated
+EAPOL: SUPP_BE entering state INITIALIZE
+EAP: EAP entering state DISABLED
+EAPOL: External notification - portValid=0
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 48 (NL80211_CMD_DISCONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore disconnect event when using userspace SME
+nl80211: Drv Event 36 (NL80211_CMD_REG_CHANGE) received for wlx70f11c0ddc2a
+nl80211: Regulatory domain change
+ * initiator=0
+ * type=1
+wlx70f11c0ddc2a: Event CHANNEL_LIST_CHANGED (28) received
+wlx70f11c0ddc2a: CTRL-EVENT-REGDOM-CHANGE init=CORE type=WORLD
+nl80211: Regulatory information - country=00
+nl80211: 2402-2472 @ 40 MHz 20 mBm
+nl80211: 2457-2482 @ 20 MHz 20 mBm (no IR)
+nl80211: 2474-2494 @ 20 MHz 20 mBm (no OFDM) (no IR)
+nl80211: 5170-5250 @ 80 MHz 20 mBm (no IR)
+nl80211: 5250-5330 @ 80 MHz 20 mBm (DFS) (no IR)
+nl80211: 5490-5730 @ 160 MHz 20 mBm (DFS) (no IR)
+nl80211: 5735-5835 @ 80 MHz 20 mBm (no IR)
+nl80211: 57240-63720 @ 2160 MHz 0 mBm
+nl80211: Added 802.11b mode based on 802.11g information
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 0.000180 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+nl80211: Scan trigger failed: ret=-16 (Device or resource busy)
+wlx70f11c0ddc2a: State: SCANNING -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: CTRL-EVENT-SCAN-FAILED ret=-16 retry=1
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 0.021503 seconds
+wlx70f11c0ddc2a: Setting scan request: 1.000000 sec
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+RTM_NEWLINK: ifi_index=11 ifname= operstate=2 linkmode=1 ifi_family=0 ifi_flags=0x1003 ([UP])
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+Delay radio work start until externally triggered scan completes
+EAPOL: startWhen --> 0
+EAPOL: disable timer tick
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.042154 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 4
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 2.051329 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.000692 seconds
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.104848 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 5
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 3.313160 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-67
+wlx70f11c0ddc2a:    skip - blacklisted (count=1 limit=0)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-87
+wlx70f11c0ddc2a:    skip - SSID mismatch
+wlx70f11c0ddc2a: No APs found - clear blacklist and try again
+Removed BSSID 68:9c:e2:a0:00:fd from blacklist (clear)
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-67
+wlx70f11c0ddc2a:    selected based on RSN IE
+wlx70f11c0ddc2a:    selected BSS 68:9c:e2:a0:00:fd ssid='cbct'
+wlx70f11c0ddc2a: Considering connect request: reassociate: 0  selected: 68:9c:e2:a0:00:fd  bssid: 00:00:00:00:00:00  pending: 00:00:00:00:00:00  wpa_state: SCANNING  ssid=0x5583a71f0f40  current_ssid=(nil)
+wlx70f11c0ddc2a: Request association with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Re-association to the same ESS
+wlx70f11c0ddc2a: Add radio work 'sme-connect'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'sme-connect'@0x5583a721e650 after 0.000104 second wait
+wlx70f11c0ddc2a: Automatic auth_alg selection: 0x1
+RSN: PMKSA cache search - network_ctx=(nil) try_opportunistic=0
+RSN: Search for BSSID 68:9c:e2:a0:00:fd
+RSN: No PMKSA cache entry found
+wlx70f11c0ddc2a: RSN: using IEEE 802.11i/D9.0
+wlx70f11c0ddc2a: WPA: Selected cipher suites: group 16 pairwise 16 key_mgmt 1 proto 2
+wlx70f11c0ddc2a: WPA: clearing AP WPA IE
+WPA: set AP RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 8c 00
+wlx70f11c0ddc2a: WPA: using GTK CCMP
+wlx70f11c0ddc2a: WPA: using PTK CCMP
+wlx70f11c0ddc2a: WPA: using KEY_MGMT 802.1X
+WPA: Set own WPA IE default - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+RRM: Determining whether RRM can be used - device support: 0x0
+RRM: No RRM in network
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: SME: Trying to authenticate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: SCANNING -> AUTHENTICATING
+EAPOL: External notification - EAP success=0
+EAPOL: External notification - EAP fail=0
+EAPOL: External notification - portControl=Auto
+nl80211: Authenticate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=0): [NULL]
+  * Auth Type 0
+nl80211: Authentication request send successfully
+nl80211: Drv Event 19 (NL80211_CMD_NEW_STATION) received for wlx70f11c0ddc2a
+nl80211: New station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 37 (NL80211_CMD_AUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Authenticate event
+wlx70f11c0ddc2a: Event AUTH (11) received
+wlx70f11c0ddc2a: SME: Authentication response: peer=68:9c:e2:a0:00:fd auth_type=0 auth_transaction=2 status_code=0
+wlx70f11c0ddc2a: Trying to associate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: AUTHENTICATING -> ASSOCIATING
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WPA: set own WPA/RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+nl80211: Associate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=32): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00 7f 08 00 00 00 00 00 00 00 40
+  * WPA Versions 0x2
+  * pairwise=0xfac04
+  * group=0xfac04
+  * akm=0xfac01
+nl80211: Association request send successfully
+l2_packet_receive: src=68:9c:e2:a0:00:fd len=9
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Not associated - Delay processing of received EAPOL frame (state=ASSOCIATING bssid=00:00:00:00:00:00)
+RTM_NEWLINK: ifi_index=11 ifname= operstate=5 linkmode=1 ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+nl80211: Drv Event 38 (NL80211_CMD_ASSOCIATE) received for wlx70f11c0ddc2a
+nl80211: Associate event
+wlx70f11c0ddc2a: Event ASSOC (0) received
+wlx70f11c0ddc2a: Association info event
+resp_ies - hexdump(len=115): 01 08 82 84 8b 96 24 30 48 6c 32 04 0c 12 18 60 2d 1a bc 18 1b ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 3d 16 01 08 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 7f 08 00 00 08 00 00 00 00 40 dd 09 00 10 18 02 00 00 0c 00 00 dd 18 00 50 f2 02 01 01 80 00 03 a4 00 00 27 a4 00 00 42 43 5e 00 62 32 2f 00
+wlx70f11c0ddc2a: freq=2412 MHz
+wlx70f11c0ddc2a: State: ASSOCIATING -> ASSOCIATED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: Associated to a new BSS: BSSID=68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Associated with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: WPA: Association event - clear replay counter
+wlx70f11c0ddc2a: WPA: Clear old PTK
+EAPOL: External notification - portEnabled=0
+EAPOL: External notification - portValid=0
+EAPOL: External notification - portEnabled=1
+EAPOL: SUPP_PAE entering state CONNECTING
+EAPOL: enable timer tick
+EAPOL: SUPP_BE entering state IDLE
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+wlx70f11c0ddc2a: Setting authentication timeout: 10 sec 0 usec
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: Process pending EAPOL frame that was received just before association notification
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Setting authentication timeout: 70 sec 0 usec
+EAPOL: Received EAP-Packet frame
+EAPOL: SUPP_PAE entering state RESTART
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_PAE entering state AUTHENTICATING
+EAPOL: SUPP_BE entering state REQUEST
+EAPOL: getSuppRsp
+EAP: EAP entering state RECEIVED
+EAP: Received EAP-Request id=0 method=1 vendor=0 vendorMethod=0
+EAP: EAP entering state IDENTITY
+wlx70f11c0ddc2a: CTRL-EVENT-EAP-STARTED EAP authentication started
+EAP: Status notification: started (param=)
+EAP: EAP-Request Identity data - hexdump_ascii(len=0):
+EAP: using anonymous identity - hexdump_ascii(len=9):
+     61 6e 6f 6e 79 6d 6f 75 73                        anonymous       
+EAP: EAP entering state SEND_RESPONSE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_BE entering state RESPONSE
+EAPOL: txSuppRsp
+TX EAPOL: dst=68:9c:e2:a0:00:fd
+EAPOL: SUPP_BE entering state RECEIVE
+WMM AC: AC mandatory: AC_BE=0 AC_BK=0 AC_VI=0 AC_VO=0
+WMM AC: U-APSD queues=0x0
+WMM AC: Valid WMM association, WMM AC is enabled
+nl80211: Drv Event 46 (NL80211_CMD_CONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore connect event (cmd=46) when using userspace SME
+nl80211: Drv Event 20 (NL80211_CMD_DEL_STATION) received for wlx70f11c0ddc2a
+nl80211: Delete station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 39 (NL80211_CMD_DEAUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Deauthenticate event
+wlx70f11c0ddc2a: Event DEAUTH (12) received
+wlx70f11c0ddc2a: Deauthentication notification
+wlx70f11c0ddc2a:  * reason 3 (locally generated)
+wlx70f11c0ddc2a:  * address 68:9c:e2:a0:00:fd
+Deauthentication frame IE(s) - hexdump(len=0): [NULL]
+wlx70f11c0ddc2a: CTRL-EVENT-DISCONNECTED bssid=68:9c:e2:a0:00:fd reason=3 locally_generated=1
+wlx70f11c0ddc2a: Auto connect enabled: try to reconnect (wps=0/0 wpa_state=6)
+wlx70f11c0ddc2a: Setting scan request: 0.100000 sec
+wlx70f11c0ddc2a: Radio work 'sme-connect'@0x5583a721e650 done in 0.728045 seconds
+Added BSSID 68:9c:e2:a0:00:fd into blacklist
+wlx70f11c0ddc2a: Blacklist count 3 --> request scan in 1000 ms
+wlx70f11c0ddc2a: Ignore new scan request for 1.000000 sec since an earlier request is scheduled to trigger sooner
+wlx70f11c0ddc2a: WPA: Clear old PMK and PTK
+wlx70f11c0ddc2a: Disconnect event - remove keys
+wlx70f11c0ddc2a: State: ASSOCIATED -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WMM AC: WMM AC is disabled
+EAPOL: External notification - portEnabled=0
+EAPOL: SUPP_PAE entering state DISCONNECTED
+EAPOL: Supplicant port status: Unauthorized
+nl80211: Skip set_supp_port(unauthorized) while not associated
+EAPOL: SUPP_BE entering state INITIALIZE
+EAP: EAP entering state DISABLED
+EAPOL: External notification - portValid=0
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 48 (NL80211_CMD_DISCONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore disconnect event when using userspace SME
+nl80211: Drv Event 36 (NL80211_CMD_REG_CHANGE) received for wlx70f11c0ddc2a
+nl80211: Regulatory domain change
+ * initiator=0
+ * type=1
+wlx70f11c0ddc2a: Event CHANNEL_LIST_CHANGED (28) received
+wlx70f11c0ddc2a: CTRL-EVENT-REGDOM-CHANGE init=CORE type=WORLD
+nl80211: Regulatory information - country=00
+nl80211: 2402-2472 @ 40 MHz 20 mBm
+nl80211: 2457-2482 @ 20 MHz 20 mBm (no IR)
+nl80211: 2474-2494 @ 20 MHz 20 mBm (no OFDM) (no IR)
+nl80211: 5170-5250 @ 80 MHz 20 mBm (no IR)
+nl80211: 5250-5330 @ 80 MHz 20 mBm (DFS) (no IR)
+nl80211: 5490-5730 @ 160 MHz 20 mBm (DFS) (no IR)
+nl80211: 5735-5835 @ 80 MHz 20 mBm (no IR)
+nl80211: 57240-63720 @ 2160 MHz 0 mBm
+nl80211: Added 802.11b mode based on 802.11g information
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 0.000140 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+nl80211: Scan trigger failed: ret=-16 (Device or resource busy)
+wlx70f11c0ddc2a: State: SCANNING -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: CTRL-EVENT-SCAN-FAILED ret=-16 retry=1
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 0.024998 seconds
+wlx70f11c0ddc2a: Setting scan request: 1.000000 sec
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+RTM_NEWLINK: ifi_index=11 ifname= operstate=2 linkmode=1 ifi_family=0 ifi_flags=0x1003 ([UP])
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a7214700
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+Delay radio work start until externally triggered scan completes
+EAPOL: startWhen --> 0
+EAPOL: disable timer tick
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.147816 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 6
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a7214700 after 2.158957 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.000828 seconds
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.071477 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 7
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a7214700 done in 3.280259 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a:    skip - blacklisted (count=1 limit=0)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-87
+wlx70f11c0ddc2a:    skip - SSID mismatch
+wlx70f11c0ddc2a: No APs found - clear blacklist and try again
+Removed BSSID 68:9c:e2:a0:00:fd from blacklist (clear)
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a:    selected based on RSN IE
+wlx70f11c0ddc2a:    selected BSS 68:9c:e2:a0:00:fd ssid='cbct'
+wlx70f11c0ddc2a: Considering connect request: reassociate: 0  selected: 68:9c:e2:a0:00:fd  bssid: 00:00:00:00:00:00  pending: 00:00:00:00:00:00  wpa_state: SCANNING  ssid=0x5583a71f0f40  current_ssid=(nil)
+wlx70f11c0ddc2a: Request association with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Re-association to the same ESS
+wlx70f11c0ddc2a: Add radio work 'sme-connect'@0x5583a7214700
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'sme-connect'@0x5583a7214700 after 0.000163 second wait
+wlx70f11c0ddc2a: Automatic auth_alg selection: 0x1
+RSN: PMKSA cache search - network_ctx=(nil) try_opportunistic=0
+RSN: Search for BSSID 68:9c:e2:a0:00:fd
+RSN: No PMKSA cache entry found
+wlx70f11c0ddc2a: RSN: using IEEE 802.11i/D9.0
+wlx70f11c0ddc2a: WPA: Selected cipher suites: group 16 pairwise 16 key_mgmt 1 proto 2
+wlx70f11c0ddc2a: WPA: clearing AP WPA IE
+WPA: set AP RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 8c 00
+wlx70f11c0ddc2a: WPA: using GTK CCMP
+wlx70f11c0ddc2a: WPA: using PTK CCMP
+wlx70f11c0ddc2a: WPA: using KEY_MGMT 802.1X
+WPA: Set own WPA IE default - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+RRM: Determining whether RRM can be used - device support: 0x0
+RRM: No RRM in network
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: SME: Trying to authenticate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: SCANNING -> AUTHENTICATING
+EAPOL: External notification - EAP success=0
+EAPOL: External notification - EAP fail=0
+EAPOL: External notification - portControl=Auto
+nl80211: Authenticate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=0): [NULL]
+  * Auth Type 0
+nl80211: Authentication request send successfully
+nl80211: Drv Event 19 (NL80211_CMD_NEW_STATION) received for wlx70f11c0ddc2a
+nl80211: New station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 37 (NL80211_CMD_AUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Authenticate event
+wlx70f11c0ddc2a: Event AUTH (11) received
+wlx70f11c0ddc2a: SME: Authentication response: peer=68:9c:e2:a0:00:fd auth_type=0 auth_transaction=2 status_code=0
+wlx70f11c0ddc2a: Trying to associate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: AUTHENTICATING -> ASSOCIATING
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WPA: set own WPA/RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+nl80211: Associate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=32): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00 7f 08 00 00 00 00 00 00 00 40
+  * WPA Versions 0x2
+  * pairwise=0xfac04
+  * group=0xfac04
+  * akm=0xfac01
+nl80211: Association request send successfully
+l2_packet_receive: src=68:9c:e2:a0:00:fd len=9
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Not associated - Delay processing of received EAPOL frame (state=ASSOCIATING bssid=00:00:00:00:00:00)
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= operstate=5 linkmode=1 ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+nl80211: Drv Event 38 (NL80211_CMD_ASSOCIATE) received for wlx70f11c0ddc2a
+nl80211: Associate event
+wlx70f11c0ddc2a: Event ASSOC (0) received
+wlx70f11c0ddc2a: Association info event
+resp_ies - hexdump(len=115): 01 08 82 84 8b 96 24 30 48 6c 32 04 0c 12 18 60 2d 1a bc 18 1b ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 3d 16 01 08 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 7f 08 00 00 08 00 00 00 00 40 dd 09 00 10 18 02 00 00 0c 00 00 dd 18 00 50 f2 02 01 01 80 00 03 a4 00 00 27 a4 00 00 42 43 5e 00 62 32 2f 00
+wlx70f11c0ddc2a: freq=2412 MHz
+wlx70f11c0ddc2a: State: ASSOCIATING -> ASSOCIATED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: Associated to a new BSS: BSSID=68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Associated with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: WPA: Association event - clear replay counter
+wlx70f11c0ddc2a: WPA: Clear old PTK
+EAPOL: External notification - portEnabled=0
+EAPOL: External notification - portValid=0
+EAPOL: External notification - portEnabled=1
+EAPOL: SUPP_PAE entering state CONNECTING
+EAPOL: enable timer tick
+EAPOL: SUPP_BE entering state IDLE
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+wlx70f11c0ddc2a: Setting authentication timeout: 10 sec 0 usec
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: Process pending EAPOL frame that was received just before association notification
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Setting authentication timeout: 70 sec 0 usec
+EAPOL: Received EAP-Packet frame
+EAPOL: SUPP_PAE entering state RESTART
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_PAE entering state AUTHENTICATING
+EAPOL: SUPP_BE entering state REQUEST
+EAPOL: getSuppRsp
+EAP: EAP entering state RECEIVED
+EAP: Received EAP-Request id=0 method=1 vendor=0 vendorMethod=0
+EAP: EAP entering state IDENTITY
+wlx70f11c0ddc2a: CTRL-EVENT-EAP-STARTED EAP authentication started
+EAP: Status notification: started (param=)
+EAP: EAP-Request Identity data - hexdump_ascii(len=0):
+EAP: using anonymous identity - hexdump_ascii(len=9):
+     61 6e 6f 6e 79 6d 6f 75 73                        anonymous       
+EAP: EAP entering state SEND_RESPONSE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_BE entering state RESPONSE
+EAPOL: txSuppRsp
+TX EAPOL: dst=68:9c:e2:a0:00:fd
+EAPOL: SUPP_BE entering state RECEIVE
+WMM AC: AC mandatory: AC_BE=0 AC_BK=0 AC_VI=0 AC_VO=0
+WMM AC: U-APSD queues=0x0
+WMM AC: Valid WMM association, WMM AC is enabled
+nl80211: Drv Event 46 (NL80211_CMD_CONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore connect event (cmd=46) when using userspace SME
+nl80211: Drv Event 20 (NL80211_CMD_DEL_STATION) received for wlx70f11c0ddc2a
+nl80211: Delete station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 39 (NL80211_CMD_DEAUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Deauthenticate event
+wlx70f11c0ddc2a: Event DEAUTH (12) received
+wlx70f11c0ddc2a: Deauthentication notification
+wlx70f11c0ddc2a:  * reason 3 (locally generated)
+wlx70f11c0ddc2a:  * address 68:9c:e2:a0:00:fd
+Deauthentication frame IE(s) - hexdump(len=0): [NULL]
+wlx70f11c0ddc2a: CTRL-EVENT-DISCONNECTED bssid=68:9c:e2:a0:00:fd reason=3 locally_generated=1
+wlx70f11c0ddc2a: Auto connect enabled: try to reconnect (wps=0/0 wpa_state=6)
+wlx70f11c0ddc2a: Setting scan request: 0.100000 sec
+wlx70f11c0ddc2a: Radio work 'sme-connect'@0x5583a7214700 done in 0.771429 seconds
+Added BSSID 68:9c:e2:a0:00:fd into blacklist
+Continuous association failures - consider temporary network disabling
+wlx70f11c0ddc2a: CTRL-EVENT-SSID-TEMP-DISABLED id=0 ssid="cbct" auth_failures=1 duration=10 reason=CONN_FAILED
+wlx70f11c0ddc2a: Blacklist count 4 --> request scan in 5000 ms
+wlx70f11c0ddc2a: Ignore new scan request for 5.000000 sec since an earlier request is scheduled to trigger sooner
+wlx70f11c0ddc2a: WPA: Clear old PMK and PTK
+wlx70f11c0ddc2a: Disconnect event - remove keys
+wlx70f11c0ddc2a: State: ASSOCIATED -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WMM AC: WMM AC is disabled
+EAPOL: External notification - portEnabled=0
+EAPOL: SUPP_PAE entering state DISCONNECTED
+EAPOL: Supplicant port status: Unauthorized
+nl80211: Skip set_supp_port(unauthorized) while not associated
+EAPOL: SUPP_BE entering state INITIALIZE
+EAP: EAP entering state DISABLED
+EAPOL: External notification - portValid=0
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 48 (NL80211_CMD_DISCONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore disconnect event when using userspace SME
+nl80211: Drv Event 36 (NL80211_CMD_REG_CHANGE) received for wlx70f11c0ddc2a
+nl80211: Regulatory domain change
+ * initiator=0
+ * type=1
+wlx70f11c0ddc2a: Event CHANNEL_LIST_CHANGED (28) received
+wlx70f11c0ddc2a: CTRL-EVENT-REGDOM-CHANGE init=CORE type=WORLD
+nl80211: Regulatory information - country=00
+nl80211: 2402-2472 @ 40 MHz 20 mBm
+nl80211: 2457-2482 @ 20 MHz 20 mBm (no IR)
+nl80211: 2474-2494 @ 20 MHz 20 mBm (no OFDM) (no IR)
+nl80211: 5170-5250 @ 80 MHz 20 mBm (no IR)
+nl80211: 5250-5330 @ 80 MHz 20 mBm (DFS) (no IR)
+nl80211: 5490-5730 @ 160 MHz 20 mBm (DFS) (no IR)
+nl80211: 5735-5835 @ 80 MHz 20 mBm (no IR)
+nl80211: 57240-63720 @ 2160 MHz 0 mBm
+nl80211: Added 802.11b mode based on 802.11g information
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 0.000188 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.000752 seconds
+RTM_NEWLINK: ifi_index=11 ifname= operstate=2 linkmode=1 ifi_family=0 ifi_flags=0x1003 ([UP])
+EAPOL: startWhen --> 0
+EAPOL: disable timer tick
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.123794 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 8
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 3.337530 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a:    skip - blacklisted (count=1 limit=0)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-79
+wlx70f11c0ddc2a:    skip - disabled temporarily for 6 second(s)
+wlx70f11c0ddc2a: No APs found - clear blacklist and try again
+Removed BSSID 68:9c:e2:a0:00:fd from blacklist (clear)
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a:    skip - disabled temporarily for 6 second(s)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-79
+wlx70f11c0ddc2a:    skip - disabled temporarily for 6 second(s)
+wlx70f11c0ddc2a: No suitable network found
+wlx70f11c0ddc2a: Setting scan request: 5.000000 sec
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.076586 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 9
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 0.000157 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.000418 seconds
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.072473 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 10
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 3.131551 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a: CTRL-EVENT-SSID-REENABLED id=0 ssid="cbct"
+wlx70f11c0ddc2a:    selected based on RSN IE
+wlx70f11c0ddc2a:    selected BSS 68:9c:e2:a0:00:fd ssid='cbct'
+wlx70f11c0ddc2a: Considering connect request: reassociate: 0  selected: 68:9c:e2:a0:00:fd  bssid: 00:00:00:00:00:00  pending: 00:00:00:00:00:00  wpa_state: SCANNING  ssid=0x5583a71f0f40  current_ssid=(nil)
+wlx70f11c0ddc2a: Request association with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Re-association to the same ESS
+wlx70f11c0ddc2a: Add radio work 'sme-connect'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'sme-connect'@0x5583a721e650 after 0.000286 second wait
+wlx70f11c0ddc2a: Automatic auth_alg selection: 0x1
+RSN: PMKSA cache search - network_ctx=(nil) try_opportunistic=0
+RSN: Search for BSSID 68:9c:e2:a0:00:fd
+RSN: No PMKSA cache entry found
+wlx70f11c0ddc2a: RSN: using IEEE 802.11i/D9.0
+wlx70f11c0ddc2a: WPA: Selected cipher suites: group 16 pairwise 16 key_mgmt 1 proto 2
+wlx70f11c0ddc2a: WPA: clearing AP WPA IE
+WPA: set AP RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 8c 00
+wlx70f11c0ddc2a: WPA: using GTK CCMP
+wlx70f11c0ddc2a: WPA: using PTK CCMP
+wlx70f11c0ddc2a: WPA: using KEY_MGMT 802.1X
+WPA: Set own WPA IE default - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+RRM: Determining whether RRM can be used - device support: 0x0
+RRM: No RRM in network
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: SME: Trying to authenticate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: SCANNING -> AUTHENTICATING
+EAPOL: External notification - EAP success=0
+EAPOL: External notification - EAP fail=0
+EAPOL: External notification - portControl=Auto
+nl80211: Authenticate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=0): [NULL]
+  * Auth Type 0
+nl80211: Authentication request send successfully
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+nl80211: Drv Event 19 (NL80211_CMD_NEW_STATION) received for wlx70f11c0ddc2a
+nl80211: New station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 35 (NL80211_CMD_SCAN_ABORTED) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan aborted
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 0.002049 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 11
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+nl80211: Drv Event 37 (NL80211_CMD_AUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Authenticate event
+wlx70f11c0ddc2a: Event AUTH (11) received
+wlx70f11c0ddc2a: SME: Authentication response: peer=68:9c:e2:a0:00:fd auth_type=0 auth_transaction=2 status_code=0
+wlx70f11c0ddc2a: Trying to associate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: AUTHENTICATING -> ASSOCIATING
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WPA: set own WPA/RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+nl80211: Associate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=32): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00 7f 08 00 00 00 00 00 00 00 40
+  * WPA Versions 0x2
+  * pairwise=0xfac04
+  * group=0xfac04
+  * akm=0xfac01
+nl80211: Association request send successfully
+l2_packet_receive: src=68:9c:e2:a0:00:fd len=9
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Not associated - Delay processing of received EAPOL frame (state=ASSOCIATING bssid=00:00:00:00:00:00)
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= operstate=5 linkmode=1 ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+nl80211: Drv Event 38 (NL80211_CMD_ASSOCIATE) received for wlx70f11c0ddc2a
+nl80211: Associate event
+wlx70f11c0ddc2a: Event ASSOC (0) received
+wlx70f11c0ddc2a: Association info event
+resp_ies - hexdump(len=115): 01 08 82 84 8b 96 24 30 48 6c 32 04 0c 12 18 60 2d 1a bc 18 1b ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 3d 16 01 08 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 7f 08 00 00 08 00 00 00 00 40 dd 09 00 10 18 02 00 00 0c 00 00 dd 18 00 50 f2 02 01 01 80 00 03 a4 00 00 27 a4 00 00 42 43 5e 00 62 32 2f 00
+wlx70f11c0ddc2a: freq=2412 MHz
+wlx70f11c0ddc2a: State: ASSOCIATING -> ASSOCIATED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: Associated to a new BSS: BSSID=68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Associated with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: WPA: Association event - clear replay counter
+wlx70f11c0ddc2a: WPA: Clear old PTK
+EAPOL: External notification - portEnabled=0
+EAPOL: External notification - portValid=0
+EAPOL: External notification - portEnabled=1
+EAPOL: SUPP_PAE entering state CONNECTING
+EAPOL: enable timer tick
+EAPOL: SUPP_BE entering state IDLE
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+wlx70f11c0ddc2a: Setting authentication timeout: 10 sec 0 usec
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: Process pending EAPOL frame that was received just before association notification
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Setting authentication timeout: 70 sec 0 usec
+EAPOL: Received EAP-Packet frame
+EAPOL: SUPP_PAE entering state RESTART
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_PAE entering state AUTHENTICATING
+EAPOL: SUPP_BE entering state REQUEST
+EAPOL: getSuppRsp
+EAP: EAP entering state RECEIVED
+EAP: Received EAP-Request id=0 method=1 vendor=0 vendorMethod=0
+EAP: EAP entering state IDENTITY
+wlx70f11c0ddc2a: CTRL-EVENT-EAP-STARTED EAP authentication started
+EAP: Status notification: started (param=)
+EAP: EAP-Request Identity data - hexdump_ascii(len=0):
+EAP: using anonymous identity - hexdump_ascii(len=9):
+     61 6e 6f 6e 79 6d 6f 75 73                        anonymous       
+EAP: EAP entering state SEND_RESPONSE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_BE entering state RESPONSE
+EAPOL: txSuppRsp
+TX EAPOL: dst=68:9c:e2:a0:00:fd
+EAPOL: SUPP_BE entering state RECEIVE
+WMM AC: AC mandatory: AC_BE=0 AC_BK=0 AC_VI=0 AC_VO=0
+WMM AC: U-APSD queues=0x0
+WMM AC: Valid WMM association, WMM AC is enabled
+nl80211: Drv Event 46 (NL80211_CMD_CONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore connect event (cmd=46) when using userspace SME
+nl80211: Drv Event 20 (NL80211_CMD_DEL_STATION) received for wlx70f11c0ddc2a
+nl80211: Delete station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 39 (NL80211_CMD_DEAUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Deauthenticate event
+wlx70f11c0ddc2a: Event DEAUTH (12) received
+wlx70f11c0ddc2a: Deauthentication notification
+wlx70f11c0ddc2a:  * reason 3 (locally generated)
+wlx70f11c0ddc2a:  * address 68:9c:e2:a0:00:fd
+Deauthentication frame IE(s) - hexdump(len=0): [NULL]
+wlx70f11c0ddc2a: CTRL-EVENT-DISCONNECTED bssid=68:9c:e2:a0:00:fd reason=3 locally_generated=1
+wlx70f11c0ddc2a: Auto connect enabled: try to reconnect (wps=0/0 wpa_state=6)
+wlx70f11c0ddc2a: Setting scan request: 0.100000 sec
+wlx70f11c0ddc2a: Radio work 'sme-connect'@0x5583a721e650 done in 0.967646 seconds
+Added BSSID 68:9c:e2:a0:00:fd into blacklist
+Continuous association failures - consider temporary network disabling
+wlx70f11c0ddc2a: CTRL-EVENT-SSID-TEMP-DISABLED id=0 ssid="cbct" auth_failures=2 duration=23 reason=CONN_FAILED
+wlx70f11c0ddc2a: Blacklist count 5 --> request scan in 10000 ms
+wlx70f11c0ddc2a: Ignore new scan request for 10.000000 sec since an earlier request is scheduled to trigger sooner
+wlx70f11c0ddc2a: WPA: Clear old PMK and PTK
+wlx70f11c0ddc2a: Disconnect event - remove keys
+wlx70f11c0ddc2a: State: ASSOCIATED -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WMM AC: WMM AC is disabled
+EAPOL: External notification - portEnabled=0
+EAPOL: SUPP_PAE entering state DISCONNECTED
+EAPOL: Supplicant port status: Unauthorized
+nl80211: Skip set_supp_port(unauthorized) while not associated
+EAPOL: SUPP_BE entering state INITIALIZE
+EAP: EAP entering state DISABLED
+EAPOL: External notification - portValid=0
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 48 (NL80211_CMD_DISCONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore disconnect event when using userspace SME
+nl80211: Drv Event 36 (NL80211_CMD_REG_CHANGE) received for wlx70f11c0ddc2a
+nl80211: Regulatory domain change
+ * initiator=0
+ * type=1
+wlx70f11c0ddc2a: Event CHANNEL_LIST_CHANGED (28) received
+wlx70f11c0ddc2a: CTRL-EVENT-REGDOM-CHANGE init=CORE type=WORLD
+nl80211: Regulatory information - country=00
+nl80211: 2402-2472 @ 40 MHz 20 mBm
+nl80211: 2457-2482 @ 20 MHz 20 mBm (no IR)
+nl80211: 2474-2494 @ 20 MHz 20 mBm (no OFDM) (no IR)
+nl80211: 5170-5250 @ 80 MHz 20 mBm (no IR)
+nl80211: 5250-5330 @ 80 MHz 20 mBm (DFS) (no IR)
+nl80211: 5490-5730 @ 160 MHz 20 mBm (DFS) (no IR)
+nl80211: 5735-5835 @ 80 MHz 20 mBm (no IR)
+nl80211: 57240-63720 @ 2160 MHz 0 mBm
+nl80211: Added 802.11b mode based on 802.11g information
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a7214700
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a7214700 after 0.000186 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+nl80211: Scan trigger failed: ret=-16 (Device or resource busy)
+wlx70f11c0ddc2a: State: SCANNING -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: CTRL-EVENT-SCAN-FAILED ret=-16 retry=1
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a7214700 done in 0.025735 seconds
+wlx70f11c0ddc2a: Setting scan request: 1.000000 sec
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+RTM_NEWLINK: ifi_index=11 ifname= operstate=2 linkmode=1 ifi_family=0 ifi_flags=0x1003 ([UP])
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+Delay radio work start until externally triggered scan completes
+EAPOL: startWhen --> 0
+EAPOL: disable timer tick
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.171169 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 12
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 2.205189 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.000437 seconds
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.131399 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 13
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 3.297391 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a:    skip - blacklisted (count=1 limit=0)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-85
+wlx70f11c0ddc2a:    skip - disabled temporarily for 17 second(s)
+wlx70f11c0ddc2a: No APs found - clear blacklist and try again
+Removed BSSID 68:9c:e2:a0:00:fd from blacklist (clear)
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a:    skip - disabled temporarily for 17 second(s)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-85
+wlx70f11c0ddc2a:    skip - disabled temporarily for 17 second(s)
+wlx70f11c0ddc2a: No suitable network found
+wlx70f11c0ddc2a: Setting scan request: 5.000000 sec
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.068712 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 14
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 0.000182 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.001231 seconds
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.140772 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 15
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 3.176047 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a:    skip - disabled temporarily for 8 second(s)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-79
+wlx70f11c0ddc2a:    skip - disabled temporarily for 8 second(s)
+wlx70f11c0ddc2a: No suitable network found
+wlx70f11c0ddc2a: Setting scan request: 5.000000 sec
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.135080 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 16
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 0.000298 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.000885 seconds
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.110590 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 17
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 3.161143 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a: CTRL-EVENT-SSID-REENABLED id=0 ssid="cbct"
+wlx70f11c0ddc2a:    selected based on RSN IE
+wlx70f11c0ddc2a:    selected BSS 68:9c:e2:a0:00:fd ssid='cbct'
+wlx70f11c0ddc2a: Considering connect request: reassociate: 0  selected: 68:9c:e2:a0:00:fd  bssid: 00:00:00:00:00:00  pending: 00:00:00:00:00:00  wpa_state: SCANNING  ssid=0x5583a71f0f40  current_ssid=(nil)
+wlx70f11c0ddc2a: Request association with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Re-association to the same ESS
+wlx70f11c0ddc2a: Add radio work 'sme-connect'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'sme-connect'@0x5583a721e650 after 0.000135 second wait
+wlx70f11c0ddc2a: Automatic auth_alg selection: 0x1
+RSN: PMKSA cache search - network_ctx=(nil) try_opportunistic=0
+RSN: Search for BSSID 68:9c:e2:a0:00:fd
+RSN: No PMKSA cache entry found
+wlx70f11c0ddc2a: RSN: using IEEE 802.11i/D9.0
+wlx70f11c0ddc2a: WPA: Selected cipher suites: group 16 pairwise 16 key_mgmt 1 proto 2
+wlx70f11c0ddc2a: WPA: clearing AP WPA IE
+WPA: set AP RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 8c 00
+wlx70f11c0ddc2a: WPA: using GTK CCMP
+wlx70f11c0ddc2a: WPA: using PTK CCMP
+wlx70f11c0ddc2a: WPA: using KEY_MGMT 802.1X
+WPA: Set own WPA IE default - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+RRM: Determining whether RRM can be used - device support: 0x0
+RRM: No RRM in network
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: SME: Trying to authenticate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: SCANNING -> AUTHENTICATING
+EAPOL: External notification - EAP success=0
+EAPOL: External notification - EAP fail=0
+EAPOL: External notification - portControl=Auto
+nl80211: Authenticate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=0): [NULL]
+  * Auth Type 0
+nl80211: Authentication request send successfully
+nl80211: Drv Event 19 (NL80211_CMD_NEW_STATION) received for wlx70f11c0ddc2a
+nl80211: New station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 37 (NL80211_CMD_AUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Authenticate event
+wlx70f11c0ddc2a: Event AUTH (11) received
+wlx70f11c0ddc2a: SME: Authentication response: peer=68:9c:e2:a0:00:fd auth_type=0 auth_transaction=2 status_code=0
+wlx70f11c0ddc2a: Trying to associate with 68:9c:e2:a0:00:fd (SSID='cbct' freq=2412 MHz)
+wlx70f11c0ddc2a: State: AUTHENTICATING -> ASSOCIATING
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WPA: set own WPA/RSN IE - hexdump(len=22): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00
+nl80211: Associate (ifindex=11)
+  * bssid=68:9c:e2:a0:00:fd
+  * freq=2412
+  * SSID - hexdump_ascii(len=4):
+     63 62 63 74                                       cbct            
+  * IEs - hexdump(len=32): 30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00 00 0f ac 01 00 00 7f 08 00 00 00 00 00 00 00 40
+  * WPA Versions 0x2
+  * pairwise=0xfac04
+  * group=0xfac04
+  * akm=0xfac01
+nl80211: Association request send successfully
+l2_packet_receive: src=68:9c:e2:a0:00:fd len=9
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Not associated - Delay processing of received EAPOL frame (state=ASSOCIATING bssid=00:00:00:00:00:00)
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= operstate=5 linkmode=1 ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+nl80211: Drv Event 38 (NL80211_CMD_ASSOCIATE) received for wlx70f11c0ddc2a
+nl80211: Associate event
+wlx70f11c0ddc2a: Event ASSOC (0) received
+wlx70f11c0ddc2a: Association info event
+resp_ies - hexdump(len=115): 01 08 82 84 8b 96 24 30 48 6c 32 04 0c 12 18 60 2d 1a bc 18 1b ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 3d 16 01 08 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 7f 08 00 00 08 00 00 00 00 40 dd 09 00 10 18 02 00 00 0c 00 00 dd 18 00 50 f2 02 01 01 80 00 03 a4 00 00 27 a4 00 00 42 43 5e 00 62 32 2f 00
+wlx70f11c0ddc2a: freq=2412 MHz
+wlx70f11c0ddc2a: State: ASSOCIATING -> ASSOCIATED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: Associated to a new BSS: BSSID=68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Associated with 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: WPA: Association event - clear replay counter
+wlx70f11c0ddc2a: WPA: Clear old PTK
+EAPOL: External notification - portEnabled=0
+EAPOL: External notification - portValid=0
+EAPOL: External notification - portEnabled=1
+EAPOL: SUPP_PAE entering state CONNECTING
+EAPOL: enable timer tick
+EAPOL: SUPP_BE entering state IDLE
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+wlx70f11c0ddc2a: Setting authentication timeout: 10 sec 0 usec
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: Process pending EAPOL frame that was received just before association notification
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:00:fd
+wlx70f11c0ddc2a: Setting authentication timeout: 70 sec 0 usec
+EAPOL: Received EAP-Packet frame
+EAPOL: SUPP_PAE entering state RESTART
+EAP: EAP entering state INITIALIZE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_PAE entering state AUTHENTICATING
+EAPOL: SUPP_BE entering state REQUEST
+EAPOL: getSuppRsp
+EAP: EAP entering state RECEIVED
+EAP: Received EAP-Request id=0 method=1 vendor=0 vendorMethod=0
+EAP: EAP entering state IDENTITY
+wlx70f11c0ddc2a: CTRL-EVENT-EAP-STARTED EAP authentication started
+EAP: Status notification: started (param=)
+EAP: EAP-Request Identity data - hexdump_ascii(len=0):
+EAP: using anonymous identity - hexdump_ascii(len=9):
+     61 6e 6f 6e 79 6d 6f 75 73                        anonymous       
+EAP: EAP entering state SEND_RESPONSE
+EAP: EAP entering state IDLE
+EAPOL: SUPP_BE entering state RESPONSE
+EAPOL: txSuppRsp
+TX EAPOL: dst=68:9c:e2:a0:00:fd
+EAPOL: SUPP_BE entering state RECEIVE
+WMM AC: AC mandatory: AC_BE=0 AC_BK=0 AC_VI=0 AC_VO=0
+WMM AC: U-APSD queues=0x0
+WMM AC: Valid WMM association, WMM AC is enabled
+nl80211: Drv Event 46 (NL80211_CMD_CONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore connect event (cmd=46) when using userspace SME
+nl80211: Drv Event 20 (NL80211_CMD_DEL_STATION) received for wlx70f11c0ddc2a
+nl80211: Delete station 68:9c:e2:a0:00:fd
+nl80211: Drv Event 39 (NL80211_CMD_DEAUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Deauthenticate event
+wlx70f11c0ddc2a: Event DEAUTH (12) received
+wlx70f11c0ddc2a: Deauthentication notification
+wlx70f11c0ddc2a:  * reason 3 (locally generated)
+wlx70f11c0ddc2a:  * address 68:9c:e2:a0:00:fd
+Deauthentication frame IE(s) - hexdump(len=0): [NULL]
+wlx70f11c0ddc2a: CTRL-EVENT-DISCONNECTED bssid=68:9c:e2:a0:00:fd reason=3 locally_generated=1
+wlx70f11c0ddc2a: Auto connect enabled: try to reconnect (wps=0/0 wpa_state=6)
+wlx70f11c0ddc2a: Setting scan request: 0.100000 sec
+wlx70f11c0ddc2a: Radio work 'sme-connect'@0x5583a721e650 done in 0.809389 seconds
+Added BSSID 68:9c:e2:a0:00:fd into blacklist
+Continuous association failures - consider temporary network disabling
+wlx70f11c0ddc2a: CTRL-EVENT-SSID-TEMP-DISABLED id=0 ssid="cbct" auth_failures=3 duration=46 reason=CONN_FAILED
+wlx70f11c0ddc2a: Blacklist count 6 --> request scan in 10000 ms
+wlx70f11c0ddc2a: Ignore new scan request for 10.000000 sec since an earlier request is scheduled to trigger sooner
+wlx70f11c0ddc2a: WPA: Clear old PMK and PTK
+wlx70f11c0ddc2a: Disconnect event - remove keys
+wlx70f11c0ddc2a: State: ASSOCIATED -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+WMM AC: WMM AC is disabled
+EAPOL: External notification - portEnabled=0
+EAPOL: SUPP_PAE entering state DISCONNECTED
+EAPOL: Supplicant port status: Unauthorized
+nl80211: Skip set_supp_port(unauthorized) while not associated
+EAPOL: SUPP_BE entering state INITIALIZE
+EAP: EAP entering state DISABLED
+EAPOL: External notification - portValid=0
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 48 (NL80211_CMD_DISCONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore disconnect event when using userspace SME
+nl80211: Drv Event 36 (NL80211_CMD_REG_CHANGE) received for wlx70f11c0ddc2a
+nl80211: Regulatory domain change
+ * initiator=0
+ * type=1
+wlx70f11c0ddc2a: Event CHANNEL_LIST_CHANGED (28) received
+wlx70f11c0ddc2a: CTRL-EVENT-REGDOM-CHANGE init=CORE type=WORLD
+nl80211: Regulatory information - country=00
+nl80211: 2402-2472 @ 40 MHz 20 mBm
+nl80211: 2457-2482 @ 20 MHz 20 mBm (no IR)
+nl80211: 2474-2494 @ 20 MHz 20 mBm (no OFDM) (no IR)
+nl80211: 5170-5250 @ 80 MHz 20 mBm (no IR)
+nl80211: 5250-5330 @ 80 MHz 20 mBm (DFS) (no IR)
+nl80211: 5490-5730 @ 160 MHz 20 mBm (DFS) (no IR)
+nl80211: 5735-5835 @ 80 MHz 20 mBm (no IR)
+nl80211: 57240-63720 @ 2160 MHz 0 mBm
+nl80211: Added 802.11b mode based on 802.11g information
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 0.000137 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.001151 seconds
+RTM_NEWLINK: ifi_index=11 ifname= operstate=2 linkmode=1 ifi_family=0 ifi_flags=0x1003 ([UP])
+EAPOL: startWhen --> 0
+EAPOL: disable timer tick
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.206093 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 18
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 3.242766 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a:    skip - blacklisted (count=1 limit=0)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-91
+wlx70f11c0ddc2a:    skip - disabled temporarily for 42 second(s)
+wlx70f11c0ddc2a: No APs found - clear blacklist and try again
+Removed BSSID 68:9c:e2:a0:00:fd from blacklist (clear)
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-69
+wlx70f11c0ddc2a:    skip - disabled temporarily for 42 second(s)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-91
+wlx70f11c0ddc2a:    skip - disabled temporarily for 42 second(s)
+wlx70f11c0ddc2a: No suitable network found
+wlx70f11c0ddc2a: Setting scan request: 5.000000 sec
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.091288 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 19
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 0.000200 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.000996 seconds
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.103579 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 20
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 3.139652 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-71
+wlx70f11c0ddc2a:    skip - disabled temporarily for 34 second(s)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-85
+wlx70f11c0ddc2a:    skip - disabled temporarily for 34 second(s)
+wlx70f11c0ddc2a: No suitable network found
+wlx70f11c0ddc2a: Setting scan request: 5.000000 sec
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.186663 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 21
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 0.000104 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.000418 seconds
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.065688 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 22
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=1 ext=0)
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a721e650 done in 3.126059 seconds
+wlx70f11c0ddc2a: Selecting BSS from priority group 0
+wlx70f11c0ddc2a: 0: 68:9c:e2:a0:00:fd ssid='cbct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-71
+wlx70f11c0ddc2a:    skip - disabled temporarily for 26 second(s)
+wlx70f11c0ddc2a: 1: 68:9c:e2:a0:05:c5 ssid='bct' wpa_ie_len=0 rsn_ie_len=20 caps=0x411 level=-79
+wlx70f11c0ddc2a:    skip - disabled temporarily for 26 second(s)
+wlx70f11c0ddc2a: No suitable network found
+wlx70f11c0ddc2a: Setting scan request: 5.000000 sec
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.166687 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 23
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 19 (NL80211_CMD_NEW_STATION) received for wlx70f11c0ddc2a
+nl80211: New station 68:9c:e2:a0:05:c5
+nl80211: Drv Event 37 (NL80211_CMD_AUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Authenticate event
+wlx70f11c0ddc2a: Event AUTH (11) received
+wlx70f11c0ddc2a: SME: Ignore authentication event when network is not selected
+l2_packet_receive: src=68:9c:e2:a0:05:c5 len=9
+wlx70f11c0ddc2a: RX EAPOL from 68:9c:e2:a0:05:c5
+wlx70f11c0ddc2a: Not associated - Delay processing of received EAPOL frame (state=SCANNING bssid=00:00:00:00:00:00)
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+RTM_NEWLINK: ifi_index=11 ifname= operstate=5 linkmode=1 ifi_family=0 ifi_flags=0x11003 ([UP][LOWER_UP])
+nl80211: Drv Event 38 (NL80211_CMD_ASSOCIATE) received for wlx70f11c0ddc2a
+nl80211: Associate event
+wlx70f11c0ddc2a: Event ASSOC (0) received
+wlx70f11c0ddc2a: Association info event
+resp_ies - hexdump(len=115): 01 08 82 84 8b 96 24 30 48 6c 32 04 0c 12 18 60 2d 1a bc 18 1b ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 3d 16 0b 08 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 7f 08 00 00 08 00 00 00 00 40 dd 09 00 10 18 02 00 00 0c 00 00 dd 18 00 50 f2 02 01 01 80 00 03 a4 00 00 27 a4 00 00 42 43 5e 00 62 32 2f 00
+wlx70f11c0ddc2a: freq=2412 MHz
+wlx70f11c0ddc2a: State: SCANNING -> ASSOCIATED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: Associated to a new BSS: BSSID=68:9c:e2:a0:05:c5
+wlx70f11c0ddc2a: Select network based on association information
+wlx70f11c0ddc2a: Selected network is temporarily disabled for 22 second(s)
+wlx70f11c0ddc2a: Request to deauthenticate - bssid=68:9c:e2:a0:05:c5 pending_bssid=00:00:00:00:00:00 reason=3 state=ASSOCIATED
+wpa_driver_nl80211_deauthenticate(addr=68:9c:e2:a0:05:c5 reason_code=3)
+wlx70f11c0ddc2a: Event DEAUTH (12) received
+wlx70f11c0ddc2a: Deauthentication notification
+wlx70f11c0ddc2a:  * reason 3 (locally generated)
+Deauthentication frame IE(s) - hexdump(len=0): [NULL]
+wlx70f11c0ddc2a: CTRL-EVENT-DISCONNECTED bssid=68:9c:e2:a0:05:c5 reason=3 locally_generated=1
+wlx70f11c0ddc2a: Auto connect enabled: try to reconnect (wps=0/0 wpa_state=6)
+wlx70f11c0ddc2a: Rescheduling scan request: 0.100000 sec
+Added BSSID 68:9c:e2:a0:05:c5 into blacklist
+wlx70f11c0ddc2a: Blacklist count 7 --> request scan in 10000 ms
+wlx70f11c0ddc2a: Ignore new scan request for 10.000000 sec since an earlier request is scheduled to trigger sooner
+wlx70f11c0ddc2a: WPA: Clear old PMK and PTK
+wlx70f11c0ddc2a: Disconnect event - remove keys
+wlx70f11c0ddc2a: State: ASSOCIATED -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+EAPOL: External notification - portEnabled=0
+EAPOL: External notification - portValid=0
+wlx70f11c0ddc2a: State: DISCONNECTED -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+EAPOL: External notification - portEnabled=0
+EAPOL: External notification - portValid=0
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 46 (NL80211_CMD_CONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore connect event (cmd=46) when using userspace SME
+nl80211: Drv Event 20 (NL80211_CMD_DEL_STATION) received for wlx70f11c0ddc2a
+nl80211: Delete station 68:9c:e2:a0:05:c5
+nl80211: Drv Event 39 (NL80211_CMD_DEAUTHENTICATE) received for wlx70f11c0ddc2a
+nl80211: Deauthenticate event
+nl80211: Ignore deauth event triggered due to own deauth request
+nl80211: Drv Event 48 (NL80211_CMD_DISCONNECT) received for wlx70f11c0ddc2a
+nl80211: Ignore disconnect event when using userspace SME
+nl80211: Drv Event 36 (NL80211_CMD_REG_CHANGE) received for wlx70f11c0ddc2a
+nl80211: Regulatory domain change
+ * initiator=0
+ * type=1
+wlx70f11c0ddc2a: Event CHANNEL_LIST_CHANGED (28) received
+wlx70f11c0ddc2a: CTRL-EVENT-REGDOM-CHANGE init=CORE type=WORLD
+nl80211: Regulatory information - country=00
+nl80211: 2402-2472 @ 40 MHz 20 mBm
+nl80211: 2457-2482 @ 20 MHz 20 mBm (no IR)
+nl80211: 2474-2494 @ 20 MHz 20 mBm (no OFDM) (no IR)
+nl80211: 5170-5250 @ 80 MHz 20 mBm (no IR)
+nl80211: 5250-5330 @ 80 MHz 20 mBm (DFS) (no IR)
+nl80211: 5490-5730 @ 160 MHz 20 mBm (DFS) (no IR)
+nl80211: 5735-5835 @ 80 MHz 20 mBm (no IR)
+nl80211: 57240-63720 @ 2160 MHz 0 mBm
+nl80211: Added 802.11b mode based on 802.11g information
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a7214700
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a7214700 after 0.000176 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+nl80211: Scan trigger failed: ret=-16 (Device or resource busy)
+wlx70f11c0ddc2a: State: SCANNING -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+wlx70f11c0ddc2a: CTRL-EVENT-SCAN-FAILED ret=-16 retry=1
+wlx70f11c0ddc2a: Radio work 'scan'@0x5583a7214700 done in 0.024462 seconds
+wlx70f11c0ddc2a: Setting scan request: 1.000000 sec
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: External program started a scan
+RTM_NEWLINK: ifi_index=11 ifname= operstate=2 linkmode=1 ifi_family=0 ifi_flags=0x1003 ([UP])
+wlx70f11c0ddc2a: State: DISCONNECTED -> SCANNING
+wlx70f11c0ddc2a: Starting AP scan for wildcard SSID
+wlx70f11c0ddc2a: Add radio work 'scan'@0x5583a721e650
+wlx70f11c0ddc2a: First radio work item in the queue - schedule start immediately
+Delay radio work start until externally triggered scan completes
+RTM_NEWLINK: ifi_index=11 ifname= wext ifi_family=0 ifi_flags=0x1003 ([UP])
+nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: New scan results available
+nl80211: Scan probed for SSID ''
+nl80211: Scan included frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+wlx70f11c0ddc2a: Event SCAN_RESULTS (3) received
+wlx70f11c0ddc2a: Scan completed in 3.112134 seconds
+nl80211: Received scan results (2 BSSes)
+wlx70f11c0ddc2a: BSS: Start scan result update 24
+BSS: last_scan_res_used=2/32
+wlx70f11c0ddc2a: New scan results available (own=0 ext=1)
+wlx70f11c0ddc2a: Do not use results from externally requested scan operation for network selection
+wlx70f11c0ddc2a: Starting radio work 'scan'@0x5583a721e650 after 2.130081 second wait
+wlx70f11c0ddc2a: nl80211: scan request
+Scan requested (ret=0) - scan timeout 30 seconds
+nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlx70f11c0ddc2a
+wlx70f11c0ddc2a: nl80211: Scan trigger
+wlx70f11c0ddc2a: Event SCAN_STARTED (47) received
+wlx70f11c0ddc2a: Own scan request started a scan in 0.000881 seconds
+wlx70f11c0ddc2a: Removing interface wlx70f11c0ddc2a
+wlx70f11c0ddc2a: Request to deauthenticate - bssid=00:00:00:00:00:00 pending_bssid=00:00:00:00:00:00 reason=3 state=SCANNING
+wlx70f11c0ddc2a: State: SCANNING -> DISCONNECTED
+nl80211: Set wlx70f11c0ddc2a operstate 0->0 (DORMANT)
+netlink: Operstate: ifindex=11 linkmode=-1 (no change), operstate=5 (IF_OPER_DORMANT)
+EAPOL: External notification - portEnabled=0
+EAPOL: External notification - portValid=0
+wlx70f11c0ddc2a: WPA: Clear old PMK and PTK
+Removed BSSID 68:9c:e2:a0:05:c5 from blacklist (clear)
+wlx70f11c0ddc2a: BSS: Remove id 0 BSSID 68:9c:e2:a0:00:fd SSID 'cbct' due to wpa_bss_flush
+wlx70f11c0ddc2a: BSS: Remove id 1 BSSID 68:9c:e2:a0:05:c5 SSID 'bct' due to wpa_bss_flush
+wlx70f11c0ddc2a: Cancelling scan request
+wlx70f11c0ddc2a: Cancelling authentication timeout
+Remove interface wlx70f11c0ddc2a from radio phy8
+wlx70f11c0ddc2a: Remove radio work 'scan'@0x5583a721e650 (started)
+Remove radio phy8
+nl80211: deinit ifname=wlx70f11c0ddc2a disabled_11b_rates=0
+nl80211: Remove monitor interface: refcount=0
+netlink: Operstate: ifindex=11 linkmode=0 (kernel-control), operstate=6 (IF_OPER_UP)
+nl80211: Set mode ifindex 11 iftype 2 (STATION)
+nl80211: Unsubscribe mgmt frames handle 0x8888dd0b2f979c29 (mode change)
+wlx70f11c0ddc2a: CTRL-EVENT-TERMINATING 

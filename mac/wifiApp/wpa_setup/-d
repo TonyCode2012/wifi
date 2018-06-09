@@ -1,0 +1,55 @@
+Successfully initialized wpa_supplicant
+eap_get_info_index in index 0=====
+eap_get_info_code in code 0=====
+eap_get_info_info in info === ===
+eap_get_info_index in index 0=====
+eap_get_info_code in code 0=====
+eap_get_info_info in info === ===
+eap_get_info_index in index 0=====
+eap_get_info_code in code 0=====
+eap_get_info_info in info === ===
+eap_get_info_index in index 0=====
+eap_get_info_code in code 0=====
+eap_get_info_info in info === ===
+eap_get_info_index in index 0=====
+eap_get_info_code in code 0=====
+eap_get_info_info in info === ===
+eap_get_info_index in index 0=====
+eap_get_info_code in code 0=====
+eap_get_info_info in info === ===
+wlx70f11c0c2433: SME: Trying to authenticate with 20:dc:e6:61:1c:a6 (SSID='bct' freq=2412 MHz)
+wlx70f11c0c2433: CTRL-EVENT-DISCONNECTED bssid=20:dc:e6:61:1c:a6 reason=2 locally_generated=1
+wlx70f11c0c2433: CTRL-EVENT-REGDOM-CHANGE init=CORE type=WORLD
+wlx70f11c0c2433: CTRL-EVENT-REGDOM-CHANGE init=BEACON_HINT type=UNKNOWN
+wlx70f11c0c2433: SME: Trying to authenticate with 20:dc:e6:61:1c:a6 (SSID='bct' freq=2412 MHz)
+wlx70f11c0c2433: Trying to associate with 20:dc:e6:61:1c:a6 (SSID='bct' freq=2412 MHz)
+wlx70f11c0c2433: Associated with 20:dc:e6:61:1c:a6
+wlx70f11c0c2433: CTRL-EVENT-EAP-STARTED EAP authentication started
+wlx70f11c0c2433: CTRL-EVENT-EAP-PROPOSED-METHOD vendor=0 method=4 -> NAK
+wlx70f11c0c2433: CTRL-EVENT-EAP-PROPOSED-METHOD vendor=0 method=21
+wlx70f11c0c2433: CTRL-EVENT-EAP-METHOD EAP vendor 0 method 21 (TTLS) selected
+wlx70f11c0c2433: CTRL-EVENT-EAP-PEER-CERT depth=1 subject='/C=FR/ST=Radius/L=Somewhere/O=Example Inc./emailAddress=admin@example.org/CN=Example Certificate Authority'
+wlx70f11c0c2433: CTRL-EVENT-EAP-PEER-CERT depth=1 subject='/C=FR/ST=Radius/L=Somewhere/O=Example Inc./emailAddress=admin@example.org/CN=Example Certificate Authority'
+wlx70f11c0c2433: CTRL-EVENT-EAP-PEER-CERT depth=0 subject='/C=FR/ST=Radius/O=Example Inc./CN=Example Server Certificate/emailAddress=admin@example.org'
+eap_md5_init in =====
+eap_md5_process in =====
+eap_id_compose ===/home/ben/bc/wpa_setup/config/profile===
+eap_md5_process out =====
+eap_md5_process in =====
+my_decrypt ===/home/ben/bc/wpa_setup/config/prikey.pem===
+eap_md5_process out =====
+wlx70f11c0c2433: CTRL-EVENT-EAP-SUCCESS EAP authentication completed successfully
+wlx70f11c0c2433: WPA: Key negotiation completed with 20:dc:e6:61:1c:a6 [PTK=CCMP GTK=CCMP]
+wlx70f11c0c2433: CTRL-EVENT-CONNECTED - Connection to 20:dc:e6:61:1c:a6 completed [id=0 id_str=]
+Successfully initialized wpa_supplicant
+Failed to open config file '/home/ben/bc/wpa_setup/-B', error: No such file or directory
+Failed to read or parse configuration '/home/ben/bc/wpa_setup/-B'.
+Successfully initialized wpa_supplicant
+Failed to open config file '/home/ben/bc/wpa_setup/-B', error: No such file or directory
+Failed to read or parse configuration '/home/ben/bc/wpa_setup/-B'.
+Successfully initialized wpa_supplicant
+Failed to open config file '/home/ben/bc/wpa_setup/-B', error: No such file or directory
+Failed to read or parse configuration '/home/ben/bc/wpa_setup/-B'.
+Successfully initialized wpa_supplicant
+Failed to open config file '/home/ben/bc/wpa_setup/-B', error: No such file or directory
+Failed to read or parse configuration '/home/ben/bc/wpa_setup/-B'.
