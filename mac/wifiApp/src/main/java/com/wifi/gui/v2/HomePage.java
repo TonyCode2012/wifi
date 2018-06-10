@@ -242,7 +242,7 @@ public class HomePage {
         connectStatusL.setText("");
         // set connect status icon
         connectedIcon = new ImageIcon(rootPath + "/img/connected.png");
-        connectedOpaqueIcon = new ImageIcon(rootPath + "/img/connected_Opaque.png");
+        connectedOpaqueIcon = new ImageIcon(rootPath + "/img/connected_opaque.png");
         unconnectedIcon = new ImageIcon(rootPath + "/img/unconnected.png");
         connectingIcon = new ImageIcon(rootPath + "/img/connecting.png");
         double cWidth = connectedIcon.getIconWidth();
