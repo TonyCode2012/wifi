@@ -250,39 +250,36 @@ public class Register {
         }
         try {
             String wpaCmdPath = getWpaCmdPath();
-            String rootPath = System.getProperty("user.dir");
-            ObjectMapper objMapper = new ObjectMapper();
+            // copy profile to wpa configure directory
             String profilePath = rootPath.concat("/") + configSetting.getProfileFPath();
-//            String profilePath = rootPath.concat("/") + configSetting.getProfileWifiFPath();
-//            String profilePath = "/home/ben/bc/wpa_setup/config/profile";
-//            String profileComPath = rootPath.concat("/") + configSetting.getIdentityPath().concat("_").concat(companyId);
             String profileComPath = getIdentityPath();
             String profileTestPath = getTestIdentityPath();
-            File profile = new File(profilePath);
+            File profileUpload = new File(profilePath);
             File profileCompany = new File(profileComPath);
             File profileTest = new File(profileTestPath);
-            ObjectNode config = (ObjectNode) objMapper.readTree(profileCompany);
-//            config.remove("company");
-//            config.put("company","TELECOM");
-//            profileCompany.delete();
-//            profileCompany.createNewFile();
-//            OutputStreamWriter oStreamWriter = new OutputStreamWriter(new FileOutputStream(profileCompany), "utf-8");
-//            oStreamWriter.append(config.toString());
-//            oStreamWriter.close();
             if(testFlag) {
-                FileUtils.copyFile(profileTest,profile);
+                FileUtils.copyFile(profileTest,profileUpload);
             } else {
-                FileUtils.copyFile(profileCompany, profile);
+                FileUtils.copyFile(profileCompany, profileUpload);
             }
-            System.out.println("==============");
+            // copy public and private key to wpa configure directory
+            String wifiPubKeyPath = rootPath.concat("/") + configSetting.getWifiPubKeyPath();
+            String wifiPriKeyPath = rootPath.concat("/") + configSetting.getWifiPriKeyPath();
+            String wpaPubKeyPath = rootPath.concat("/") + configSetting.getWpaPubKeyPath();
+            String wpaPriKeyPath = rootPath.concat("/") + configSetting.getWpaPriKeyPath();
+            File wifiPubFile = new File(wifiPubKeyPath);
+            File wifiPriFile = new File(wifiPriKeyPath);
+            if(!wifiPubFile.exists() || !wifiPriFile.exists()) {
+                System.out.println("[ERROR] public key or private key not exists!");
+                return;
+            }
+            FileUtils.copyFile(wifiPubFile,new File(wpaPubKeyPath));
+            FileUtils.copyFile(wifiPriFile,new File(wpaPriKeyPath));
 
             new Thread(() -> {
                 setLaunchPage();
                 // run wpa_supplicant as a daemon process
                 try {
-//                    ProcessBuilder pb = new ProcessBuilder(
-//                            wpaCmdPath+"/testConnect.sh"
-//                    );
                     ProcessBuilder pb = new ProcessBuilder(
                             "wlan.sh",
                             "connect",
@@ -370,30 +367,6 @@ public class Register {
                 }
             }).start();
 
-//            sleep(3000);
-            // run wpa_cli status to check network connection status
-//            new Thread(() -> {
-//                String line;
-//                try {
-//                    while(!breakNetwork) {
-//                        ProcessBuilder pb = new ProcessBuilder(
-//                                wpaCmdPath + "/testStatus.sh"
-//                        );
-//                        pb.redirectErrorStream(true);
-//                        Process process = pb.start();
-//                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//                        StringBuilder sb = new StringBuilder();
-//                        while ((line = reader.readLine()) != null) {
-//                            sb.append(line);
-//                        }
-//                        System.out.println(sb.toString());
-//                        sleep(3000);
-//                    }
-//                    System.out.println("Break network connection!");
-//                } catch (IOException|InterruptedException ex) {
-//                    System.out.println(ex.getMessage());
-//                }
-//            }).start();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
@@ -425,45 +398,6 @@ public class Register {
             FileOutputStream ifos = new FileOutputStream(identityFile);
             ifos.write(profileData.toString().getBytes());
             ifos.close();
-            /*
-            ProcessBuilder pb = new ProcessBuilder(
-                    "curl",
-                    "-s",
-                    "-X POST",
-                    configSetting.getRegServerUrl(),
-                    "-H",
-                    "cache-control: no-cache",
-                    "-H",
-                    "content-type: application/json",
-                    "-d",
-                    profileData.toString(),
-                    "-k"
-            );
-            
-            
-
-            pb.redirectErrorStream(true);
-//            pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
-//            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-//            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
-
-            Process process = pb.start();
-            if (process != null) {
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line).append("\n");
-                }
-                String result = sb.toString();
-                process.destroy();
-                if(result.contains("company")) {
-                    return true;
-                }
-//                process.waitFor();
-            } else {
-                System.out.println("There is no PID found.");
-            }*/
         } catch (IOException exp){
             System.out.println(exp.getMessage());
             return false;
@@ -478,29 +412,34 @@ public class Register {
         try {
             File prikeyfile = new File(getPrikeyPath());
             File pubkeyfile = new File(getPubkeyPath());
-            boolean flag = true;
+            boolean isKeyExist = true;
             if(!prikeyfile.exists()){
                 if(!prikeyfile.createNewFile()) {
                     System.out.println("[ERROR] create private key file failed!");
                     return "";
                 }
-                flag = false;
+                isKeyExist = false;
             }
             if(!pubkeyfile.exists()) {
                 if(!pubkeyfile.createNewFile()) {
                     System.out.println("[ERROR] create public key file failed!");
                     return "";
                 }
-                flag = false;
+                isKeyExist = false;
             }
-            if(flag) {
-                InputStreamReader isr = new InputStreamReader(new FileInputStream(pubkeyfile),"utf-8");
-                Long filelength = pubkeyfile.length();
-                char[] cbuf = new char[filelength.intValue()];
-                isr.read(cbuf);
-                pubKey_str.append(cbuf);
+            if(isKeyExist && (pubkeyfile.length() != 0 && prikeyfile.length() != 0)) {
+                InputStreamReader pubisr = new InputStreamReader(new FileInputStream(pubkeyfile),"utf-8");
+                InputStreamReader priisr = new InputStreamReader(new FileInputStream(prikeyfile),"utf-8");
+                Long pubFileLen = pubkeyfile.length();
+                Long priFIleLen = prikeyfile.length();
+                char[] pubKeyBuf = new char[pubFileLen.intValue()];
+                char[] priKeyBuf = new char[priFIleLen.intValue()];
+                pubisr.read(pubKeyBuf);
+                priisr.read(priKeyBuf);
+                pubKey_str.append(pubKeyBuf);
+                priKey_str.append(priKeyBuf);
 
-                System.out.println("filelenght is:"+filelength+",readed length:"+cbuf.length);
+                System.out.println("filelenght is:" + pubFileLen + ",readed length:" + pubKeyBuf.length);
             } else {
                 pubKey_str.append("-----BEGIN PUBLIC KEY-----\n");
                 priKey_str.append("-----BEGIN RSA PRIVATE KEY-----\n");

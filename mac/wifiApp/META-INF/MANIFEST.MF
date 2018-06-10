@@ -3,4 +3,4 @@ Archiver-Version: Plexus Archiver
 Built-By: yaoz
 Created-By: Apache Maven 3.3.9
 Build-Jdk: 1.8.0_91
-Main-class: com.wifi.gui.index
+Main-class: com.wifi.gui.v2.Boost

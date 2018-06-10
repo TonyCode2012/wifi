@@ -47,6 +47,22 @@ public class configSetting {
         return getProperty("fontSize");
     }
 
+    public static String getWifiPubKeyPath() {
+        return getProperty("wifiPubKeyPath");
+    }
+
+    public static String getWifiPriKeyPath() {
+        return getProperty("wifiPriKeyPath");
+    }
+
+    public static String getWpaPubKeyPath() {
+        return getProperty("wpaPubKeyPath");
+    }
+
+    public static String getWpaPriKeyPath() {
+        return getProperty("wpaPriKeyPath");
+    }
+
     public static String getProperty(String key) {
         String configure = "";
         try {

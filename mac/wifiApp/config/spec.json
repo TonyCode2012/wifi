@@ -1,6 +1,10 @@
 {
   "identityFPath": "config/.identity",
   "profileWifiFPath": "config/profile",
+  "wifiPubKeyPath": "config/pubkey.pem",
+  "wifiPriKeyPath": "config/prikey.pem",
+  "wpaPubKeyPath": "wpa_setup/config/pubkey.pem",
+  "wpaPriKeyPath": "wpa_setup/config/prikey.pem",
   "profileFPath": "wpa_setup/config/profile",
   "wpaCmdPath": "wpa_setup",
   "priKeyFPath": "config/prikey.pem",
