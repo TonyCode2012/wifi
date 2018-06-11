@@ -46,6 +46,8 @@ public class Register {
     private JButton testBackBtn;
     private JTextArea testPubKeyText;
     private JButton delProfileBtn;
+    private JTextField verifyCodeText;
+    private JButton getVCodeBtn;
 
     private JFrame fJFrame;
     private HomePage preHomePage;
@@ -231,6 +233,16 @@ public class Register {
                 testProfile.delete();
                 nameText.setText("");
                 phoneText.setText("");
+            }
+        });
+        getVCodeBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Thread(() -> {
+                    for(int i=59;i>=0;i--){
+
+                    }
+                }).start();
             }
         });
     }
