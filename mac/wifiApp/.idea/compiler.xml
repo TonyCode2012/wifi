@@ -9,8 +9,5 @@
         <module name="wifiApp" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="wifiApp" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
