@@ -288,17 +288,15 @@ public class Register {
                             wpaCmdPath + "/config/wpa.conf",
                             wpaCmdPath + "/wpa.log"
                     );
+//                    ProcessBuilder pb = new ProcessBuilder(
+//                            "testConnect.sh"
+//                    );
                     pb.redirectErrorStream(true);
-                    ProcessBuilder pbFailed = new ProcessBuilder(
-                            wpaCmdPath+"/testConnectFailed.sh"
-                    );
-                    pbFailed.redirectErrorStream(true);
 //                    pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
 //                    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 //                    pb.redirectError(ProcessBuilder.Redirect.INHERIT);
 
                     Process process = pb.start();
-//                    process = testFlag ? pbFailed.start() : pb.start();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String line;
                     StringBuilder sb = new StringBuilder();
@@ -315,6 +313,8 @@ public class Register {
                     if(retStr.contains("main connect return code")) {
                         String retStrArry[] = retStr.split(" ");
                         rStatus = Integer.parseInt(retStrArry[retStrArry.length-1]);
+                    } else {
+                        rStatus = 404;
                     }
                     switch (rStatus) {
                         case 1:
@@ -363,6 +363,7 @@ public class Register {
                     }
                     preHomePage.setRetStatus(rStatus);
                 } catch (IOException|InterruptedException e) {
+                    preHomePage.setRetStatus(404);
                     System.out.println(e.getMessage());
                 }
             }).start();

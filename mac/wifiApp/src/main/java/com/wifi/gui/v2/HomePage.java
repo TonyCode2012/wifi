@@ -43,7 +43,6 @@ public class HomePage {
     private JLabel firstWifiLabel;
     private JButton breakConnBtn;
     private JLabel connectStatusL;
-    private JLabel connectText;
     private JLabel ad1Label;
     private JLabel ad2Label;
     private JLabel ad3Label;
@@ -93,11 +92,9 @@ public class HomePage {
                 String connStr = "正在连接";
                 connectStatusL.setVisible(true);
                 connectStatusL.setText(connStr);
-//                connectText.setVisible(true);
-//                connectText.setText(connStr);
                 while(retStatus == -1) {
-                    JLabel label = launchLabels[index];
-                    label.setVisible(true);
+                    JLabel llabel = launchLabels[index];
+                    llabel.setVisible(true);
                     connectStatusL.setIcon(connStatusIcon);
                     Icon icon0 = adLabels[0].getIcon();
                     for(int i=0;i<adLabels.length;i++) {
@@ -109,7 +106,7 @@ public class HomePage {
                     }
                     connStatusIcon = (connStatusIcon == connectingIcon ? connectedOpaqueIcon : connectingIcon);
                     sleep(600);
-                    label.setVisible(false);
+                    llabel.setVisible(false);
                     index = (++index) % 4;
                 }
                 if(retStatus == 0) {
@@ -119,14 +116,12 @@ public class HomePage {
                     launchLabels[3].setVisible(true);
                     connectStatusL.setIcon(connectedIcon);
                     connectStatusL.setText("已连接");
-//                    connectText.setText("已连接");
                 } else {
                     launchTipLabel.setText("连接失败!");
                     unLWifilabel.setIcon(unLaunchIcon);
                     unLWifilabel.setVisible(true);
                     connectStatusL.setIcon(unconnectedIcon);
                     connectStatusL.setText("未连接");
-//                    connectText.setText("未连接");
                 }
 
             } catch (InterruptedException ex) {
@@ -185,7 +180,6 @@ public class HomePage {
         fourthWifiLabel.setVisible(false);
         unLWifilabel.setVisible(false);
         connectStatusL.setVisible(false);
-        connectText.setVisible(false);
         breakConnBtn.setVisible(false);
         nextRegister.setBreakNetwork(true);
         registerBtn.setVisible(true);
@@ -196,8 +190,9 @@ public class HomePage {
         int width = rootPanel.getWidth();
         int height = rootPanel.getHeight();
         // set advertisement icon
-        double raRatio = 0.15;
         JLabel adLabels[] = {ad1Label,ad2Label,ad3Label,ad4Label,ad5Label};
+//        double raRatio = 0.15;
+        double raRatio = (1 - 0.35) / adLabels.length;
         for(int i=0;i<adLabels.length;i++){
             String iconPath = rootPath + "/img/tcn"+(i+1)+".jpg";
             JLabel tmpLabel = adLabels[i];
@@ -263,8 +258,6 @@ public class HomePage {
         this.rootPanel.setSize(360,500);
         underPanel.revalidate();
         breakConnBtn.setVisible(false);
-        connectText.setText("");
-        connectText.setVisible(false);
         connectStatusL.setText("");
         connectStatusL.setVisible(false);
         unLWifilabel.setText("");
