@@ -11,5 +11,5 @@
   "pubKeyFPath": "config/pubkey.pem",
   "wpaConfFpath": "config/wpa.conf",
   "regServerUrl": "https://120.27.237.152:5005/user/create",
-  "fontSize": 15
+  "fontSize": 18
 }

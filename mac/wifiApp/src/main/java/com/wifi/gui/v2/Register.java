@@ -3,6 +3,7 @@ package com.wifi.gui.v2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sun.javafx.scene.layout.region.Margins;
 import com.wifi.configSetting;
 import org.apache.commons.io.FileUtils;
 import sun.misc.BASE64Encoder;
@@ -12,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.security.*;
+
+import static java.lang.Thread.sleep;
 
 
 public class Register {
@@ -64,7 +67,6 @@ public class Register {
         phoneText.setEnabled(false);
         regTabbedPane.remove(1);
         regTabbedPane.remove(1);
-
     }
 
     public Register() {
@@ -239,8 +241,17 @@ public class Register {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new Thread(() -> {
-                    for(int i=59;i>=0;i--){
-
+                    try {
+                        getVCodeBtn.setEnabled(false);
+                        getVCodeBtn.setText("60s");
+                        sleep(1000);
+                        for (int i = 59; i >= 0; i--) {
+                            getVCodeBtn.setText(Integer.toString(i).concat("s"));
+                            sleep(1000);
+                        }
+                        getVCodeBtn.setText("获取");
+                    } catch (InterruptedException ex) {
+                        System.out.println(ex.getMessage());
                     }
                 }).start();
             }
