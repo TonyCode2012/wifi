@@ -188,10 +188,8 @@ public class HomePage {
     private void setLaunchImgStatus() {
         // get root panel width and height
         int width = rootPanel.getWidth();
-        int height = rootPanel.getHeight();
         // set advertisement icon
         JLabel adLabels[] = {ad1Label,ad2Label,ad3Label,ad4Label,ad5Label};
-//        double raRatio = 0.15;
         double raRatio = (1 - 0.35) / adLabels.length;
         for(int i=0;i<adLabels.length;i++){
             String iconPath = rootPath + "/img/tcn"+(i+1)+".jpg";

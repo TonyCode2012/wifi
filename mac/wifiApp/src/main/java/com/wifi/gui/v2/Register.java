@@ -380,7 +380,7 @@ public class Register {
                             System.out.println("Launch failed! Error: Parameter error!");
                             break;
                         default:
-                            System.out.println("Launch failed! Error: Unknown return status code!");
+                            System.out.println("Launch failed! Error: Unknown return status code("+rStatus+")!");
                             break;
 
                     }
