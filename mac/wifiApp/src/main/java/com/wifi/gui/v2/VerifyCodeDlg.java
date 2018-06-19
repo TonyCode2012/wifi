@@ -68,17 +68,17 @@ public class VerifyCodeDlg extends JDialog {
                     objNode.put("pin",pinCode);
                     writer.write(objNode.toString());
                     writer.close();
-                    ProcessBuilder pb = new ProcessBuilder(
-                            "wlan.sh",
-                            "connect",
-                            rootPath.concat("/").concat(configSetting.getWpaPriKeyPath()),
-                            pinCodePath,
-                            rootPath.concat("/").concat(configSetting.getWpaConfPath()),
-                            rootPath.concat("/wpa_setup/wpa.log")
-                    );
 //                    ProcessBuilder pb = new ProcessBuilder(
-//                            rootPath + "/wpa_setup/testPinCode.sh"
+//                            "wlan.sh",
+//                            "connect",
+//                            rootPath.concat("/").concat(configSetting.getWpaPriKeyPath()),
+//                            pinCodePath,
+//                            rootPath.concat("/").concat(configSetting.getWpaConfPath()),
+//                            rootPath.concat("/wpa_setup/wpa.log")
 //                    );
+                    ProcessBuilder pb = new ProcessBuilder(
+                            rootPath + "/wpa_setup/testPinCode.sh"
+                    );
                     Process process = pb.start();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String line;

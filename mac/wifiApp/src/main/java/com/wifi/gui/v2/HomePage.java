@@ -48,26 +48,45 @@ public class HomePage {
     private JLabel ad3Label;
     private JLabel ad4Label;
     private JLabel ad5Label;
-    private JLabel unLWifilabel;
+    private JLabel ssidLabel;
 
     private JFrame fJFrame;
     private Register nextRegister;
     private Launch nextLaunch;
     private String rootPath = System.getProperty("user.dir");
     private int retStatus = -1;
+    private ImageIcon launchIcon;
     private ImageIcon unLaunchIcon;
     private ImageIcon connectedIcon;
     private ImageIcon connectedOpaqueIcon;
     private ImageIcon unconnectedIcon;
     private ImageIcon connectingIcon;
-    private Thread connectThread;
     private Thread connStatusImgThread;
     private boolean networkConnected;
-    private ImageIcon adIcons[] = new ImageIcon[6];
 
     public void setLaunchImg() {
         // reset launch img status
         resetLaunchImgStatus();
+
+        // set recognised ssid
+        Color backColor = rootPanel.getBackground();
+        int backRed = backColor.getRed();
+        int backGreen = backColor.getGreen();
+        int backBlue = backColor.getBlue();
+        new Thread(() -> {
+            try {
+                int j=backGreen,k=backBlue;
+                for(int i=backRed;i>0&&retStatus==-1;i-=3){
+                    j-=3;k-=3;
+                    if(j < 0) j=0;
+                    if(k < 0) k=0;
+                    ssidLabel.setForeground(new Color(i,j,k));
+                    sleep(100);
+                }
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        }).start();
 
         // set break connection button to visible
         breakConnBtn.setVisible(true);
@@ -109,6 +128,7 @@ public class HomePage {
                     llabel.setVisible(false);
                     index = (++index) % 4;
                 }
+                ssidLabel.setForeground(Color.black);
                 if(retStatus == 0) {
                     setBreakdownStatus();
                 } else if(retStatus == 64) {
@@ -118,8 +138,8 @@ public class HomePage {
                     connectStatusL.setText("已连接");
                 } else {
                     launchTipLabel.setText("连接失败!");
-                    unLWifilabel.setIcon(unLaunchIcon);
-                    unLWifilabel.setVisible(true);
+                    launchLabels[3].setIcon(unLaunchIcon);
+                    launchLabels[3].setVisible(true);
                     connectStatusL.setIcon(unconnectedIcon);
                     connectStatusL.setText("未连接");
                 }
@@ -171,14 +191,14 @@ public class HomePage {
         secondWifiLabel.setVisible(false);
         thirdWifiLabel.setVisible(false);
         fourthWifiLabel.setVisible(false);
-        unLWifilabel.setVisible(false);
+        fourthWifiLabel.setIcon(launchIcon);
+        ssidLabel.setForeground(rootPanel.getBackground());
         setRetStatus(-1);
     }
 
     private void setBreakdownStatus() {
         launchTipLabel.setVisible(false);
         fourthWifiLabel.setVisible(false);
-        unLWifilabel.setVisible(false);
         connectStatusL.setVisible(false);
         breakConnBtn.setVisible(false);
         nextRegister.setBreakNetwork(true);
@@ -226,6 +246,7 @@ public class HomePage {
             wifiIcon.setImage(wifiIcon.getImage().getScaledInstance(launchIconW, launchIconH, Image.SCALE_DEFAULT));
             wifiLabel.setIcon(wifiIcon);
         }
+        launchIcon = launchIcon4;
         unLaunchIcon = new ImageIcon(rootPath + "/img/unLaunch.png");
         unLaunchIcon.setImage(unLaunchIcon.getImage().getScaledInstance(launchIconW, launchIconH, Image.SCALE_DEFAULT));
         // set visibility
@@ -258,12 +279,13 @@ public class HomePage {
         breakConnBtn.setVisible(false);
         connectStatusL.setText("");
         connectStatusL.setVisible(false);
-        unLWifilabel.setText("");
-        unLWifilabel.setVisible(false);
         networkConnected = false;
         // remove new panel
         pageHomeTabbedPane.remove(1);
         setLaunchImgStatus();
+        // set recognise ssid label text to space
+        ssidLabel.setText("blockchain");
+        ssidLabel.setForeground(rootPanel.getBackground());
     }
 
     public HomePage() {
