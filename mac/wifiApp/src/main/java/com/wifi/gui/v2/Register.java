@@ -3,7 +3,6 @@ package com.wifi.gui.v2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.sun.javafx.scene.layout.region.Margins;
 import com.wifi.configSetting;
 import org.apache.commons.io.FileUtils;
 import sun.misc.BASE64Encoder;
@@ -50,7 +49,8 @@ public class Register {
     private JTextArea testPubKeyText;
     private JButton delProfileBtn;
     private JTextField verifyCodeText;
-    private JButton getVCodeBtn;
+    private JButton verifyCodeBtn;
+    private JLabel verifyCodeLabel;
 
     private JFrame fJFrame;
     private HomePage preHomePage;
@@ -60,6 +60,7 @@ public class Register {
     private ObjectMapper objMapper = new ObjectMapper();
     private boolean breakNetwork = false;
     private String infoPanelTitle;
+    private int connStatusCode;
 
 
     public void _init() {
@@ -67,6 +68,7 @@ public class Register {
         phoneText.setEnabled(false);
         regTabbedPane.remove(1);
         regTabbedPane.remove(1);
+        setVCUnvisible(false);
     }
 
     public Register() {
@@ -237,19 +239,19 @@ public class Register {
                 phoneText.setText("");
             }
         });
-        getVCodeBtn.addActionListener(new ActionListener() {
+        verifyCodeBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new Thread(() -> {
                     try {
-                        getVCodeBtn.setEnabled(false);
-                        getVCodeBtn.setText("60s");
+                        verifyCodeBtn.setEnabled(false);
+                        verifyCodeBtn.setText("60s");
                         sleep(1000);
                         for (int i = 59; i >= 0; i--) {
-                            getVCodeBtn.setText(Integer.toString(i).concat("s"));
+                            verifyCodeBtn.setText(Integer.toString(i).concat("s"));
                             sleep(1000);
                         }
-                        getVCodeBtn.setText("获取");
+                        verifyCodeBtn.setText("获取");
                     } catch (InterruptedException ex) {
                         System.out.println(ex.getMessage());
                     }
@@ -299,6 +301,7 @@ public class Register {
             FileUtils.copyFile(wifiPubFile,new File(wpaPubKeyPath));
             FileUtils.copyFile(wifiPriFile,new File(wpaPriKeyPath));
 
+            Register thisRegister = this;
             new Thread(() -> {
                 setLaunchPage();
                 // run wpa_supplicant as a daemon process
@@ -312,7 +315,7 @@ public class Register {
                             wpaCmdPath + "/wpa.log"
                     );
 //                    ProcessBuilder pb = new ProcessBuilder(
-//                            "testConnect.sh"
+//                            rootPath + "/wpa_setup/testConnect.sh"
 //                    );
                     pb.redirectErrorStream(true);
 //                    pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
@@ -332,14 +335,24 @@ public class Register {
                     }
                     process.waitFor();
                     String retStr = sb.toString();
-                    int rStatus = -1;
                     if(retStr.contains("main connect return code")) {
                         String retStrArry[] = retStr.split(" ");
-                        rStatus = Integer.parseInt(retStrArry[retStrArry.length-1]);
+                        connStatusCode = Integer.parseInt(retStrArry[retStrArry.length-1]);
                     } else {
-                        rStatus = 404;
+                        connStatusCode = 404;
                     }
-                    switch (rStatus) {
+                    // if return code is 3,pop up a dialog to require pin code.
+                    if(connStatusCode == 3) {
+                        System.out.println("Register successfully,please input pin code.");
+                        // if register successfully show login page
+                        VerifyCodeDlg vcDlg = new VerifyCodeDlg();
+                        vcDlg.setRegisterPage(thisRegister);
+                        vcDlg.setLocation(650,250);
+                        vcDlg.pack();
+                        vcDlg.setVisible(true);
+                        while(connStatusCode == 3) {}
+                    }
+                    switch (connStatusCode) {
                         case 1:
                             System.out.println("Launch failed! Error: User doesn't exist!");
                             break;
@@ -379,12 +392,18 @@ public class Register {
                         case 72:
                             System.out.println("Launch failed! Error: Parameter error!");
                             break;
+                        case 303:
+                            System.out.println("Launch failed! Error: please input pin code!");
+                            break;
+                        case 304:
+                            System.out.println("Launch failed! Input pin code time out!");
+                            break;
                         default:
-                            System.out.println("Launch failed! Error: Unknown return status code("+rStatus+")!");
+                            System.out.println("Launch failed! Error: Unknown return status code("+connStatusCode+")!");
                             break;
 
                     }
-                    preHomePage.setRetStatus(rStatus);
+                    preHomePage.setRetStatus(connStatusCode);
                 } catch (IOException|InterruptedException e) {
                     preHomePage.setRetStatus(404);
                     System.out.println(e.getMessage());
@@ -533,6 +552,7 @@ public class Register {
             case "苹果联盟": companyId="APPLE";break;
         }
         try {
+//            setVCUnvisible(false);
             File file = new File(getIdentityPath());
             if (file.exists()) {
                 JsonNode jsonNode = objMapper.readTree(file);
@@ -543,6 +563,7 @@ public class Register {
             } else {
                 nameText.setText("");
                 phoneText.setText("");
+//                setVCUnvisible(true);
             }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -551,6 +572,12 @@ public class Register {
         regTabbedPane.remove(0);
         regTabbedPane.add(infoPanel);
         regTabbedPane.setTitleAt(0,infoPanelTitle);
+    }
+
+    private void setVCUnvisible(boolean visible) {
+        verifyCodeBtn.setVisible(visible);
+        verifyCodeLabel.setVisible(visible);
+        verifyCodeText.setVisible(visible);
     }
 
     private String getIdentityPath() {
@@ -594,6 +621,10 @@ public class Register {
         regTabbedPane.remove(0);
         regTabbedPane.add(regPanel);
         regTabbedPane.setTitleAt(0,"登录");
+    }
+
+    public void setConnStatusCode(int connStatusCode) {
+        this.connStatusCode = connStatusCode;
     }
 
     private void createUIComponents() {

@@ -11,6 +11,8 @@ REPLY=""
 WPA_MAX_RETRY_COUNT=60
 DHCP_MAX_RETRY_COUNT=60
 
+CODE_REGISTER_SUCCESS=3
+
 CODE_SUCCESS=64	# success
 CODE_ASSOCAITE_FAILED=65 	# associate failed
 CODE_HDCP_FAILED=66 	# dhcp failed
@@ -178,6 +180,7 @@ function connect_wlan {
 			index=`$basedir/wpa_cli get eap_info | sed '/^code=/!d;s/.*=//'`
 			code=`$basedir/wpa_cli get eap_info | sed '/^code=/!d;s/.*=//'`
 			if [ $index -ne 0 -a $code -ne 0 ]; then
+				terminate_supplicant
 				return $code
 			fi
 				
@@ -229,6 +232,11 @@ if [[ $1 == "connect" ]]; then
 	if [ ! -f $PRIKEY -o  ! -f $IDFILE -o ! -f $CFGFILE -o -z "$LOGFILE" ];then
 		r=$CODE_PARAM_ERROR
 	else
+		# remove log file
+		if [ -f $LOGFILE ]; then
+			rm $LOGFILE
+		fi
+		
 		# connect wlan
 		connect_wlan
 		r=$?

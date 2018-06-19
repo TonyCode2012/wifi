@@ -31,8 +31,8 @@ public class configSetting {
         return getProperty("priKeyFPath");
     }
 
-    public static String getWpaConfFPath() {
-        return getProperty("wpaConfFPath");
+    public static String getWifiConfPath() {
+        return getProperty("wifiConfPath");
     }
 
     public static String getRegServerUrl() {
@@ -61,6 +61,14 @@ public class configSetting {
 
     public static String getWpaPriKeyPath() {
         return getProperty("wpaPriKeyPath");
+    }
+
+    public static String getWpaConfPath() {
+        return getProperty("wpaConfPath");
+    }
+
+    public static String getWpaPinCodePath() {
+        return getProperty("wpaPinCodePath");
     }
 
     public static String getProperty(String key) {

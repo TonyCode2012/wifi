@@ -27,3 +27,22 @@
 		CODE_NOT_ROOT=71	# root is required
 		CODE_PARAM_ERROR=72	# wrong parameters
 	
+4. v0.5 2018-06-16
+	a. how to run,
+	1). register.
+	./wlan.sh connect /home/ben/bc/wpa_setup/config/prikey.pem /home/ben/bc/wpa_setup/config/profile /home/ben/bc/wpa_setup/config/wpa.conf /home/ben/wpa.log
+	return values:
+		"3": register succesfully, please input pin code and goto step 2)
+		"others": failed
+		
+	2). verify pin code and login: ./wlan.sh connect /home/ben/bc/wpa_setup/config/prikey.pem /home/ben/bc/wpa_setup/config/pin /home/ben/bc/wpa_setup/config/wpa.conf /home/ben/wpa.log
+	
+	3). verify profile and login
+	./wlan.sh connect /home/ben/bc/wpa_setup/config/prikey.pem /home/ben/bc/wpa_setup/config/profile /home/ben/bc/wpa_setup/config/wpa.conf /home/ben/wpa.log
+		"64": verify succesfully
+		"others": failed	
+		
+	b. add one return code 
+		CODE_REGISTER_SUCCESS=3
+		
+	c. remove log file before writing new lines
