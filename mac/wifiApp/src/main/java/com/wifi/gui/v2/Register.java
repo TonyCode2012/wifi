@@ -306,17 +306,17 @@ public class Register {
                 setLaunchPage();
                 // run wpa_supplicant as a daemon process
                 try {
-//                    ProcessBuilder pb = new ProcessBuilder(
-//                            "wlan.sh",
-//                            "connect",
-//                            wpaCmdPath + "/config/prikey.pem",
-//                            wpaCmdPath + "/config/profile",
-//                            wpaCmdPath + "/config/wpa.conf",
-//                            wpaCmdPath + "/wpa.log"
-//                    );
                     ProcessBuilder pb = new ProcessBuilder(
-                            rootPath + "/wpa_setup/testConnect.sh"
+                            "wlan.sh",
+                            "connect",
+                            wpaCmdPath + "/config/prikey.pem",
+                            wpaCmdPath + "/config/profile",
+                            wpaCmdPath + "/config/wpa.conf",
+                            wpaCmdPath + "/wpa.log"
                     );
+//                    ProcessBuilder pb = new ProcessBuilder(
+//                            rootPath + "/wpa_setup/testConnect.sh"
+//                    );
                     pb.redirectErrorStream(true);
 //                    pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
 //                    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -342,7 +342,7 @@ public class Register {
                         connStatusCode = 404;
                     }
                     // if return code is 3,pop up a dialog to require pin code.
-                    if(connStatusCode == 3) {
+                    if(connStatusCode == 9) {
                         System.out.println("Register successfully,please input pin code.");
                         // if register successfully show login page
                         VerifyCodeDlg vcDlg = new VerifyCodeDlg();
@@ -350,7 +350,7 @@ public class Register {
                         vcDlg.setLocation(650,250);
                         vcDlg.pack();
                         vcDlg.setVisible(true);
-                        while(connStatusCode == 3) {}
+                        while(connStatusCode == 9) { sleep(100);}
                     }
                     switch (connStatusCode) {
                         case 1:

@@ -69,6 +69,7 @@ public class HomePage {
         resetLaunchImgStatus();
 
         // set recognised ssid
+        ssidLabel.setVisible(true);
         Color backColor = rootPanel.getBackground();
         int backRed = backColor.getRed();
         int backGreen = backColor.getGreen();
@@ -135,13 +136,13 @@ public class HomePage {
                     launchTipLabel.setText("连接成功!");
                     launchLabels[3].setVisible(true);
                     connectStatusL.setIcon(connectedIcon);
-                    connectStatusL.setText("已连接");
+                    connectStatusL.setText("已连接   ");
                 } else {
                     launchTipLabel.setText("连接失败!");
                     launchLabels[3].setIcon(unLaunchIcon);
                     launchLabels[3].setVisible(true);
                     connectStatusL.setIcon(unconnectedIcon);
-                    connectStatusL.setText("未连接");
+                    connectStatusL.setText("未连接   ");
                 }
 
             } catch (InterruptedException ex) {
@@ -203,6 +204,8 @@ public class HomePage {
         breakConnBtn.setVisible(false);
         nextRegister.setBreakNetwork(true);
         registerBtn.setVisible(true);
+        ssidLabel.setVisible(false);
+//        ssidLabel.setForeground(rootPanel.getBackground());
     }
 
     private void setLaunchImgStatus() {
