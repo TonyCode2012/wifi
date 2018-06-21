@@ -1,4 +1,5 @@
 .idea
 target
+META-INF
 .DS_Store
 wpa_setup/.svn
