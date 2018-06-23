@@ -306,17 +306,17 @@ public class Register {
                 setLaunchPage();
                 // run wpa_supplicant as a daemon process
                 try {
-                    ProcessBuilder pb = new ProcessBuilder(
-                            "wlan.sh",
-                            "connect",
-                            wpaCmdPath + "/config/prikey.pem",
-                            wpaCmdPath + "/config/profile",
-                            wpaCmdPath + "/config/wpa.conf",
-                            wpaCmdPath + "/wpa.log"
-                    );
 //                    ProcessBuilder pb = new ProcessBuilder(
-//                            rootPath + "/wpa_setup/testConnect.sh"
+//                            "wlan.sh",
+//                            "connect",
+//                            wpaCmdPath + "/config/prikey.pem",
+//                            wpaCmdPath + "/config/profile",
+//                            wpaCmdPath + "/config/wpa.conf",
+//                            wpaCmdPath + "/wpa.log"
 //                    );
+                    ProcessBuilder pb = new ProcessBuilder(
+                            rootPath + "/wpa_setup/testConnect.sh"
+                    );
                     pb.redirectErrorStream(true);
 //                    pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
 //                    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
