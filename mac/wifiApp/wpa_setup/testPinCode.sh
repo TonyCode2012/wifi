@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sleep 5
+sleep 3
 echo "main connect return code 64"

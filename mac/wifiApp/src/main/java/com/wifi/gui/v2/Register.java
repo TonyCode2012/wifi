@@ -350,7 +350,7 @@ public class Register {
                         vcDlg.setLocation(650,250);
                         vcDlg.pack();
                         vcDlg.setVisible(true);
-                        while(connStatusCode == 9) { sleep(100);}
+                        while(connStatusCode == 9) { sleep(10); }
                     }
                     switch (connStatusCode) {
                         case 1:
