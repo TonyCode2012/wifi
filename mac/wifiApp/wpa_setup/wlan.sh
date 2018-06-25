@@ -177,7 +177,7 @@ function connect_wlan {
 			echo "All authentication completed"
 			break
 		else
-			index=`$basedir/wpa_cli get eap_info | sed '/^code=/!d;s/.*=//'`
+			index=`$basedir/wpa_cli get eap_info | sed '/^index=/!d;s/.*=//'`
 			code=`$basedir/wpa_cli get eap_info | sed '/^code=/!d;s/.*=//'`
 			if [ $index -ne 0 -a $code -ne 0 ]; then
 				terminate_supplicant
@@ -256,6 +256,14 @@ if [[ $1 == "connect" ]]; then
 fi	
 
 if [[ $1 == "disconnect" ]]; then
+	# test network
+	r=$CODE_SUCCESS
+	terminate_supplicant
+	echo "main disconnect return code " $r
+	exit $r
+fi
+
+if [[ $1 == "close_account" ]]; then
 	# test network
 	r=$CODE_SUCCESS
 	terminate_supplicant
