@@ -48,9 +48,6 @@ public class Register {
     private JButton testBackBtn;
     private JTextArea testPubKeyText;
     private JButton delProfileBtn;
-    private JTextField verifyCodeText;
-    private JButton verifyCodeBtn;
-    private JLabel verifyCodeLabel;
 
     private JFrame fJFrame;
     private HomePage preHomePage;
@@ -68,7 +65,6 @@ public class Register {
         phoneText.setEnabled(false);
         regTabbedPane.remove(1);
         regTabbedPane.remove(1);
-        setVCUnvisible(false);
     }
 
     public Register() {
@@ -239,25 +235,6 @@ public class Register {
                 phoneText.setText("");
             }
         });
-        verifyCodeBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Thread(() -> {
-                    try {
-                        verifyCodeBtn.setEnabled(false);
-                        verifyCodeBtn.setText("60s");
-                        sleep(1000);
-                        for (int i = 59; i >= 0; i--) {
-                            verifyCodeBtn.setText(Integer.toString(i).concat("s"));
-                            sleep(1000);
-                        }
-                        verifyCodeBtn.setText("获取");
-                    } catch (InterruptedException ex) {
-                        System.out.println(ex.getMessage());
-                    }
-                }).start();
-            }
-        });
     }
 
     private void setLaunchPage() {
@@ -306,17 +283,17 @@ public class Register {
                 setLaunchPage();
                 // run wpa_supplicant as a daemon process
                 try {
-                    ProcessBuilder pb = new ProcessBuilder(
-                            "wlan.sh",
-                            "connect",
-                            wpaCmdPath + "/config/prikey.pem",
-                            wpaCmdPath + "/config/profile",
-                            wpaCmdPath + "/config/wpa.conf",
-                            wpaCmdPath + "/wpa.log"
-                    );
 //                    ProcessBuilder pb = new ProcessBuilder(
-//                            rootPath + "/wpa_setup/testConnect.sh"
+//                            "wlan.sh",
+//                            "connect",
+//                            wpaCmdPath + "/config/prikey.pem",
+//                            wpaCmdPath + "/config/profile",
+//                            wpaCmdPath + "/config/wpa.conf",
+//                            wpaCmdPath + "/wpa.log"
 //                    );
+                    ProcessBuilder pb = new ProcessBuilder(
+                            rootPath + "/wpa_setup/testConnect.sh"
+                    );
                     pb.redirectErrorStream(true);
 //                    pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
 //                    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -354,52 +331,217 @@ public class Register {
                     }
                     switch (connStatusCode) {
                         case 1:
-                            System.out.println("Launch failed! Error: User doesn't exist!");
+                            System.out.println("[ERROR] Launch failed! User doesn't exist!");
                             break;
                         case 2:
-                            System.out.println("Launch failed! Error: User info doesn't match!");
+                            System.out.println("[ERROR] Launch failed! User info doesn't match!");
                             break;
                         case 4:
-                            System.out.println("Launch failed! Error: Phone num authentication failed!");
+                            System.out.println("[ERROR] Launch failed! Phone num authentication failed!");
                             break;
                         case 5:
-                            System.out.println("Launch failed! Error: User account registration failed!!");
+                            System.out.println("[ERROR] Launch failed! User account registration failed!!");
+                            break;
+                        case 8:
+                            System.out.println("[ERROR] Launch failed! phone verify failed!");
+                            break;
+                        case 9:
+                            System.out.println("[INFO] phone sending service successfully!");
+                            break;
+                        case 10:
+                            System.out.println("[ERROR] Launch failed! phone sending service failed!");
+                            break;
+                        case 11:
+                            System.out.println("[ERROR] Launch failed! Phone sending fail to many!");
                             break;
                         case 64:
-                            System.out.println("Launch successfully!");
+                            System.out.println("[INFO] Launch successfully!");
                             break;
                         case 65:
-                            System.out.println("Launch failed! Error: Associate failed!");
+                            System.out.println("[ERROR] Launch failed! Associate failed!");
                             break;
                         case 66:
-                            System.out.println("Launch failed! Error: dhcp failed!");
+                            System.out.println("[ERROR] Launch failed! dhcp failed!");
                             break;
                         case 67:
-                            System.out.println("Launch failed! Error: Internet cannot be accessed!");
+                            System.out.println("[ERROR] Launch failed! Internet cannot be accessed!");
                             break;
                         case 68:
-                            System.out.println("Launch failed! Error: no wlan interface!");
+                            System.out.println("[ERROR] Launch failed! no wlan interface!");
                             break;
                         case 69:
-                            System.out.println("Launch failed! Error: wpa timeout!");
+                            System.out.println("[ERROR] Launch failed! wpa timeout!");
                             break;
                         case 70:
-                            System.out.println("Launch failed! Error: no suitable ssid!");
+                            System.out.println("[ERROR] Launch failed! no suitable ssid!");
                             break;
                         case 71:
-                            System.out.println("Launch failed! Error: Need root privilege!");
+                            System.out.println("[ERROR] Launch failed! Need root privilege!");
                             break;
                         case 72:
-                            System.out.println("Launch failed! Error: Parameter error!");
+                            System.out.println("[ERROR] Launch failed! Parameter error!");
+                            break;
+                        case 128:
+                            System.out.println("[ERROR] Launch failed! Profile is in wrong format!");
+                            break;
+                        case 129:
+                            System.out.println("[ERROR] Launch failed! RSA encryption failed!");
+                            break;
+                        case 130:
+                            System.out.println("[ERROR] Launch failed! RSA verification failed!");
+                            break;
+                        case 156:
+                            System.out.println("[ERROR] Launch failed! No password!");
+                            break;
+                        case 157:
+                            System.out.println("[ERROR] Launch failed! Datagram failed!");
+                            break;
+                        case 158:
+                            System.out.println("[ERROR] Challenge content failed!");
+                            break;
+                        case 159:
+                            System.out.println("[ERROR] Launch failed! Read profile data failed!");
+                            break;
+                        case 160:
+                            System.out.println("[ERROR] Launch failed! Open private key file failed!");
+                            break;
+                        case 161:
+                            System.out.println("[ERROR] Launch failed! Read private key failed!");
+                            break;
+                        case 162:
+                            System.out.println("[ERROR] Launch failed! decryption failed!");
+                            break;
+                        case 163:
+                            System.out.println("[ERROR] Launch failed! Supplicant content error!");
+                            break;
+                        case 192:
+                            System.out.println("[ERROR] Launch failed! HTTP content error!");
+                            break;
+                        case 193:
+                            System.out.println("[ERROR] Launch failed! CURLE_UNSUPPORTED_PROTOCOL, 1: unsupported protocol");
+                            break;
+                        case 194:
+                            System.out.println("[ERROR] Launch failed! CURLE_FAILED_INIT, 2: failed init");
+                            break;
+                        case 195:
+                            System.out.println("[ERROR] Launch failed! CURLE_URL_MALFORMAT, 3: URL using bad/illegal format or missing URL");
+                            break;
+                        case 196:
+                            System.out.println("[ERROR] Launch failed! CURLE_URL_MALFORMAT_USER, 4: unknown error");
+                            break;
+                        case 197:
+                            System.out.println("[ERROR] Launch failed! CURLE_COULDNT_RESOLVE_PROXY, 5: couldn’t resolve proxy name");
+                            break;
+                        case 198:
+                            System.out.println("[ERROR] Launch failed! CURLE_COULDNT_RESOLVE_HOST, 6: couldn’t resolve host name");
+                            break;
+                        case 199:
+                            System.out.println("[ERROR] Launch failed! CURLE_COULDNT_CONNECT, 7: couldn’t connect to server");
+                            break;
+                        case 201:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_WEIRD_SERVER_REPLY, 8: FTP: weird server reply");
+                            break;
+                        case 202:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_ACCESS_DENIED,9");
+                            break;
+                        case 203:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_USER_PASSWORD_INCORRECT, 10: unknown error");
+                            break;
+                        case 204:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_WEIRD_PASS_REPLY, 11: FTP: unknown PASS reply");
+                            break;
+                        case 205:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_WEIRD_USER_REPLY, 12: FTP: unknown USER reply");
+                            break;
+                        case 206:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_WEIRD_PASV_REPLY, 13: FTP: unknown PASV reply");
+                            break;
+                        case 207:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_WEIRD_227_FORMAT, 14: FTP: unknown 227 response format");
+                            break;
+                        case 208:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_CANT_GET_HOST, 15: FTP: can’t figure out the host in the PASV response");
+                            break;
+                        case 209:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_CANT_RECONNECT, 16: FTP: can’t connect to server the response code is unknown");
+                            break;
+                        case 210:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_COULDNT_SET_BINARY, 17: FTP: couldn’t set binary mode");
+                            break;
+                        case 211:
+                            System.out.println("[ERROR] Launch failed! CURLE_PARTIAL_FILE, 18: Transferred a partial file");
+                            break;
+                        case 212:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_COULDNT_RETR_FILE, 19: FTP: couldn’t retrieve (RETR failed) the specified file");
+                            break;
+                        case 213:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_WRITE_ERROR, 20: FTP: the post-transfer acknowledge response was not OK");
+                            break;
+                        case 214:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_QUOTE_ERROR, 21: FTP: a quote command returned error");
+                            break;
+                        case 215:
+                            System.out.println("[ERROR] Launch failed! CURLE_HTTP_RETURNED_ERROR, 22: HTTP response code said error");
+                            break;
+                        case 216:
+                            System.out.println("[ERROR] Launch failed! CURLE_WRITE_ERROR, 23: failed writing received data to disk/application");
+                            break;
+                        case 217:
+                            System.out.println("[ERROR] Launch failed! CURLE_MALFORMAT_USER, 24: unknown error");
+                            break;
+                        case 218:
+                            System.out.println("[ERROR] Launch failed! CURLE_UPLOAD_FAILED, 25: upload failed (at start/before it took off)");
+                            break;
+                        case 219:
+                            System.out.println("[ERROR] Launch failed! CURLE_READ_ERROR, 26: failed to open/read local data from file/application");
+                            break;
+                        case 220:
+                            System.out.println("[ERROR] Launch failed! CURLE_OUT_OF_MEMORY, 27: out of memory");
+                            break;
+                        case 221:
+                            System.out.println("[ERROR] Launch failed! CURLE_OPERATION_TIMEOUTED, 28: a timeout was reached");
+                            break;
+                        case 222:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_COULDNT_SET_ASCII, 29: FTP could not set ASCII mode (TYPE A)");
+                            break;
+                        case 223:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_PORT_FAILED, 30: FTP command PORT failed");
+                            break;
+                        case 224:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_COULDNT_USE_REST, 31: FTP command REST failed");
+                            break;
+                        case 225:
+                            System.out.println("[ERROR] Launch failed! CURLE_FTP_COULDNT_GET_SIZE, 32: FTP command SIZE failed");
+                            break;
+                        case 226:
+                            System.out.println("[ERROR] Launch failed! CURLE_HTTP_RANGE_ERROR, 33: a range was requested but the server did not deliver it");
+                            break;
+                        case 227:
+                            System.out.println("[ERROR] Launch failed! CURLE_HTTP_POST_ERROR, 34: internal problem setting up the POST");
+                            break;
+                        case 228:
+                            System.out.println("[ERROR] Launch failed! CURLE_SSL_CONNECT_ERROR, 35: SSL connect error");
+                            break;
+                        case 229:
+                            System.out.println("[ERROR] Launch failed! CURLE_BAD_DOWNLOAD_RESUME, 36: couldn’t resume download");
+                            break;
+                        case 230:
+                            System.out.println("[ERROR] Launch failed! CURLE_FILE_COULDNT_READ_FILE, 37: couldn’t read a file 231 # CURLE_LDAP_CANNOT_BIND, 38: LDAP: cannot bind");
+                            break;
+                        case 232:
+                            System.out.println("[ERROR] Launch failed! CURLE_LDAP_SEARCH_FAILED, 39: LDAP: search failed");
+                            break;
+                        case 233:
+                            System.out.println("[ERROR] Launch failed! CURLE_LIBRARY_NOT_FOUND, 40: a required shared library was not found");
                             break;
                         case 303:
-                            System.out.println("Launch failed! Error: please input pin code!");
+                            System.out.println("[ERROR] Launch failed! please input pin code!");
                             break;
                         case 304:
-                            System.out.println("Launch failed! Input pin code time out!");
+                            System.out.println("[ERROR] Launch failed! Input pin code time out!");
                             break;
                         default:
-                            System.out.println("Launch failed! Error: Unknown return status code("+connStatusCode+")!");
+                            System.out.println("[ERROR] Launch failed! Unknown return status code("+connStatusCode+")!");
                             break;
 
                     }
@@ -552,7 +694,6 @@ public class Register {
             case "苹果联盟": companyId="APPLE";break;
         }
         try {
-//            setVCUnvisible(false);
             File file = new File(getIdentityPath());
             if (file.exists()) {
                 JsonNode jsonNode = objMapper.readTree(file);
@@ -563,7 +704,6 @@ public class Register {
             } else {
                 nameText.setText("");
                 phoneText.setText("");
-//                setVCUnvisible(true);
             }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -572,12 +712,6 @@ public class Register {
         regTabbedPane.remove(0);
         regTabbedPane.add(infoPanel);
         regTabbedPane.setTitleAt(0,infoPanelTitle);
-    }
-
-    private void setVCUnvisible(boolean visible) {
-        verifyCodeBtn.setVisible(visible);
-        verifyCodeLabel.setVisible(visible);
-        verifyCodeText.setVisible(visible);
     }
 
     private String getIdentityPath() {
