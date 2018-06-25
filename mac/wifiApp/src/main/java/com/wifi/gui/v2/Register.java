@@ -59,6 +59,7 @@ public class Register {
     private boolean breakNetwork = false;
     private String infoPanelTitle;
     private int connStatusCode;
+    private int unregPinCode;
 
 
     public void _init() {
@@ -255,39 +256,42 @@ public class Register {
     private void unRegisterUser() {
         try {
             String wpaCmdPath = getWpaCmdPath();
-            // disconnect network
-            ProcessBuilder pbDis = new ProcessBuilder(
-                    "wlah.sh",
-                    "disconnect"
-            );
-            Process processDis = pbDis.start();
-            pbDis.redirectErrorStream(true);
-            BufferedReader disReader = new BufferedReader(new InputStreamReader(processDis.getInputStream()));
             String line;
-            StringBuilder sb = new StringBuilder();
-            while((line = disReader.readLine()) != null) {
-                sb.append(line);
-                System.out.println(line);
-            }
-            processDis.waitFor();
-            String disRetStr = sb.toString();
-            if(disRetStr.contains("main connect return code")) {
-                String[] retStr = disRetStr.split(" ");
-                int statusCode = Integer.parseInt(retStr[retStr.length - 1]);
-                if(statusCode != 64) {
-                    System.out.println("[ERROR] disconnect network failed!");
-                }
-            } else {
-                System.out.println("[ERROR] disconnect command failed!");
-            }
+            // disconnect network
+//            ProcessBuilder pbDis = new ProcessBuilder(
+//                    "wlah.sh",
+//                    "disconnect"
+//            );
+//            Process processDis = pbDis.start();
+//            pbDis.redirectErrorStream(true);
+//            BufferedReader disReader = new BufferedReader(new InputStreamReader(processDis.getInputStream()));
+//            StringBuilder sb = new StringBuilder();
+//            while((line = disReader.readLine()) != null) {
+//                sb.append(line);
+//                System.out.println(line);
+//            }
+//            processDis.waitFor();
+//            String disRetStr = sb.toString();
+//            if(disRetStr.contains("main connect return code")) {
+//                String[] retStr = disRetStr.split(" ");
+//                int statusCode = Integer.parseInt(retStr[retStr.length - 1]);
+//                if(statusCode != 64) {
+//                    System.out.println("[ERROR] disconnect network failed!");
+//                }
+//            } else {
+//                System.out.println("[ERROR] disconnect command failed!");
+//            }
             // send disconnect
+//            ProcessBuilder pbCloseProfile = new ProcessBuilder(
+//                    "wlan.sh",
+//                    "connect",
+//                    wpaCmdPath.concat("/config/prikey.pem"),
+//                    wpaCmdPath.concat("/config/close_profile"),
+//                    wpaCmdPath.concat("/config/wpa.conf"),
+//                    wpaCmdPath.concat("/wpa.log")
+//            );
             ProcessBuilder pbCloseProfile = new ProcessBuilder(
-                    "wlan.sh",
-                    "connect",
-                    wpaCmdPath.concat("/config/prikey.pem"),
-                    wpaCmdPath.concat("/config/close_profile"),
-                    wpaCmdPath.concat("/config/wpa.conf"),
-                    wpaCmdPath.concat("/wpa.log")
+                    rootPath + "/wpa_setup/testConnect2.sh"
             );
             Process processCloseProfile = pbCloseProfile.start();
             BufferedReader closeProfileReader = new BufferedReader(new InputStreamReader(processCloseProfile.getInputStream()));
@@ -297,13 +301,14 @@ public class Register {
                 System.out.println(line);
             }
             processCloseProfile.waitFor();
-            String closeProfileRetStr = sb.toString();
-            if(disRetStr.contains("main connect return code")) {
+            String closeProfileRetStr = sbCloseProfile.toString();
+            if(closeProfileRetStr.contains("main connect return code")) {
                 String[] retStr = closeProfileRetStr.split(" ");
-                int statusCode = Integer.parseInt(retStr[retStr.length - 1]);
-                switch (statusCode) {
+                unregPinCode = Integer.parseInt(retStr[retStr.length - 1]);
+                switch (unregPinCode) {
                     case 12:
                         System.out.println("[INFO] Send verify request successfully!");
+                        sendClosePinCode();
                         break;
                     case 13:
                         System.out.println("[ERROR] Send verify request failed!");
@@ -317,51 +322,27 @@ public class Register {
             } else {
                 System.out.println("[ERROR] Send verify request failed!");
             }
-            // send unregister pin code
-            ProcessBuilder pbSendPinCode = new ProcessBuilder(
-                    "wlan.sh",
-                    "connect",
-                    wpaCmdPath.concat("/config/prikey.pem"),
-                    wpaCmdPath.concat("/config/close_pin"),
-                    wpaCmdPath.concat("/config/wpa.conf"),
-                    wpaCmdPath.concat("wpa.log")
-            );
-            Process processSendPinCode = pbSendPinCode.start();
-            BufferedReader sendPinCodeReader = new BufferedReader(new InputStreamReader(processSendPinCode.getInputStream()));
-            StringBuilder sbSendPinCode = new StringBuilder();
-            while((line = sendPinCodeReader.readLine()) != null) {
-                sbSendPinCode.append(line);
-                System.out.println(line);
-            }
-            processSendPinCode.waitFor();
-            String sendPinRetStr = sb.toString();
-            if(disRetStr.contains("main connect return code")) {
-                String[] retStr = sendPinRetStr.split(" ");
-                int statusCode = Integer.parseInt(retStr[retStr.length - 1]);
-                switch (statusCode) {
-                    case 15:
-                        System.out.println("[INFO] Unregister user successfully!");
-                        break;
-                    case 16:
-                        System.out.println("[ERROR] Unregister user failed! Verify phone num failed!!");
-                        break;
-                    case 17:
-                        System.out.println("[ERROR] Unregister user failed! User account doesn't exist!");
-                        break;
-                    case 18:
-                        System.out.println("[ERROR] Unregister user failed! Phone number doesn't exist!");
-                        break;
-                    case 19:
-                        System.out.println("[ERROR] Unregister user failed! Unknown error!");
-                        break;
-                    default:
-                        System.out.println("[ERROR] Unregister user failed! Wrong status code!");
-                }
-            } else {
-                System.out.println("[ERROR] Send verify request failed!");
-            }
         } catch (IOException|InterruptedException ex) {
             System.out.println(ex.getMessage());
+        }
+    }
+
+    private void sendClosePinCode() {
+        try {
+            VerifyCodeDlg dlg = new VerifyCodeDlg();
+            dlg.setRegisterPage(this);
+            dlg.setDlgType("UNREGISTER");
+            dlg.setLocation(650, 250);
+            dlg.pack();
+            dlg.setVisible(true);
+            while (unregPinCode == 12) {
+                sleep(10);
+            }
+            if(unregPinCode == 303) {
+                System.out.println("[ERROR] Send pin code failed!");
+            }
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -403,17 +384,17 @@ public class Register {
                 setLaunchPage();
                 // run wpa_supplicant as a daemon process
                 try {
-                    ProcessBuilder pb = new ProcessBuilder(
-                            "wlan.sh",
-                            "connect",
-                            wpaCmdPath + "/config/prikey.pem",
-                            wpaCmdPath + "/config/profile",
-                            wpaCmdPath + "/config/wpa.conf",
-                            wpaCmdPath + "/wpa.log"
-                    );
 //                    ProcessBuilder pb = new ProcessBuilder(
-//                            rootPath + "/wpa_setup/testConnect.sh"
+//                            "wlan.sh",
+//                            "connect",
+//                            wpaCmdPath + "/config/prikey.pem",
+//                            wpaCmdPath + "/config/profile",
+//                            wpaCmdPath + "/config/wpa.conf",
+//                            wpaCmdPath + "/wpa.log"
 //                    );
+                    ProcessBuilder pb = new ProcessBuilder(
+                            rootPath + "/wpa_setup/testConnect.sh"
+                    );
                     pb.redirectErrorStream(true);
 //                    pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
 //                    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -443,6 +424,7 @@ public class Register {
                         System.out.println("Register successfully,please input pin code.");
                         // if register successfully show login page
                         VerifyCodeDlg vcDlg = new VerifyCodeDlg();
+                        vcDlg.setDlgType("REGISTER");
                         vcDlg.setRegisterPage(thisRegister);
                         vcDlg.setLocation(650,250);
                         vcDlg.pack();
@@ -879,6 +861,10 @@ public class Register {
 
     public void setConnStatusCode(int connStatusCode) {
         this.connStatusCode = connStatusCode;
+    }
+
+    public void setUnregPinCode(int unregPinCode) {
+        this.unregPinCode = unregPinCode;
     }
 
     private void createUIComponents() {
