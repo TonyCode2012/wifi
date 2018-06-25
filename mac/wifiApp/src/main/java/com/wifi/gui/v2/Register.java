@@ -319,7 +319,7 @@ public class Register {
                         connStatusCode = 404;
                     }
                     // if return code is 3,pop up a dialog to require pin code.
-                    if(connStatusCode == 9) {
+                    if(connStatusCode == 3) {
                         System.out.println("Register successfully,please input pin code.");
                         // if register successfully show login page
                         VerifyCodeDlg vcDlg = new VerifyCodeDlg();
@@ -327,7 +327,7 @@ public class Register {
                         vcDlg.setLocation(650,250);
                         vcDlg.pack();
                         vcDlg.setVisible(true);
-                        while(connStatusCode == 9) { sleep(10); }
+                        while(connStatusCode == 3) { sleep(10); }
                     }
                     switch (connStatusCode) {
                         case 1:

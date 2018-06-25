@@ -2,4 +2,4 @@
 
 #sleep 6
 
-echo "main connect return code 9"
+echo "main connect return code 3"
