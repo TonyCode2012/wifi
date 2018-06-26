@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wifi.configSetting;
+import com.wifi.gui.v2.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +26,7 @@ public class VerifyCodeDlg extends JDialog {
     private Register register;
     private ObjectMapper objMapper = new ObjectMapper();
     private String dlgType;
+    private int statusCode = -1;
 
     private void init() {
         tipLabel.setText("   ");
@@ -32,11 +34,13 @@ public class VerifyCodeDlg extends JDialog {
         // set timeout tips
         new Thread(() -> {
             try {
-                for (int i = 59; i >= 0; i--) {
+                for (int i = 59; i >= 0 && statusCode == -1; i--) {
                     timeoutLabel.setText(i + "s");
                     sleep(1000);
                 }
-                register.setConnStatusCode(304);
+                if(statusCode == -1) {
+                    register.setConnStatusCode(304);
+                }
                 dispose();
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
@@ -61,31 +65,32 @@ public class VerifyCodeDlg extends JDialog {
                             tipLabel.setForeground(Color.red);
                             return;
                         }
+                        // write pin code info to pin file
+                        String pinCodePath = getPinCodePath();
+                        ObjectNode pinCodeNode = objMapper.createObjectNode();
+                        JsonNode profileNode = objMapper.readTree(new FileReader(getProfilePath()));
+                        String accountStr = profileNode.get("account").asText();
+                        String phone = profileNode.get("phone").asText();
+                        pinCodeNode.put("account", accountStr);
+                        pinCodeNode.put("pin", pinCode);
+                        pinCodeNode.put("phone", phone);
+                        OutputStreamWriter pinCodeWriter = new OutputStreamWriter(new FileOutputStream(pinCodePath));
+                        pinCodeWriter.write(pinCodeNode.toString());
+                        pinCodeWriter.close();
                         if (dlgType.equals("REGISTER")) {
-                            // write pin code info to pin file
-                            String pinCodePath = getPinCodePath();
-                            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(pinCodePath));
-                            ObjectNode objNode = objMapper.createObjectNode();
-                            JsonNode profileNode = objMapper.readTree(new FileReader(getProfilePath()));
-                            String accountStr = profileNode.get("account").asText();
-                            String phone = profileNode.get("phone").asText();
-                            objNode.put("account", accountStr);
-                            objNode.put("pin", pinCode);
-                            objNode.put("phone", phone);
-                            writer.write(objNode.toString());
-                            writer.close();
                             that.setVisible(false);
-//                            ProcessBuilder pb = new ProcessBuilder(
-//                                    "wlan.sh",
-//                                    "connect",
-//                                    rootPath.concat("/").concat(configSetting.getWpaPriKeyPath()),
-//                                    pinCodePath,
-//                                    rootPath.concat("/").concat(configSetting.getWpaConfPath()),
-//                                    rootPath.concat("/wpa_setup/wpa.log")
-//                            );
+                            Utils.addCmdCode2File(3,pinCodePath);
                             ProcessBuilder pb = new ProcessBuilder(
-                                    rootPath + "/wpa_setup/testPinCode.sh"
+                                    "wlan.sh",
+                                    "connect",
+                                    rootPath.concat("/").concat(configSetting.getWpaPriKeyPath()),
+                                    pinCodePath,
+                                    rootPath.concat("/").concat(configSetting.getWpaConfPath()),
+                                    rootPath.concat("/wpa_setup/wpa.log")
                             );
+//                            ProcessBuilder pb = new ProcessBuilder(
+//                                    rootPath + "/wpa_setup/testPinCode.sh"
+//                            );
                             Process process = pb.start();
                             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                             String line;
@@ -96,23 +101,23 @@ public class VerifyCodeDlg extends JDialog {
                             }
                             process.waitFor();
                             String retStr = sb.toString();
-                            int cStatusCode;
                             if (retStr.contains("main connect return code")) {
                                 String retStrArry[] = retStr.split(" ");
-                                cStatusCode = Integer.parseInt(retStrArry[retStrArry.length - 1]);
+                                statusCode = Integer.parseInt(retStrArry[retStrArry.length - 1]);
                             } else {
-                                cStatusCode = 404;
+                                statusCode = 404;
                             }
-                            register.setConnStatusCode(cStatusCode);
                         }
                         if(dlgType.equals("UNREGISTER")) {
                             String wpaCmdPath = getWpaCmdPath();
                             // send unregister pin code
+                            that.setVisible(false);
+                            Utils.addCmdCode2File(6,pinCodePath);
                             ProcessBuilder pbSendPinCode = new ProcessBuilder(
                                     "wlan.sh",
                                     "connect",
                                     wpaCmdPath.concat("/config/prikey.pem"),
-                                    wpaCmdPath.concat("/config/close_pin"),
+                                    wpaCmdPath.concat("/config/pin"),
                                     wpaCmdPath.concat("/config/wpa.conf"),
                                     wpaCmdPath.concat("/wpa.log")
                             );
@@ -128,7 +133,7 @@ public class VerifyCodeDlg extends JDialog {
                             String sendPinRetStr = sbSendPinCode.toString();
                             if(sendPinRetStr.contains("main connect return code")) {
                                 String[] retStr = sendPinRetStr.split(" ");
-                                int statusCode = Integer.parseInt(retStr[retStr.length - 1]);
+                                statusCode = Integer.parseInt(retStr[retStr.length - 1]);
                                 switch (statusCode) {
                                     case 15:
                                         System.out.println("[INFO] Unregister user successfully!");
@@ -150,8 +155,11 @@ public class VerifyCodeDlg extends JDialog {
                                 }
                             } else {
                                 System.out.println("[ERROR] Send verify request failed!");
+                                statusCode = 303;
                             }
+                            register.setUnregPinCode(statusCode);
                         }
+                        register.setConnStatusCode(statusCode);
                         dispose();
                     } catch(IOException | InterruptedException ex){
                         System.out.println(ex.getMessage());
