@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 public class Utils {
 
     private static ObjectMapper objMapper = new ObjectMapper();
+    private static boolean testFlag = false;
 
     public static void addCmdCode2File(int cmdCode,String filePath) {
         try {
@@ -23,5 +24,13 @@ public class Utils {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static boolean getTestFlag() {
+        return testFlag;
+    }
+
+    public static void setTestFlag(boolean testFlag) {
+        Utils.testFlag = testFlag;
     }
 }

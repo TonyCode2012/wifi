@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.Enumeration;
 
 import com.wifi.configSetting;
+import com.wifi.gui.v2.utils.Utils;
 
 public class Boost {
 
@@ -24,6 +25,9 @@ public class Boost {
     }
 
     public static void main(String[] args) {
+        if(args.length != 0) {
+            Utils.setTestFlag(Boolean.parseBoolean(args[0]));
+        }
         InitGlobalFont(new Font(Font.DIALOG, Font.PLAIN, Integer.parseInt(configSetting.getFontSize())));
         frame.setTitle("中国电信wifi");
         Register register = new Register();

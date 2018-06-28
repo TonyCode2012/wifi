@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
@@ -21,6 +22,9 @@ public class VerifyCodeDlg extends JDialog {
     private JTextField verifyCodeText;
     private JLabel tipLabel;
     private JLabel timeoutLabel;
+    private JProgressBar waitUnregPb;
+    private JLabel verifyCodeLabel;
+    private JLabel unregStatLabel;
 
     private String rootPath = System.getProperty("user.dir");
     private Register register;
@@ -28,9 +32,64 @@ public class VerifyCodeDlg extends JDialog {
     private String dlgType;
     private int statusCode = -1;
 
-    private void init() {
+    /*
+    * -1: nothing to do, just show processing
+    *  0: send requesting pin code message successfully
+    *  1: send verifying unregister pin code process
+    * */
+    private int unregStatusCode = -1;
+
+    private void init(String type) {
+        dlgType = type;
         tipLabel.setText("   ");
         timeoutLabel.setText("60s");
+        if(dlgType.equals("REGISTER")) {
+            setRegStatus();
+        } else {
+            new Thread(() -> {
+                try {
+                    unregStatLabel.setText("正在发送请求...");
+                    setUnregStatus();
+                    while (unregStatusCode == -1) {
+                        sleep(10);
+                    }
+                    if(unregStatusCode == 0) {
+                        setRegStatus();
+                    }
+                } catch (InterruptedException e) {
+                    System.out.println(e.getMessage());
+                }
+            }).start();
+        }
+    }
+
+    private void setRegStatus() {
+        okBtn.setVisible(true);
+        cancelBtn.setVisible(true);
+        tipLabel.setVisible(true);
+        timeoutLabel.setVisible(true);
+        verifyCodeText.setVisible(true);
+        verifyCodeLabel.setVisible(true);
+        waitUnregPb.setVisible(false);
+        unregStatLabel.setVisible(false);
+        showInvalidTimer();
+        this.pack();
+    }
+
+    private void setUnregStatus() {
+        okBtn.setVisible(false);
+        cancelBtn.setVisible(false);
+        tipLabel.setVisible(false);
+        timeoutLabel.setVisible(false);
+        verifyCodeText.setVisible(false);
+        verifyCodeLabel.setVisible(false);
+        waitUnregPb.setVisible(true);
+        unregStatLabel.setVisible(true);
+        viewBar();
+        this.pack();
+    }
+
+    private void showInvalidTimer() {
         // set timeout tips
         new Thread(() -> {
             try {
@@ -41,15 +100,15 @@ public class VerifyCodeDlg extends JDialog {
                 if(statusCode == -1) {
                     register.setConnStatusCode(304);
                 }
-                dispose();
+//                dispose();
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
         }).start();
     }
 
-    public VerifyCodeDlg() {
-        init();
+    public VerifyCodeDlg(String type) {
+        init(type);
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(okBtn);
@@ -80,14 +139,26 @@ public class VerifyCodeDlg extends JDialog {
                         if (dlgType.equals("REGISTER")) {
                             that.setVisible(false);
                             Utils.addCmdCode2File(3,pinCodePath);
-                            ProcessBuilder pb = new ProcessBuilder(
-                                    "wlan.sh",
-                                    "connect",
-                                    rootPath.concat("/").concat(configSetting.getWpaPriKeyPath()),
-                                    pinCodePath,
-                                    rootPath.concat("/").concat(configSetting.getWpaConfPath()),
-                                    rootPath.concat("/wpa_setup/wpa.log")
-                            );
+                            ArrayList<String> cmds = new ArrayList<>();
+                            if(Utils.getTestFlag()) {
+                                cmds.add(rootPath + "/wpa_setup/testPinCode.sh");
+                            } else {
+                                cmds.add("wlan.sh");
+                                cmds.add("connect");
+                                cmds.add(rootPath.concat("/").concat(configSetting.getWpaPriKeyPath()));
+                                cmds.add(pinCodePath);
+                                cmds.add(rootPath.concat("/").concat(configSetting.getWpaConfPath()));
+                                cmds.add(rootPath.concat("/wpa_setup/wpa.log"));
+                            }
+                            ProcessBuilder pb = new ProcessBuilder(cmds);
+//                            ProcessBuilder pb = new ProcessBuilder(
+//                                    "wlan.sh",
+//                                    "connect",
+//                                    rootPath.concat("/").concat(configSetting.getWpaPriKeyPath()),
+//                                    pinCodePath,
+//                                    rootPath.concat("/").concat(configSetting.getWpaConfPath()),
+//                                    rootPath.concat("/wpa_setup/wpa.log")
+//                            );
 //                            ProcessBuilder pb = new ProcessBuilder(
 //                                    rootPath + "/wpa_setup/testPinCode.sh"
 //                            );
@@ -111,16 +182,30 @@ public class VerifyCodeDlg extends JDialog {
                         if(dlgType.equals("UNREGISTER")) {
                             String wpaCmdPath = getWpaCmdPath();
                             // send unregister pin code
-                            that.setVisible(false);
+//                            that.setVisible(false);
+                            unregStatLabel.setText("正在注销...");
+                            setUnregStatus();
                             Utils.addCmdCode2File(6,pinCodePath);
-                            ProcessBuilder pbSendPinCode = new ProcessBuilder(
-                                    "wlan.sh",
-                                    "connect",
-                                    wpaCmdPath.concat("/config/prikey.pem"),
-                                    wpaCmdPath.concat("/config/pin"),
-                                    wpaCmdPath.concat("/config/wpa.conf"),
-                                    wpaCmdPath.concat("/wpa.log")
-                            );
+                            ArrayList<String> cmds = new ArrayList<>();
+                            if(Utils.getTestFlag()) {
+                                cmds.add(rootPath.concat("/wpa_setup/testSendUnregPin.sh"));
+                            } else {
+                                cmds.add("wlan.sh");
+                                cmds.add("connect");
+                                cmds.add(wpaCmdPath.concat("/config/prikey.pem"));
+                                cmds.add(wpaCmdPath.concat("/config/pin"));
+                                cmds.add(wpaCmdPath.concat("/config/wpa.conf"));
+                                cmds.add(wpaCmdPath.concat("/wpa.log"));
+                            }
+                            ProcessBuilder pbSendPinCode = new ProcessBuilder(cmds);
+//                            ProcessBuilder pbSendPinCode = new ProcessBuilder(
+//                                    "wlan.sh",
+//                                    "connect",
+//                                    wpaCmdPath.concat("/config/prikey.pem"),
+//                                    wpaCmdPath.concat("/config/pin"),
+//                                    wpaCmdPath.concat("/config/wpa.conf"),
+//                                    wpaCmdPath.concat("/wpa.log")
+//                            );
                             Process processSendPinCode = pbSendPinCode.start();
                             BufferedReader sendPinCodeReader = new BufferedReader(new InputStreamReader(processSendPinCode.getInputStream()));
                             StringBuilder sbSendPinCode = new StringBuilder();
@@ -157,6 +242,12 @@ public class VerifyCodeDlg extends JDialog {
                                 System.out.println("[ERROR] Send verify request failed!");
                                 statusCode = 303;
                             }
+                            if(statusCode == 15) {
+                                unregStatLabel.setText("注销成功！");
+                            } else {
+                                unregStatLabel.setText("注销失败！");
+                            }
+                            sleep(1500);
                             register.setUnregPinCode(statusCode);
                         }
                         register.setConnStatusCode(statusCode);
@@ -180,6 +271,30 @@ public class VerifyCodeDlg extends JDialog {
             }
         });
     }
+    
+    public void viewBar() {
+
+//        waitUnregPb.setStringPainted(true);
+        waitUnregPb.setIndeterminate(true);
+//        waitUnregPb.setValue(0);
+
+//        int timerDelay = 10;
+//        new javax.swing.Timer(timerDelay , new ActionListener() {
+//            private int index = 0;
+//            private int maxIndex = 100;
+//            public void actionPerformed(ActionEvent e) {
+//                if (index < maxIndex) {
+//                    waitUnregPb.setValue(index);
+//                    index++;
+//                } else {
+//                    waitUnregPb.setValue(maxIndex);
+//                    ((javax.swing.Timer)e.getSource()).stop(); // stop the timer
+//                }
+//            }
+//        }).start();
+
+//        waitUnregPb.setValue(waitUnregPb.getMinimum());
+    }
 
     public void setRegisterPage(Register register) {
         this.register = register;
@@ -187,6 +302,10 @@ public class VerifyCodeDlg extends JDialog {
 
     public void setDlgType(String dlgType) {
         this.dlgType = dlgType;
+    }
+
+    public void setUnregStatusCode(int unregStatusCode) {
+        this.unregStatusCode = unregStatusCode;
     }
 
     private String getPinCodePath() {
