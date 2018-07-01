@@ -1,10 +1,13 @@
 package com.wifi.gui.v2;
 
+import com.wifi.gui.v2.utils.Utils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
@@ -320,10 +323,14 @@ public class HomePage {
 
                 // disconnect network
                 try {
-                    ProcessBuilder pb = new ProcessBuilder(
-                            "wlan.sh",
-                            "disconnect"
-                    );
+                    ArrayList<String> cmds = new ArrayList<>();
+                    if(Utils.getTestFlag()) {
+                        cmds.add(rootPath.concat("/wpa_setup/testDisconnect.sh"));
+                    } else {
+                        cmds.add("wlan.sh");
+                        cmds.add("disconnect");
+                    }
+                    ProcessBuilder pb = new ProcessBuilder(cmds);
 //                    pb.redirectErrorStream(true);
                     pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
                     pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
