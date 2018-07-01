@@ -3,14 +3,11 @@ package com.wifi.gui.v2.utils;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 public class ScaleIcon implements Icon {
 
     private BufferedImage i = null;
-    private Icon icon = null;
+    private Icon icon;
 
     public ScaleIcon(Icon icon) {
         this.icon = icon;

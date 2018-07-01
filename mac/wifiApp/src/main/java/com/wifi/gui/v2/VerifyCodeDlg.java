@@ -30,14 +30,16 @@ public class VerifyCodeDlg extends JDialog {
     private Register register;
     private ObjectMapper objMapper = new ObjectMapper();
     private String dlgType;
-    private int statusCode = -1;
+    private int regStatusCode = -1;
 
     /*
-    * -1: nothing to do, just show processing
-    *  0: send requesting pin code message successfully
-    *  1: send verifying unregister pin code process
+    * 1: process -- disconnect network
+    * 2: disconnect network failed
+    * 3: process -- disconnect network successfully,send unregister request
+    * 4: send unregister request failed
+    * 5: pin code -- send unregister request successfully,please input pinCode
     * */
-    private int unregStatusCode = -1;
+    private int unregStatusCode = 1;
 
     private void init(String type) {
         dlgType = type;
@@ -50,11 +52,25 @@ public class VerifyCodeDlg extends JDialog {
                 try {
                     unregStatLabel.setText("正在发送请求...");
                     setUnregStatus();
-                    while (unregStatusCode == -1) {
+                    while (unregStatusCode == 1 || unregStatusCode == 3) {
                         sleep(10);
                     }
-                    if(unregStatusCode == 0) {
-                        setRegStatus();
+                    switch (unregStatusCode) {
+                        case 2:
+                            System.out.println("[ERROR] Disconnect network failed!");
+                            unregStatLabel.setText("断开网络失败！");
+                            sleep(1500);
+                            dispose();
+                            break;
+                        case 4:
+                            System.out.println("[ERROR] Send unregister request failed!");
+                            unregStatLabel.setText("发送注销请求失败！");
+                            sleep(1500);
+                            dispose();
+                            break;
+                        case 5:
+                            setRegStatus(); // send unregister request
+                            break;
                     }
                 } catch (InterruptedException e) {
                     System.out.println(e.getMessage());
@@ -72,8 +88,8 @@ public class VerifyCodeDlg extends JDialog {
         verifyCodeLabel.setVisible(true);
         waitUnregPb.setVisible(false);
         unregStatLabel.setVisible(false);
-        showInvalidTimer();
-        this.pack();
+        setPCodeTimeout();
+        this.pack();        // reshape window
     }
 
     private void setUnregStatus() {
@@ -86,25 +102,36 @@ public class VerifyCodeDlg extends JDialog {
         waitUnregPb.setVisible(true);
         unregStatLabel.setVisible(true);
         viewBar();
-        this.pack();
+        this.pack();        // reshape window
     }
 
-    private void showInvalidTimer() {
+    private void setPCodeTimeout() {
         // set timeout tips
         new Thread(() -> {
             try {
-                for (int i = 59; i >= 0 && statusCode == -1; i--) {
+                for (int i = 59; i >= 0; i--) {
+                    if(dlgType.equals("UNREGISTER") && unregStatusCode != 5) break;
+                    else if(regStatusCode != -1) break;
                     timeoutLabel.setText(i + "s");
                     sleep(1000);
                 }
-                if(statusCode == -1) {
-                    register.setConnStatusCode(304);
+                if((dlgType.equals("UNREGISTER") && unregStatusCode == 5) ||
+                        (dlgType.equals("REGISTER")) && regStatusCode != -1){
+                    setTimeout();
                 }
-//                dispose();
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
         }).start();
+    }
+
+    private void setTimeout() throws InterruptedException {
+        tipLabel.setText("输入验证码超时！");
+        tipLabel.setForeground(Color.red);
+        verifyCodeText.setEnabled(false);
+        register.setConnStatusCode(304);
+        sleep(1500);
+        dispose();
     }
 
     public VerifyCodeDlg(String type) {
@@ -174,10 +201,11 @@ public class VerifyCodeDlg extends JDialog {
                             String retStr = sb.toString();
                             if (retStr.contains("main connect return code")) {
                                 String retStrArry[] = retStr.split(" ");
-                                statusCode = Integer.parseInt(retStrArry[retStrArry.length - 1]);
+                                regStatusCode = Integer.parseInt(retStrArry[retStrArry.length - 1]);
                             } else {
-                                statusCode = 404;
+                                regStatusCode = 404;
                             }
+                            register.setConnStatusCode(regStatusCode);
                         }
                         if(dlgType.equals("UNREGISTER")) {
                             String wpaCmdPath = getWpaCmdPath();
@@ -218,39 +246,38 @@ public class VerifyCodeDlg extends JDialog {
                             String sendPinRetStr = sbSendPinCode.toString();
                             if(sendPinRetStr.contains("main connect return code")) {
                                 String[] retStr = sendPinRetStr.split(" ");
-                                statusCode = Integer.parseInt(retStr[retStr.length - 1]);
-                                switch (statusCode) {
-                                    case 15:
-                                        System.out.println("[INFO] Unregister user successfully!");
-                                        break;
-                                    case 16:
-                                        System.out.println("[ERROR] Unregister user failed! Verify phone num failed!!");
-                                        break;
-                                    case 17:
-                                        System.out.println("[ERROR] Unregister user failed! User account doesn't exist!");
-                                        break;
-                                    case 18:
-                                        System.out.println("[ERROR] Unregister user failed! Phone number doesn't exist!");
-                                        break;
-                                    case 19:
-                                        System.out.println("[ERROR] Unregister user failed! Unknown error!");
-                                        break;
-                                    default:
-                                        System.out.println("[ERROR] Unregister user failed! Wrong status code!");
-                                }
+                                unregStatusCode = Integer.parseInt(retStr[retStr.length - 1]);
                             } else {
                                 System.out.println("[ERROR] Send verify request failed!");
-                                statusCode = 303;
+                                unregStatusCode = 303;
                             }
-                            if(statusCode == 15) {
+                            switch (unregStatusCode) {
+                                case 15:
+                                    System.out.println("[INFO] Unregister user successfully!");
+                                    break;
+                                case 16:
+                                    System.out.println("[ERROR] Unregister user failed! Verify phone num failed!!");
+                                    break;
+                                case 17:
+                                    System.out.println("[ERROR] Unregister user failed! User account doesn't exist!");
+                                    break;
+                                case 18:
+                                    System.out.println("[ERROR] Unregister user failed! Phone number doesn't exist!");
+                                    break;
+                                case 19:
+                                    System.out.println("[ERROR] Unregister user failed! Unknown error!");
+                                    break;
+                                default:
+                                    System.out.println("[ERROR] Unregister user failed! Wrong status code!");
+                            }
+                            if(unregStatusCode == 15) {
                                 unregStatLabel.setText("注销成功！");
                             } else {
                                 unregStatLabel.setText("注销失败！");
                             }
                             sleep(1500);
-                            register.setUnregPinCode(statusCode);
+                            register.setUnregStatusCode(unregStatusCode);
                         }
-                        register.setConnStatusCode(statusCode);
                         dispose();
                     } catch(IOException | InterruptedException ex){
                         System.out.println(ex.getMessage());
@@ -265,7 +292,7 @@ public class VerifyCodeDlg extends JDialog {
                     register.setConnStatusCode(303);
                 }
                 if(dlgType.equals("UNREGISTER")) {
-                    register.setUnregPinCode(303);
+                    register.setUnregStatusCode(303);
                 }
                 dispose();
             }

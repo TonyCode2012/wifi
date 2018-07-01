@@ -60,8 +60,8 @@ public class Register {
     private ObjectMapper objMapper = new ObjectMapper();
     private boolean breakNetwork = false;
     private String infoPanelTitle;
-    private int connStatusCode;
-    private int unregPinCode;
+    private int connStatusCode;      // register or launch returned status code
+    private int unregStatusCode;       // returned unregister request status code
 
 
     public void _init() {
@@ -293,14 +293,21 @@ public class Register {
                 String disRetStr = sb.toString();
                 if(disRetStr.contains("main connect return code")) {
                     String[] retStr = disRetStr.split(" ");
-                    int statusCode = Integer.parseInt(retStr[retStr.length - 1]);
-                    if(statusCode != 64) {
-                        System.out.println("[ERROR] disconnect network failed!");
-                    }
+                    unregStatusCode = Integer.parseInt(retStr[retStr.length - 1]);
                 } else {
-                    System.out.println("[ERROR] disconnect command failed!");
+                    unregStatusCode = 304;
                 }
-                // send disconnect
+                switch (unregStatusCode) {
+                    case 64:
+                        System.out.println("[INFO] Disconnect network successfully!");
+                        dlg.setUnregStatusCode(3);
+                        break;
+                    default:
+                        System.out.println("[ERROR] Disconnect network failed!");
+                        dlg.setUnregStatusCode(2);
+                        return;
+                }
+                // send unregister request
                 Utils.addCmdCode2File(4,wpaCmdPath.concat("/config/profile"));
                 ArrayList<String> sendUnregCmds = new ArrayList<>();
                 if(Utils.getTestFlag()) {
@@ -336,25 +343,28 @@ public class Register {
                 String closeProfileRetStr = sbCloseProfile.toString();
                 if(closeProfileRetStr.contains("main connect return code")) {
                     String[] retStr = closeProfileRetStr.split(" ");
-                    unregPinCode = Integer.parseInt(retStr[retStr.length - 1]);
-                    switch (unregPinCode) {
-                        case 12:
-                            System.out.println("[INFO] Send verify request successfully!");
-                            sendClosePinCode(dlg);
-                            break;
-                        case 13:
-                            System.out.println("[ERROR] Send verify request failed!");
-                            break;
-                        case 14:
-                            System.out.println("[ERROR] Send verify request too many!");
-                            break;
-                        default:
-                            System.out.println("[ERROR] Send verify request failed! Wrong status code!");
-                    }
+                    unregStatusCode = Integer.parseInt(retStr[retStr.length - 1]);
                 } else {
-                    System.out.println("[ERROR] Send verify request failed!");
+                    System.out.println("[ERROR] Send unregister request failed!");
+                    unregStatusCode = 304;
                 }
-
+                switch (unregStatusCode) {
+                    case 12:
+                        System.out.println("[INFO] Send unregister request successfully!");
+                        sendClosePinCode(dlg);
+                        break;
+                    case 13:
+                        System.out.println("[ERROR] Send unregister request failed!");
+                        dlg.setUnregStatusCode(4);
+                        break;
+                    case 14:
+                        System.out.println("[ERROR] Send unregister request too many!");
+                        dlg.setUnregStatusCode(4);
+                        break;
+                    default:
+                        System.out.println("[ERROR] Send unregister request failed! Wrong status code!");
+                        dlg.setUnregStatusCode(4);
+                }
             } catch (IOException|InterruptedException ex) {
                 System.out.println(ex.getMessage());
             }
@@ -367,11 +377,11 @@ public class Register {
 
     private void sendClosePinCode(VerifyCodeDlg dlg) {
         try {
-            dlg.setUnregStatusCode(0);  // let tip dialog go into verify code mode
-            while (unregPinCode == 12) {
+            dlg.setUnregStatusCode(5);  // let tip dialog go into verify code mode
+            while (unregStatusCode == 12) {
                 sleep(10);
             }
-            if(unregPinCode == 303) {
+            if(unregStatusCode == 303) {
                 System.out.println("[ERROR] Send pin code failed!");
             } else {
                 dlg.setUnregStatusCode(1);
@@ -911,8 +921,8 @@ public class Register {
         this.connStatusCode = connStatusCode;
     }
 
-    public void setUnregPinCode(int unregPinCode) {
-        this.unregPinCode = unregPinCode;
+    public void setUnregStatusCode(int unregStatusCode) {
+        this.unregStatusCode = unregStatusCode;
     }
 
     private void createUIComponents() {
