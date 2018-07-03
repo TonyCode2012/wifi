@@ -52,6 +52,11 @@ public class HomePage {
     private JLabel ad4Label;
     private JLabel ad5Label;
     private JLabel ssidLabel;
+    private JPanel walletPanel;
+    private JLabel leftTileLabel;
+    private JLabel leftLabel;
+    private JButton seeAdsBtn;
+    private JButton exchangeBtn;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -140,6 +145,8 @@ public class HomePage {
                     launchLabels[3].setVisible(true);
                     connectStatusL.setIcon(connectedIcon);
                     connectStatusL.setText("已连接   ");
+                    // set wallet left value
+                    leftLabel.setText("10");
                 } else {
                     launchTipLabel.setText("连接失败!");
                     launchLabels[3].setIcon(unLaunchIcon);
