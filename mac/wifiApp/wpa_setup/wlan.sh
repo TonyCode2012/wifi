@@ -3,7 +3,10 @@
 basedir=`dirname $0`
 basedir=`cd $basedir;pwd`
 
-VERS="20180603"
+retfile="$basedir/.retfile"
+eth_cli_retfile="$basedir/.ecli"
+
+VERS="20180705"
 
 IFACE=""
 REPLY=""
@@ -22,6 +25,14 @@ CODE_WPA_TIMEOUT=69	# wpa timeout
 CODE_NO_SUITABLE_SSID=70 	# no suitable ssid
 CODE_NOT_ROOT=71	# root is required
 CODE_PARAM_ERROR=72	# wrong parameters
+CODE_BSSID_ERROR=73	# bssid error
+CODE_WAP_INCOMPLETED=74	# WAP incompleted
+CODE_GET_SUCCESS=75	# get successfully
+
+CODE_SEND_RAW_SUCCESS=92	# send raw transaction successfully
+CODE_KEYSTORE_ERROR=93	# read keystore error
+CODE_SEND_RAW_TIMEOUT=94	# send raw transaction timeout
+CODE_SEND_RAW_OTHER_ERROR=95	# send raw transaction other errors
 
 PRIKEY=#"/home/ben/bc/wpa_setup/config/prikey.pem"  
 IDFILE=#"/home/ben/bc/wpa_setup/config/profile"
@@ -270,3 +281,39 @@ if [[ $1 == "close_account" ]]; then
 	echo "main disconnect return code " $r
 	exit $r
 fi
+
+if [[ $1 == "get" ]]; then
+	if [[ $2 == "bssid" ]]; then
+		wpastate=`$basedir/wpa_cli status | sed '/^wpa_state=/!d;s/.*=//'`
+		echo $i $wpastate
+		if [[ $wpastate == COMPLETED ]]; then
+			bssid=`$basedir/wpa_cli status | sed '/^bssid=/!d;s/.*=//'`
+			
+			if [ "x$bssid" = "x" ]; then  
+				exit $CODE_BSSID_ERROR
+			else  
+				echo "bssid $bssid"
+				echo "{\"bssid\":\"$bssid\"}" > $retfile
+				exit $CODE_GET_SUCCESS
+			fi  
+			
+		else
+			exit $CODE_WAP_INCOMPLETED
+		fi	
+
+	fi
+	
+	if [[ $2 == "price" ]]; then
+			echo "default price 2"
+			echo "{\"price\":2}" > $retfile
+			exit $CODE_GET_SUCCESS
+	fi	
+fi
+
+if [[ $1 == "sendrawtransaction" ]]; then
+	$basedir/eth_cli -rpc $2 -key $3 -to $4 -amount $5 -limit $6 -price $7 -password $8 -ret $eth_cli_retfile
+	ecli_ret=`cat $eth_cli_retfile` 
+	echo $ecli_ret
+	exit $ecli_ret
+fi
+

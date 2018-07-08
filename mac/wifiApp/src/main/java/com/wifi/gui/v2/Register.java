@@ -391,6 +391,14 @@ public class Register {
         }
     }
 
+
+
+    /**
+     * @Description: launch app if having been registered, if not do registration
+     * @Param testFlag: if true go testing
+     * @return: void
+     * @Date: 18-7-8
+     */
     private void launch(boolean testFlag) {
         if(!genProfileData()) {
             System.out.println("Generate profile data failed! Login failed!");
@@ -461,10 +469,14 @@ public class Register {
                     Process process = pb.start();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String line;
+                    String leftCoinLine = "";
                     StringBuilder sb = new StringBuilder();
                     while ((line = reader.readLine()) != null) {
                         if(preHomePage.getRetStatus() == 0) {
                             process.destroy();
+                        }
+                        if(line.contains("left coin")) {
+                            leftCoinLine = line;
                         }
                         sb.append(line);
                         System.out.println(line);
@@ -474,14 +486,21 @@ public class Register {
                     if(retStr.contains("main connect return code")) {
                         String retStrArry[] = retStr.split(" ");
                         connStatusCode = Integer.parseInt(retStrArry[retStrArry.length-1]);
+                        // get user's left coin number
+                        if(leftCoinLine.contains("left coin")){
+                            String[] tmpStr = leftCoinLine.split(" ");
+                            int leftCoin = Integer.parseInt(tmpStr[tmpStr.length-1]);
+                            preHomePage.setLeftCoin(leftCoin);
+                        }
                     } else {
                         connStatusCode = 404;
                     }
-                    // if return code is 3,pop up a dialog to require pin code.
+                    // if return code is 3(which means registration success),pop up a dialog to require pin code.
                     if(connStatusCode == 9) {
                         System.out.println("Register successfully,please input pin code.");
                         // if register successfully show login page
                         VerifyCodeDlg vcDlg = new VerifyCodeDlg("REGISTER");
+                        vcDlg.setPreHomePage(preHomePage);
                         vcDlg.setDlgType("REGISTER");
                         vcDlg.setTitle("注册");
                         vcDlg.setRegisterPage(thisRegister);
@@ -497,11 +516,17 @@ public class Register {
                         case 2:
                             System.out.println("[ERROR] Launch failed! User info doesn't match!");
                             break;
+                        case 3:
+                            System.out.println("[INFO] Register successfully!!");
+                            break;
                         case 4:
                             System.out.println("[ERROR] Launch failed! Phone num authentication failed!");
                             break;
                         case 5:
                             System.out.println("[ERROR] Launch failed! User account registration failed!!");
+                            break;
+                        case 6:
+                            System.out.println("[INFO] Register successfully, waiting for writing into blockchain!!");
                             break;
                         case 8:
                             System.out.println("[ERROR] Launch failed! phone verify failed!");

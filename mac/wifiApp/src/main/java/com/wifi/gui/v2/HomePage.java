@@ -3,6 +3,7 @@ package com.wifi.gui.v2;
 import com.wifi.gui.v2.utils.Utils;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,20 +58,32 @@ public class HomePage {
     private JLabel leftLabel;
     private JButton seeAdsBtn;
     private JButton exchangeBtn;
+    private JLabel loginStatusLabel;
+    private JPanel getCoinPanel;
+    private JLabel ads1Label;
+    private JLabel ads2Label;
+    private JLabel ads3Label;
+    private JScrollPane seeAdsScrollPane;
+    private JLabel spacer1Label;
+    private JLabel spacer2Label;
 
     private JFrame fJFrame;
     private Register nextRegister;
     private Launch nextLaunch;
     private String rootPath = System.getProperty("user.dir");
     private int retStatus = -1;
+    private int leftCoin = -1;
     private ImageIcon launchIcon;
     private ImageIcon unLaunchIcon;
     private ImageIcon connectedIcon;
     private ImageIcon connectedOpaqueIcon;
     private ImageIcon unconnectedIcon;
     private ImageIcon connectingIcon;
+    private ImageIcon goldCoinIcon;
     private Thread connStatusImgThread;
     private boolean networkConnected;
+    private int loginStatus = 0;
+    private Color bgColor = rootPanel.getBackground();
 
     public void setLaunchImg() {
         // reset launch img status
@@ -146,7 +159,8 @@ public class HomePage {
                     connectStatusL.setIcon(connectedIcon);
                     connectStatusL.setText("已连接   ");
                     // set wallet left value
-                    leftLabel.setText("10");
+                    setLoginStatus(1);
+                    setWalletStatus();
                 } else {
                     launchTipLabel.setText("连接失败!");
                     launchLabels[3].setIcon(unLaunchIcon);
@@ -194,6 +208,42 @@ public class HomePage {
             jplabel.setIcon(icon);
             jtlabel.setText("这仅仅是一个测试而已，测试看啊看我们的东西能在什么防霾的比较好哈哈哈，你都嗯" +
                     "我的意思么");
+        }
+    }
+
+    private void setIcon(double ratio,double fWidth,ImageIcon icon) {
+        double iWidth = icon.getIconWidth();
+        double iHeight = icon.getIconHeight();
+        double iRatio = iHeight / iWidth;
+        int iconWidth = (int) (fWidth * ratio);
+        int iconHeight = (int) (iconWidth * iRatio);
+        icon.setImage(icon.getImage().getScaledInstance(iconWidth,iconHeight,Image.SCALE_DEFAULT));
+    }
+
+    private void seeAds() {
+        double rWidth = rootPanel.getWidth();
+        // set wallet page layout
+        spacer1Label.setBorder(new LineBorder(bgColor));
+        spacer1Label.setPreferredSize(new Dimension(10,(int)rWidth/8));
+        spacer2Label.setBorder(new LineBorder(bgColor));
+        spacer2Label.setPreferredSize(new Dimension(10,(int)rWidth/8));
+//        seeAdsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        ImageIcon img1 = new ImageIcon(rootPath + "/img/tcn1.jpg");
+        ImageIcon img2 = new ImageIcon(rootPath + "/img/tcn2.jpg");
+        ImageIcon img3 = new ImageIcon(rootPath + "/img/tcn3.jpg");
+        ImageIcon img4 = new ImageIcon(rootPath + "/img/tcn4.jpg");
+        ImageIcon img5 = new ImageIcon(rootPath + "/img/tcn5.jpg");
+        ImageIcon img6 = new ImageIcon(rootPath + "/img/tcn6.jpg");
+        JLabel seeAdsLabels[] = {ads1Label,ads2Label,ads3Label};
+        ImageIcon icons[] = {img1,img2,img3};
+        for(int i=0;i<3;i++) {
+            JLabel tmpLabel = seeAdsLabels[i];
+            ImageIcon tmpIcon = icons[i];
+            setIcon(0.2,rWidth,tmpIcon);
+            tmpLabel.setIcon(tmpIcon);
+            tmpLabel.setText("这仅仅是一个测试而已，测试看啊看我们的东西能在什么防霾的比较好哈哈哈，你都嗯" +
+                    "我的意思么");
+            tmpLabel.setVerticalTextPosition(SwingConstants.CENTER);
         }
     }
 
@@ -284,6 +334,35 @@ public class HomePage {
         }
         // set icons
         connectStatusL.setIcon(connectedIcon);
+        // set coin image
+        goldCoinIcon = new ImageIcon(rootPath + "/img/goldCoin.png");
+        double gRatio = 0.08;
+        double goldWidth = goldCoinIcon.getIconWidth();
+        double goldHeight = goldCoinIcon.getIconHeight();
+        double goldRatio = goldHeight / goldWidth;
+        int goldCoinW = (int) (width * gRatio);
+        int goldCoinH = (int) (goldCoinW * goldRatio);
+        goldCoinIcon.setImage(goldCoinIcon.getImage().getScaledInstance(goldCoinW,goldCoinH,Image.SCALE_DEFAULT));
+        leftLabel.setIcon(goldCoinIcon);
+        leftLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+    }
+
+    private void setWalletStatus() {
+        // invisible ads and exchange
+        seeAdsBtn.setVisible(false);
+        exchangeBtn.setVisible(false);
+        boolean status = false;
+        if(loginStatus == 1) {
+            status = true;
+        }
+        loginStatusLabel.setVisible(!status);
+        leftLabel.setVisible(status);
+        if(status) {
+            leftLabel.setText(String.valueOf(leftCoin));
+        }
+        leftTileLabel.setVisible(status);
+        getCoinPanel.setVisible(status);
+        seeAdsScrollPane.setVisible(status);
     }
 
     private void _init() {
@@ -299,6 +378,10 @@ public class HomePage {
         // set recognise ssid label text to space
         ssidLabel.setText("blockchain");
         ssidLabel.setForeground(rootPanel.getBackground());
+        // set wallet status
+        setWalletStatus();
+        // users can get coins by reading ads
+        seeAds();
     }
 
     public HomePage() {
@@ -345,6 +428,8 @@ public class HomePage {
 
                     Process process = pb.start();
                     process.waitFor();
+                    setLoginStatus(0);
+                    setWalletStatus();
 
                 } catch (IOException|InterruptedException ex) {
                     System.out.println(ex.getMessage());
@@ -380,6 +465,14 @@ public class HomePage {
 
     public void setRetStatus(int retStatus) {
         this.retStatus = retStatus;
+    }
+
+    public void setLeftCoin(int leftCoin) {
+        this.leftCoin = leftCoin;
+    }
+
+    public void setLoginStatus(int loginStatus) {
+        this.loginStatus = loginStatus;
     }
 
     private void createUIComponents() {

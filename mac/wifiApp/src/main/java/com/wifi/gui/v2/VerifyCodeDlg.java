@@ -31,6 +31,7 @@ public class VerifyCodeDlg extends JDialog {
     private ObjectMapper objMapper = new ObjectMapper();
     private String dlgType;
     private int regStatusCode = -1;
+    private HomePage preHomePage;
 
     /*
     * 1: process -- disconnect network
@@ -163,6 +164,7 @@ public class VerifyCodeDlg extends JDialog {
                         OutputStreamWriter pinCodeWriter = new OutputStreamWriter(new FileOutputStream(pinCodePath));
                         pinCodeWriter.write(pinCodeNode.toString());
                         pinCodeWriter.close();
+                        // registration process
                         if (dlgType.equals("REGISTER")) {
                             that.setVisible(false);
                             Utils.addCmdCode2File(3,pinCodePath);
@@ -192,8 +194,12 @@ public class VerifyCodeDlg extends JDialog {
                             Process process = pb.start();
                             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                             String line;
+                            String leftCoinLine = "";
                             StringBuilder sb = new StringBuilder();
                             while ((line = reader.readLine()) != null) {
+                                if(line.contains("left coin")){
+                                    leftCoinLine = line;
+                                }
                                 sb.append(line);
                                 System.out.println(line);
                             }
@@ -202,11 +208,20 @@ public class VerifyCodeDlg extends JDialog {
                             if (retStr.contains("main connect return code")) {
                                 String retStrArry[] = retStr.split(" ");
                                 regStatusCode = Integer.parseInt(retStrArry[retStrArry.length - 1]);
+                                if(regStatusCode == 64) {
+                                    // get user's left coin number
+                                    if(leftCoinLine.contains("left coin")){
+                                        String[] tmpStr = leftCoinLine.split(" ");
+                                        int leftCoin = Integer.parseInt(tmpStr[tmpStr.length-1]);
+                                        preHomePage.setLeftCoin(leftCoin);
+                                    }
+                                }
                             } else {
                                 regStatusCode = 404;
                             }
                             register.setConnStatusCode(regStatusCode);
                         }
+                        // unregistration process
                         if(dlgType.equals("UNREGISTER")) {
                             String wpaCmdPath = getWpaCmdPath();
                             // send unregister pin code
@@ -345,5 +360,9 @@ public class VerifyCodeDlg extends JDialog {
 
     private String getWpaCmdPath() {
         return rootPath.concat("/") + configSetting.getWpaCmdPath();
+    }
+
+    public void setPreHomePage(HomePage preHomePage) {
+        this.preHomePage = preHomePage;
     }
 }
