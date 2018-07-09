@@ -7,6 +7,8 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -84,6 +86,7 @@ public class HomePage {
     private boolean networkConnected;
     private int loginStatus = 0;
     private Color bgColor = rootPanel.getBackground();
+    private Cursor curCursor = rootPanel.getCursor();
 
     public void setLaunchImg() {
         // reset launch img status
@@ -434,6 +437,28 @@ public class HomePage {
                 } catch (IOException|InterruptedException ex) {
                     System.out.println(ex.getMessage());
                 }
+            }
+        });
+        JLabel adsLabels[] = {ads1Label,ads2Label,ads3Label};
+        for(JLabel label: adsLabels) {
+            changeCursor(label);
+        }
+    }
+
+    private void changeCursor(Component component) {
+        component.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+                rootPanel.setCursor(cursor);
+            }
+        });
+        component.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                rootPanel.setCursor(curCursor);
             }
         });
     }
