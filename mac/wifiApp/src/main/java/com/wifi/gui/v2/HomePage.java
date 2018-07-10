@@ -68,6 +68,8 @@ public class HomePage {
     private JScrollPane seeAdsScrollPane;
     private JLabel spacer1Label;
     private JLabel spacer2Label;
+    private JPanel showAdsPanel;
+    private JLabel adsDetail;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -459,6 +461,22 @@ public class HomePage {
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
                 rootPanel.setCursor(curCursor);
+            }
+        });
+        component.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                pageHomeTabbedPane.setSelectedComponent(showAdsPanel);
+                Component cmp = e.getComponent();
+                if(cmp instanceof JLabel) {
+                    JLabel label = (JLabel)cmp;
+                    String text = label.getText();
+                    Icon icon = label.getIcon();
+                    adsDetail.setText(text);
+                    adsDetail.setIcon(icon);
+                    adsDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
+                }
             }
         });
     }
