@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
@@ -69,7 +69,10 @@ public class HomePage {
     private JLabel spacer1Label;
     private JLabel spacer2Label;
     private JPanel showAdsPanel;
-    private JLabel adsDetail;
+    private JLabel adsDetailIcon;
+    private JLabel adsDetailText;
+    private JButton adsPageRetBtn;
+    private JPanel connectPanel;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -89,6 +92,8 @@ public class HomePage {
     private int loginStatus = 0;
     private Color bgColor = rootPanel.getBackground();
     private Cursor curCursor = rootPanel.getCursor();
+    private int rootWidth;
+    private int rootHeight;
 
     public void setLaunchImg() {
         // reset launch img status
@@ -173,7 +178,9 @@ public class HomePage {
                     connectStatusL.setIcon(unconnectedIcon);
                     connectStatusL.setText("未连接   ");
                 }
-
+//                fJFrame.setSize(tWidth,rootPanel.getHeight());
+                fJFrame.pack();
+                System.out.println("this is a test!");
             } catch (InterruptedException ex) {
                 System.out.println(ex.getMessage());
             }
@@ -378,7 +385,7 @@ public class HomePage {
         connectStatusL.setVisible(false);
         networkConnected = false;
         // remove new panel
-        pageHomeTabbedPane.remove(1);
+        pageHomeTabbedPane.remove(newsScrollPanel);
         setLaunchImgStatus();
         // set recognise ssid label text to space
         ssidLabel.setText("blockchain");
@@ -387,6 +394,10 @@ public class HomePage {
         setWalletStatus();
         // users can get coins by reading ads
         seeAds();
+        pageHomeTabbedPane.remove(showAdsPanel);
+        // get root panel width and height
+        rootWidth = rootPanel.getWidth();
+        rootHeight = rootPanel.getHeight();
     }
 
     public HomePage() {
@@ -441,6 +452,21 @@ public class HomePage {
                 }
             }
         });
+        adsPageRetBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    pageHomeTabbedPane.remove(showAdsPanel);
+                    leftCoin++;
+                    leftLabel.setText(String.valueOf(leftCoin));
+                    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftCoin"))));
+                    writer.write(String.valueOf(leftCoin));
+                    writer.close();
+                } catch (IOException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+        });
         JLabel adsLabels[] = {ads1Label,ads2Label,ads3Label};
         for(JLabel label: adsLabels) {
             changeCursor(label);
@@ -467,18 +493,48 @@ public class HomePage {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
+                pageHomeTabbedPane.add(showAdsPanel);
                 pageHomeTabbedPane.setSelectedComponent(showAdsPanel);
+                pageHomeTabbedPane.setTitleAt(pageHomeTabbedPane.getSelectedIndex(),"广告");
                 Component cmp = e.getComponent();
                 if(cmp instanceof JLabel) {
                     JLabel label = (JLabel)cmp;
                     String text = label.getText();
                     Icon icon = label.getIcon();
-                    adsDetail.setText(text);
-                    adsDetail.setIcon(icon);
-                    adsDetail.setVerticalTextPosition(SwingConstants.BOTTOM);
+                    adsDetailText.setSize((int)(rootPanel.getWidth()*0.95),0);
+//                    adsDetailText.setSize(pageHomeTabbedPane.getWidth(),0);
+                    JlabelSetText(adsDetailText,text);
+                    fJFrame.pack();
+                    adsDetailIcon.setIcon(icon);
                 }
             }
         });
+    }
+    public void JlabelSetText(JLabel jLabel, String longString) {
+        if(jLabel.getWidth() <= 0) {
+            System.out.println("[ERROR] Label width can't be 0!");
+            return;
+        }
+        StringBuilder builder = new StringBuilder("<html>");
+        char[] chars = longString.toCharArray();
+        FontMetrics fontMetrics = jLabel.getFontMetrics(jLabel.getFont());
+        int start = 0;
+        int len = 0;
+        while (start + len < longString.length()) {
+            while (true) {
+                len++;
+                if (start + len > longString.length()) break;
+                if (fontMetrics.charsWidth(chars, start, len) > jLabel.getWidth()) {
+                    break;
+                }
+            }
+            builder.append(chars, start, len - 1).append("<br/>");
+            start = start + len - 1;
+            len = 0;
+        }
+        builder.append(chars, start, longString.length() - start);
+        builder.append("</html>");
+        jLabel.setText(builder.toString());
     }
 
     public JPanel getRootPanel() {
