@@ -1,6 +1,11 @@
 package com.wifi.gui.v2;
 
 import com.wifi.gui.v2.utils.Utils;
+import com.wifi.configSetting;
+import org.apache.commons.io.input.ReversedLinesFileReader;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -73,6 +78,11 @@ public class HomePage {
     private JLabel adsDetailText;
     private JButton adsPageRetBtn;
     private JPanel connectPanel;
+    private JLabel ads4Label;
+    private JLabel ads5Label;
+    private JLabel historyLabel;
+    private JLabel recommendIcon;
+    private JLabel recommendText;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -86,14 +96,12 @@ public class HomePage {
     private ImageIcon connectedOpaqueIcon;
     private ImageIcon unconnectedIcon;
     private ImageIcon connectingIcon;
-    private ImageIcon goldCoinIcon;
     private Thread connStatusImgThread;
-    private boolean networkConnected;
     private int loginStatus = 0;
     private Color bgColor = rootPanel.getBackground();
     private Cursor curCursor = rootPanel.getCursor();
     private int rootWidth;
-    private int rootHeight;
+    private String historyFilePath = rootPath.concat("/config/records");
 
     public void setLaunchImg() {
         // reset launch img status
@@ -171,6 +179,11 @@ public class HomePage {
                     // set wallet left value
                     setLoginStatus(1);
                     setWalletStatus();
+                    // record item
+                    writeRecord("登陆: -1");
+                    sleep(200);
+                    String historyStr = readRecord(3);
+                    historyLabel.setText(historyStr);
                 } else {
                     launchTipLabel.setText("连接失败!");
                     launchLabels[3].setIcon(unLaunchIcon);
@@ -179,8 +192,7 @@ public class HomePage {
                     connectStatusL.setText("未连接   ");
                 }
 //                fJFrame.setSize(tWidth,rootPanel.getHeight());
-                fJFrame.pack();
-                System.out.println("this is a test!");
+//                fJFrame.pack();
             } catch (InterruptedException ex) {
                 System.out.println(ex.getMessage());
             }
@@ -206,7 +218,6 @@ public class HomePage {
         JLabel jplarry[] = {n1pLabel,n2pLabel,n3pLabel,n4pLabel,n5pLabel,n6pLabel};
         ImageIcon icons[] = {img1,img2,img3,img4,img5,img6};
         int width = rootPanel.getWidth();
-        int height = rootPanel.getHeight();
         double ratio = 0.2;
         underPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         for(int i=0;i<6;i++) {
@@ -216,14 +227,17 @@ public class HomePage {
             jtlabel.setVerticalTextPosition(JLabel.TOP);
             jtlabel.setVerticalAlignment(JLabel.TOP);
             jplabel.setText("");
-            icon.setImage(icon.getImage().getScaledInstance((int) (width * ratio), (int) (height * ratio), Image.SCALE_DEFAULT));
-            jplabel.setIcon(icon);
-            jtlabel.setText("这仅仅是一个测试而已，测试看啊看我们的东西能在什么防霾的比较好哈哈哈，你都嗯" +
-                    "我的意思么");
+            setJLabelIcon(jplabel,icon,width,ratio);
+            jtlabel.setText("<html>这仅仅是一个测试而已，测试看啊看我们的东西能在什么防霾的比较好哈哈哈，你都嗯" +
+                    "我的意思么<br/><br/>价格：0.1</html>");
         }
     }
 
     private void setIcon(double ratio,double fWidth,ImageIcon icon) {
+        if(ratio > 1) {
+            System.out.println("[ERROR] Can't set ratio more than 1!");
+            ratio = 1;
+        }
         double iWidth = icon.getIconWidth();
         double iHeight = icon.getIconHeight();
         double iRatio = iHeight / iWidth;
@@ -239,24 +253,32 @@ public class HomePage {
         spacer1Label.setPreferredSize(new Dimension(10,(int)rWidth/8));
         spacer2Label.setBorder(new LineBorder(bgColor));
         spacer2Label.setPreferredSize(new Dimension(10,(int)rWidth/8));
-//        seeAdsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        ImageIcon img1 = new ImageIcon(rootPath + "/img/tcn1.jpg");
-        ImageIcon img2 = new ImageIcon(rootPath + "/img/tcn2.jpg");
-        ImageIcon img3 = new ImageIcon(rootPath + "/img/tcn3.jpg");
-        ImageIcon img4 = new ImageIcon(rootPath + "/img/tcn4.jpg");
-        ImageIcon img5 = new ImageIcon(rootPath + "/img/tcn5.jpg");
-        ImageIcon img6 = new ImageIcon(rootPath + "/img/tcn6.jpg");
-        JLabel seeAdsLabels[] = {ads1Label,ads2Label,ads3Label};
-        ImageIcon icons[] = {img1,img2,img3};
-        for(int i=0;i<3;i++) {
+        ImageIcon img1 = new ImageIcon(rootPath + "/img/xingbake1.jpg");
+        ImageIcon img2 = new ImageIcon(rootPath + "/img/xingbake2.jpg");
+        ImageIcon img3 = new ImageIcon(rootPath + "/img/xingbake3.jpg");
+        ImageIcon img4 = new ImageIcon(rootPath + "/img/kendeji1.jpg");
+        ImageIcon img5 = new ImageIcon(rootPath + "/img/kendeji2.jpg");
+        JLabel seeAdsLabels[] = {ads1Label,ads2Label,ads3Label,ads4Label,ads5Label};
+        ImageIcon icons[] = {img1,img2,img3,img4,img5};
+        for(int i=0;i<seeAdsLabels.length;i++) {
             JLabel tmpLabel = seeAdsLabels[i];
             ImageIcon tmpIcon = icons[i];
-            setIcon(0.2,rWidth,tmpIcon);
+            setIcon(0.3,rWidth,tmpIcon);
             tmpLabel.setIcon(tmpIcon);
-            tmpLabel.setText("这仅仅是一个测试而已，测试看啊看我们的东西能在什么防霾的比较好哈哈哈，你都嗯" +
-                    "我的意思么");
-            tmpLabel.setVerticalTextPosition(SwingConstants.CENTER);
+            tmpLabel.setText("<html><p>这仅仅是一个测试而已，测试看啊看我们的东西能在什么防霾的比较好哈哈哈，你都嗯" +
+                    "我的意思么</p><br/><font color='#32CD99'>￥ 0.1</font></html>");
+            tmpLabel.setVerticalTextPosition(SwingConstants.TOP);
         }
+    }
+    
+    private void setRecommend() {
+        String text = "Nike Air VaporMax Flyknit 2 男子跑步鞋配備最新的 Max Air 革命性足底，帶來全新的設計元素。" +
+                "鞋跟設計帶來更出色的承托，同時 Flyknit 物料亦能帶來包覆雙足的觸感。充滿未來感的鞋底設計打造完美造型，" +
+                "切合所有需要，無論是外出還是快跑都格外型格。";
+        recommendText.setSize((int)(rootWidth*0.9),0);
+//        recommendText.setSize(recommandPanel.getWidth(),0);
+        setJLabelText(recommendText,text);
+        setJLabelIcon(recommendIcon,rootPath.concat("/img/nike.png"),rootWidth,0.8);
     }
 
     public void resetLaunchImgStatus() {
@@ -291,14 +313,7 @@ public class HomePage {
             JLabel tmpLabel = adLabels[i];
             tmpLabel.setVisible(false);
             tmpLabel.setText("");
-            ImageIcon tmpImg = new ImageIcon(iconPath);
-            double tmpImgH = tmpImg.getIconHeight();
-            double tmpimgW = tmpImg.getIconWidth();
-            double tmpRatio = tmpImgH / tmpimgW;
-            int stmpImgW = (int) (width * raRatio);
-            int stmpImgH = (int) (stmpImgW * tmpRatio);
-            tmpImg.setImage(tmpImg.getImage().getScaledInstance(stmpImgW,stmpImgH,Image.SCALE_DEFAULT));
-            tmpLabel.setIcon(tmpImg);
+            setJLabelIcon(tmpLabel,iconPath,rootPanel.getWidth(),raRatio);
         }
         // set wifi icons
         ImageIcon launchIcon1 = new ImageIcon(rootPath + "/img/launch1.png");
@@ -318,8 +333,7 @@ public class HomePage {
             ImageIcon wifiIcon = wifiLaunchIcons[i];
             wifiLabel.setVisible(false);
             wifiLabel.setText("");
-            wifiIcon.setImage(wifiIcon.getImage().getScaledInstance(launchIconW, launchIconH, Image.SCALE_DEFAULT));
-            wifiLabel.setIcon(wifiIcon);
+            setJLabelIcon(wifiLabel,wifiIcon,width,rlRatio);
         }
         launchIcon = launchIcon4;
         unLaunchIcon = new ImageIcon(rootPath + "/img/unLaunch.png");
@@ -347,15 +361,7 @@ public class HomePage {
         // set icons
         connectStatusL.setIcon(connectedIcon);
         // set coin image
-        goldCoinIcon = new ImageIcon(rootPath + "/img/goldCoin.png");
-        double gRatio = 0.08;
-        double goldWidth = goldCoinIcon.getIconWidth();
-        double goldHeight = goldCoinIcon.getIconHeight();
-        double goldRatio = goldHeight / goldWidth;
-        int goldCoinW = (int) (width * gRatio);
-        int goldCoinH = (int) (goldCoinW * goldRatio);
-        goldCoinIcon.setImage(goldCoinIcon.getImage().getScaledInstance(goldCoinW,goldCoinH,Image.SCALE_DEFAULT));
-        leftLabel.setIcon(goldCoinIcon);
+        setJLabelIcon(leftLabel,rootPath + "/img/goldCoin.png",width,0.08);
         leftLabel.setHorizontalTextPosition(SwingConstants.LEFT);
     }
 
@@ -375,6 +381,7 @@ public class HomePage {
         leftTileLabel.setVisible(status);
         getCoinPanel.setVisible(status);
         seeAdsScrollPane.setVisible(status);
+        historyLabel.setVisible(status);
     }
 
     private void _init() {
@@ -383,7 +390,6 @@ public class HomePage {
         breakConnBtn.setVisible(false);
         connectStatusL.setText("");
         connectStatusL.setVisible(false);
-        networkConnected = false;
         // remove new panel
         pageHomeTabbedPane.remove(newsScrollPanel);
         setLaunchImgStatus();
@@ -397,7 +403,8 @@ public class HomePage {
         pageHomeTabbedPane.remove(showAdsPanel);
         // get root panel width and height
         rootWidth = rootPanel.getWidth();
-        rootHeight = rootPanel.getHeight();
+        // set recommend ads
+        setRecommend();
     }
 
     public HomePage() {
@@ -462,12 +469,17 @@ public class HomePage {
                     OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftCoin"))));
                     writer.write(String.valueOf(leftCoin));
                     writer.close();
+                    setIcon(0.2,rootWidth,(ImageIcon) adsDetailIcon.getIcon());
+                    // record consume item
+                    writeRecord("看广告: +1");
+                    String historyStr = readRecord(3);
+                    historyLabel.setText(historyStr);
                 } catch (IOException ex) {
                     System.out.println(ex.getMessage());
                 }
             }
         });
-        JLabel adsLabels[] = {ads1Label,ads2Label,ads3Label};
+        JLabel adsLabels[] = {ads1Label,ads2Label,ads3Label,ads4Label,ads5Label};
         for(JLabel label: adsLabels) {
             changeCursor(label);
         }
@@ -499,18 +511,34 @@ public class HomePage {
                 Component cmp = e.getComponent();
                 if(cmp instanceof JLabel) {
                     JLabel label = (JLabel)cmp;
+                    // get indicated text
                     String text = label.getText();
-                    Icon icon = label.getIcon();
+                    Document doc = Jsoup.parse(text);
+                    Elements element = doc.getElementsByTag("p");
+                    text = element.text();
+                    // reset image size
+                    ImageIcon icon = (ImageIcon) label.getIcon();
+                    String filePath = icon.getDescription();
                     adsDetailText.setSize((int)(rootPanel.getWidth()*0.95),0);
-//                    adsDetailText.setSize(pageHomeTabbedPane.getWidth(),0);
-                    JlabelSetText(adsDetailText,text);
-                    fJFrame.pack();
-                    adsDetailIcon.setIcon(icon);
+                    setJLabelIcon(adsDetailIcon,filePath,rootWidth,0.93);
+                    setJLabelText(adsDetailText,text);
                 }
             }
         });
     }
-    public void JlabelSetText(JLabel jLabel, String longString) {
+
+    private void setJLabelIcon(JLabel jLabel,String iconPath,double fWidth,double ratio){
+        ImageIcon icon = new ImageIcon(iconPath);
+        setIcon(ratio,fWidth,icon);
+        jLabel.setIcon(icon);
+    }
+
+    private void setJLabelIcon(JLabel jLabel,ImageIcon icon,double fWidth,double ratio){
+        setIcon(ratio,fWidth,icon);
+        jLabel.setIcon(icon);
+    }
+
+    private void setJLabelText(JLabel jLabel, String longString) {
         if(jLabel.getWidth() <= 0) {
             System.out.println("[ERROR] Label width can't be 0!");
             return;
@@ -535,6 +563,38 @@ public class HomePage {
         builder.append(chars, start, longString.length() - start);
         builder.append("</html>");
         jLabel.setText(builder.toString());
+    }
+
+    private void writeRecord(String record) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(historyFilePath,true));
+            writer.append(record.concat("\n"));
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private String readRecord(int lineNum) {
+        try {
+            int fontSize = Integer.parseInt(configSetting.getFontSize());
+            fontSize = 4;
+            StringBuilder sb = new StringBuilder();
+            String line;
+            sb.append("<html><font size='"+fontSize+"' color="+"'#4A766E'>");
+            ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(historyFilePath),100,"UTF-8");
+            while(lineNum > 0) {
+                line = reader.readLine();
+                if(line == null) break;
+                sb.append(line).append("<br/>");
+                lineNum--;
+            }
+            sb.append("</font></html>");
+            return sb.toString();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return "";
+        }
     }
 
     public JPanel getRootPanel() {
