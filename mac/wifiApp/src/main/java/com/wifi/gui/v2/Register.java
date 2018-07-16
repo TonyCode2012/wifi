@@ -489,7 +489,7 @@ public class Register {
                         // get user's left coin number
                         if(leftCoinLine.contains("left coin")){
                             String[] tmpStr = leftCoinLine.split(" ");
-                            int leftCoin = Integer.parseInt(tmpStr[tmpStr.length-1]);
+                            double leftCoin = Double.valueOf(tmpStr[tmpStr.length-1]);
                             preHomePage.setLeftCoin(leftCoin);
                         }
                     } else {

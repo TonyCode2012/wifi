@@ -1,21 +1,24 @@
 package com.wifi.gui.v2;
 
+import com.wifi.gui.v2.utils.Arith;
 import com.wifi.gui.v2.utils.Utils;
 import com.wifi.configSetting;
 import org.apache.commons.io.input.ReversedLinesFileReader;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static java.lang.Thread.sleep;
 
@@ -63,8 +66,6 @@ public class HomePage {
     private JPanel walletPanel;
     private JLabel leftTileLabel;
     private JLabel leftLabel;
-    private JButton seeAdsBtn;
-    private JButton exchangeBtn;
     private JLabel loginStatusLabel;
     private JPanel getCoinPanel;
     private JLabel ads1Label;
@@ -73,23 +74,58 @@ public class HomePage {
     private JScrollPane seeAdsScrollPane;
     private JLabel spacer1Label;
     private JLabel spacer2Label;
-    private JPanel showAdsPanel;
     private JLabel adsDetailIcon;
     private JLabel adsDetailText;
     private JButton adsPageRetBtn;
     private JPanel connectPanel;
     private JLabel ads4Label;
     private JLabel ads5Label;
+    private JScrollPane allAdsPane;
+    private JScrollPane adsDetailPane;
     private JLabel historyLabel;
-    private JLabel recommendIcon;
-    private JLabel recommendText;
+    private JLabel purchase1Label;
+    private JLabel purchase2Label;
+    private JLabel purchase3Label;
+    private JLabel purchase4Label;
+    private JLabel purchase5Label;
+    private JPanel pLogoutPanel;
+    private JPanel pLoginPanel;
+    private JPanel mmLogoutPanel;
+    private JPanel mmLoginPanel;
+    private JPanel purchaseDetailPanel;
+    private JScrollPane allPurchasePane;
+    private JLabel purchaseIconLabel;
+    private JLabel purchaseDesLabel;
+    private JButton purchaseBtn;
+    private JButton purchaseRetBtn;
+    private JLabel purchasePriceLabel;
+    private JScrollPane purchaseDetailPane;
+    private JLabel addNumLabel;
+    private JLabel minusNumLabel;
+    private JTextField purchaseNumField;
+    private JTabbedPane allPurchasePanel;
+    private JScrollPane orderDetailPane;
+    private JLabel orderItemIcon;
+    private JLabel orderItemName;
+    private JLabel orderItemPrice;
+    private JLabel orderItemNum;
+    private JLabel orderItemTotal;
+    private JButton orderDetailRetBtn;
+    private JLabel orderTimestamp;
+    private JLabel orderSequence;
+    private JPanel orderPanel;
+    private JPanel orderListLoginPanel;
+    private JPanel orderListLogoutPanel;
+    private JPanel orderListPanel;
+    private JScrollPane orderScrollPane;
+    private JLabel testLabel;
 
     private JFrame fJFrame;
     private Register nextRegister;
     private Launch nextLaunch;
     private String rootPath = System.getProperty("user.dir");
     private int retStatus = -1;
-    private int leftCoin = -1;
+    private double leftCoin = 0.0;
     private ImageIcon launchIcon;
     private ImageIcon unLaunchIcon;
     private ImageIcon connectedIcon;
@@ -102,6 +138,17 @@ public class HomePage {
     private Cursor curCursor = rootPanel.getCursor();
     private int rootWidth;
     private String historyFilePath = rootPath.concat("/config/records");
+
+    // wallet page parameters
+    private int historyReadlineNum = 30;
+
+    // purchase page parameters
+    private int purchaseNum = 1;
+    private double purchasePrice = 1.0;
+
+    // order page parameters
+    private int orderSequenceNum = 0;
+    private ArrayList<OrderSheet> myOrder = new ArrayList<>();
 
     public void setLaunchImg() {
         // reset launch img status
@@ -178,11 +225,10 @@ public class HomePage {
                     connectStatusL.setText("已连接   ");
                     // set wallet left value
                     setLoginStatus(1);
-                    setWalletStatus();
                     // record item
                     writeRecord("登陆: -1");
                     sleep(200);
-                    String historyStr = readRecord(3);
+                    String historyStr = readRecord(historyReadlineNum);
                     historyLabel.setText(historyStr);
                 } else {
                     launchTipLabel.setText("连接失败!");
@@ -191,46 +237,11 @@ public class HomePage {
                     connectStatusL.setIcon(unconnectedIcon);
                     connectStatusL.setText("未连接   ");
                 }
-//                fJFrame.setSize(tWidth,rootPanel.getHeight());
-//                fJFrame.pack();
+                setPageStatus();
             } catch (InterruptedException ex) {
                 System.out.println(ex.getMessage());
             }
         }).start();
-    }
-
-    public void testScrollPanel() {
-//        JTextArea array[] = {textArea1,textArea2,textArea3,textArea4,textArea5,textArea6,textArea7,textArea8,textArea9};
-//        for(JTextArea jta: array) {
-//            jta.setText("我的东西在设么地方，我找不到了你知道么\n" +
-//                    "请你教教我好么，哈哈哈哈，笨蛋，我就是不叫你\n" +
-//                    "你能把握怎么办哈苏打粉，史蒂芬晚礼服骄傲是江东父老\n" +
-//                    "你最终还是要靠你自己的努力来完成你的愿望");
-//        }
-        newsScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        ImageIcon img1 = new ImageIcon(rootPath + "/img/tcn1.jpg");
-        ImageIcon img2 = new ImageIcon(rootPath + "/img/tcn2.jpg");
-        ImageIcon img3 = new ImageIcon(rootPath + "/img/tcn3.jpg");
-        ImageIcon img4 = new ImageIcon(rootPath + "/img/tcn4.jpg");
-        ImageIcon img5 = new ImageIcon(rootPath + "/img/tcn5.jpg");
-        ImageIcon img6 = new ImageIcon(rootPath + "/img/tcn6.jpg");
-        JLabel jtlarry[] = {n1tLabel,n2tLabel,n3tLabel,n4tLabel,n5tLabel,n6tLabel};
-        JLabel jplarry[] = {n1pLabel,n2pLabel,n3pLabel,n4pLabel,n5pLabel,n6pLabel};
-        ImageIcon icons[] = {img1,img2,img3,img4,img5,img6};
-        int width = rootPanel.getWidth();
-        double ratio = 0.2;
-        underPanel.setAlignmentY(Component.TOP_ALIGNMENT);
-        for(int i=0;i<6;i++) {
-            JLabel jtlabel = jtlarry[i];
-            JLabel jplabel = jplarry[i];
-            ImageIcon icon = icons[i];
-            jtlabel.setVerticalTextPosition(JLabel.TOP);
-            jtlabel.setVerticalAlignment(JLabel.TOP);
-            jplabel.setText("");
-            setJLabelIcon(jplabel,icon,width,ratio);
-            jtlabel.setText("<html>这仅仅是一个测试而已，测试看啊看我们的东西能在什么防霾的比较好哈哈哈，你都嗯" +
-                    "我的意思么<br/><br/>价格：0.1</html>");
-        }
     }
 
     private void setIcon(double ratio,double fWidth,ImageIcon icon) {
@@ -250,9 +261,9 @@ public class HomePage {
         double rWidth = rootPanel.getWidth();
         // set wallet page layout
         spacer1Label.setBorder(new LineBorder(bgColor));
-        spacer1Label.setPreferredSize(new Dimension(10,(int)rWidth/8));
+        spacer1Label.setPreferredSize(new Dimension(10,(int)rWidth/15));
         spacer2Label.setBorder(new LineBorder(bgColor));
-        spacer2Label.setPreferredSize(new Dimension(10,(int)rWidth/8));
+        spacer2Label.setPreferredSize(new Dimension(10,(int)rWidth/15));
         ImageIcon img1 = new ImageIcon(rootPath + "/img/xingbake1.jpg");
         ImageIcon img2 = new ImageIcon(rootPath + "/img/xingbake2.jpg");
         ImageIcon img3 = new ImageIcon(rootPath + "/img/xingbake3.jpg");
@@ -261,24 +272,53 @@ public class HomePage {
         JLabel seeAdsLabels[] = {ads1Label,ads2Label,ads3Label,ads4Label,ads5Label};
         ImageIcon icons[] = {img1,img2,img3,img4,img5};
         for(int i=0;i<seeAdsLabels.length;i++) {
-            JLabel tmpLabel = seeAdsLabels[i];
-            ImageIcon tmpIcon = icons[i];
-            setIcon(0.3,rWidth,tmpIcon);
-            tmpLabel.setIcon(tmpIcon);
-            tmpLabel.setText("<html><p>这仅仅是一个测试而已，测试看啊看我们的东西能在什么防霾的比较好哈哈哈，你都嗯" +
+            JLabel label = seeAdsLabels[i];
+            setJLabelIcon(label,icons[i],rootPanel.getWidth(),0.3);
+            label.setText("<html><p>这仅仅是一个测试而已，测试看啊看我们的东西能在什么防霾的比较好哈哈哈，你都嗯" +
                     "我的意思么</p><br/><font color='#32CD99'>￥ 0.1</font></html>");
-            tmpLabel.setVerticalTextPosition(SwingConstants.TOP);
+            label.setVerticalTextPosition(SwingConstants.TOP);
         }
     }
-    
-    private void setRecommend() {
-        String text = "Nike Air VaporMax Flyknit 2 男子跑步鞋配備最新的 Max Air 革命性足底，帶來全新的設計元素。" +
-                "鞋跟設計帶來更出色的承托，同時 Flyknit 物料亦能帶來包覆雙足的觸感。充滿未來感的鞋底設計打造完美造型，" +
-                "切合所有需要，無論是外出還是快跑都格外型格。";
-        recommendText.setSize((int)(rootWidth*0.9),0);
-//        recommendText.setSize(recommandPanel.getWidth(),0);
-        setJLabelText(recommendText,text);
-        setJLabelIcon(recommendIcon,rootPath.concat("/img/nike.png"),rootWidth,0.8);
+
+    private void setPurchasePage() {
+        // set all purchase page
+        ImageIcon pIcon1 = new ImageIcon(rootPath.concat("/img/purchase1.jpg"));
+        ImageIcon pIcon2 = new ImageIcon(rootPath.concat("/img/purchase2.jpg"));
+        ImageIcon pIcon3 = new ImageIcon(rootPath.concat("/img/purchase3.jpg"));
+        ImageIcon pIcon4 = new ImageIcon(rootPath.concat("/img/purchase4.jpg"));
+        ImageIcon pIcon5 = new ImageIcon(rootPath.concat("/img/purchase5.jpg"));
+        ImageIcon purchaseIcons[] = {pIcon1,pIcon2,pIcon3,pIcon4,pIcon5};
+        JLabel purchaseLabels[] = {purchase1Label,purchase2Label,purchase3Label,purchase4Label,purchase5Label};
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(new JSONObject("{'des':'焦糖咖啡星冰乐','price':'3'}"));
+        jsonArray.put(new JSONObject("{'des':'密思朵咖啡','price':'2.5'}"));
+        jsonArray.put(new JSONObject("{'des':'抹茶拿铁','price':'3'}"));
+        jsonArray.put(new JSONObject("{'des':'英式红茶','price':'4'}"));
+        jsonArray.put(new JSONObject("{'des':'经典热巧克力','price':'3.5'}"));
+        for(int i=0;i<purchaseLabels.length;i++) {
+            ImageIcon icon = purchaseIcons[i];
+            JLabel label = purchaseLabels[i];
+            // set icon
+            setJLabelIcon(label,icon,rootWidth,0.3);
+            JSONObject jsonObj = jsonArray.getJSONObject(i);
+            // set text
+            String des = jsonObj.getString("des");
+            double price = jsonObj.getDouble("price");
+            String text = "<html><p>"+des+"</p><br/><br/><font color='#8C7853'>价格 "+price+"</font></html>";
+            label.setText(text);
+            label.setVerticalTextPosition(SwingConstants.TOP);
+        }
+        // set detail purchase page
+        int rWidth = rootPanel.getWidth();
+        double addSubIconRatio = 0.05;
+        String addNumIconPath = rootPath.concat("/img/arrowUp.png");
+        String minusNumIconPath = rootPath.concat("/img/arrowDown.png");
+        setJLabelIcon(addNumLabel,addNumIconPath,rWidth,addSubIconRatio);
+        setJLabelIcon(minusNumLabel,minusNumIconPath,rWidth,addSubIconRatio);
+        purchaseNumField.setText(String.valueOf(purchaseNum));
+        purchaseNumField.setPreferredSize(new Dimension(7,4));
+        // set order detail pane
+        orderDetailPane.setVisible(false);
     }
 
     public void resetLaunchImgStatus() {
@@ -306,14 +346,20 @@ public class HomePage {
         // get root panel width and height
         int width = rootPanel.getWidth();
         // set advertisement icon
+        ImageIcon ads1Icon = new ImageIcon(rootPath.concat("/img/xingbake1.jpg"));
+        ImageIcon ads2Icon = new ImageIcon(rootPath.concat("/img/xingbake2.jpg"));
+        ImageIcon ads3Icon = new ImageIcon(rootPath.concat("/img/xingbake3.jpg"));
+        ImageIcon ads4Icon = new ImageIcon(rootPath.concat("/img/kendeji1.jpg"));
+        ImageIcon ads5Icon = new ImageIcon(rootPath.concat("/img/kendeji2.jpg"));
         JLabel adLabels[] = {ad1Label,ad2Label,ad3Label,ad4Label,ad5Label};
+        ImageIcon adsIcons[] = {ads1Icon,ads2Icon,ads3Icon,ads4Icon,ads5Icon};
         double raRatio = (1 - 0.35) / adLabels.length;
         for(int i=0;i<adLabels.length;i++){
-            String iconPath = rootPath + "/img/tcn"+(i+1)+".jpg";
+            ImageIcon icon = adsIcons[i];
             JLabel tmpLabel = adLabels[i];
             tmpLabel.setVisible(false);
             tmpLabel.setText("");
-            setJLabelIcon(tmpLabel,iconPath,rootPanel.getWidth(),raRatio);
+            setJLabelIcon(tmpLabel,icon,rootPanel.getWidth(),raRatio);
         }
         // set wifi icons
         ImageIcon launchIcon1 = new ImageIcon(rootPath + "/img/launch1.png");
@@ -366,9 +412,6 @@ public class HomePage {
     }
 
     private void setWalletStatus() {
-        // invisible ads and exchange
-        seeAdsBtn.setVisible(false);
-        exchangeBtn.setVisible(false);
         boolean status = false;
         if(loginStatus == 1) {
             status = true;
@@ -381,7 +424,54 @@ public class HomePage {
         leftTileLabel.setVisible(status);
         getCoinPanel.setVisible(status);
         seeAdsScrollPane.setVisible(status);
-        historyLabel.setVisible(status);
+    }
+
+    private void setMakeMoneyStatus() {
+        boolean status = (loginStatus == 1);
+        mmLoginPanel.setVisible(status);
+        mmLogoutPanel.setVisible(!status);
+    }
+
+    private void setPurchaseStatus() {
+        boolean status = (loginStatus == 1);
+        pLoginPanel.setVisible(status);
+        pLogoutPanel.setVisible(!status);
+    }
+
+    private void setOrderStatus() {
+        boolean status = (loginStatus ==1);
+        orderListLoginPanel.setVisible(status);
+        orderListLogoutPanel.setVisible(!status);
+    }
+
+    private void setPageStatus() {
+        setWalletStatus();
+        setMakeMoneyStatus();
+        setPurchaseStatus();
+        setOrderStatus();
+    }
+
+    private void showOrderList() {
+        double rWidth = rootPanel.getWidth();
+        JPanel testPanel = new JPanel();
+        for(OrderSheet order: myOrder) {
+            JLabel label = new JLabel();
+            setJLabelIcon(label,order.getIcon(),rWidth,0.3);
+            StringBuilder sb = new StringBuilder();
+            sb.append("<html>")
+                    .append("订单日期：").append(order.getDateStr()).append("<br/>")
+                    .append("商品名称：").append(order.getGoodsName()).append("<br/>")
+//                    .append("商品价格：").append(order.getGoodsPrice())
+//                    .append("商品数量：").append(order.getGoodsNum())
+//                    .append("商品总价：").append(Arith.mul(order.getGoodsNum(),order.getGoodsPrice()))
+                    .append("订单号：").append(order.getOrderSeq())
+              .append("</html>");
+            label.setText(sb.toString());
+//            orderListPanel.add(label,-1);
+            testPanel.add(label);
+        }
+//        orderListPanel.add(testPanel);
+        orderListLoginPanel.add(testPanel);
     }
 
     private void _init() {
@@ -392,19 +482,21 @@ public class HomePage {
         connectStatusL.setVisible(false);
         // remove new panel
         pageHomeTabbedPane.remove(newsScrollPanel);
+        pageHomeTabbedPane.remove(recommandPanel);
         setLaunchImgStatus();
         // set recognise ssid label text to space
         ssidLabel.setText("blockchain");
         ssidLabel.setForeground(rootPanel.getBackground());
-        // set wallet status
-        setWalletStatus();
         // users can get coins by reading ads
         seeAds();
-        pageHomeTabbedPane.remove(showAdsPanel);
+        adsDetailPane.setVisible(false);
         // get root panel width and height
         rootWidth = rootPanel.getWidth();
-        // set recommend ads
-        setRecommend();
+        // set purchase page
+        setPurchasePage();
+        purchaseDetailPane.setVisible(false);
+        // set all page status
+        setPageStatus();
     }
 
     public HomePage() {
@@ -452,7 +544,7 @@ public class HomePage {
                     Process process = pb.start();
                     process.waitFor();
                     setLoginStatus(0);
-                    setWalletStatus();
+                    setPageStatus();
 
                 } catch (IOException|InterruptedException ex) {
                     System.out.println(ex.getMessage());
@@ -462,30 +554,123 @@ public class HomePage {
         adsPageRetBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    pageHomeTabbedPane.remove(showAdsPanel);
-                    leftCoin++;
-                    leftLabel.setText(String.valueOf(leftCoin));
-                    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftCoin"))));
-                    writer.write(String.valueOf(leftCoin));
-                    writer.close();
-                    setIcon(0.2,rootWidth,(ImageIcon) adsDetailIcon.getIcon());
-                    // record consume item
-                    writeRecord("看广告: +1");
-                    String historyStr = readRecord(3);
-                    historyLabel.setText(historyStr);
-                } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
+                writeLeftCoin(Arith.add(leftCoin,0.1));
+                adsDetailPane.setVisible(false);
+                allAdsPane.setVisible(true);
+                writeRecord("看广告：+0.1");
+                String historyStr = readRecord(historyReadlineNum);
+                historyLabel.setText(historyStr);
+            }
+        });
+        purchaseRetBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                purchaseDetailPane.setVisible(false);
+                allPurchasePane.setVisible(true);
+                changePurchaseNum(1);
+            }
+        });
+        addNumLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                purchaseNum++;
+                purchaseNumField.setText(String.valueOf(purchaseNum));
+            }
+        });
+        minusNumLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(purchaseNum > 1) {
+                    purchaseNum--;
+                }
+                purchaseNumField.setText(String.valueOf(purchaseNum));
+            }
+        });
+        purchaseBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // set left coin
+                double cost = Arith.mul(purchasePrice,purchaseNum);
+                if (leftCoin > cost) {
+                    String purchaseName = purchaseDesLabel.getText();
+                    writeRecord("购买"+purchaseName+": -"+purchasePrice+"x"+purchaseNum+"="+cost);
+                    historyLabel.setText(readRecord(historyReadlineNum));
+                    System.out.println("[INFO] purchase successfully!");
+                    writeLeftCoin(Arith.sub(leftCoin,cost));
+                    orderSequenceNum++;
+                    // set order page
+                    ImageIcon icon = (ImageIcon) purchaseIconLabel.getIcon();
+                    String orderItemNameStr = purchaseDesLabel.getText();
+                    double totalCost = Arith.mul(purchasePrice,purchaseNum);
+                    orderItemIcon.setIcon(icon);
+                    orderItemName.setText("商品名称："+orderItemNameStr);
+                    orderItemPrice.setText("商品价格："+String.valueOf(purchasePrice));
+                    orderItemNum.setText("购买数量："+String.valueOf(purchaseNum));
+                    orderItemTotal.setText("总额："+String.valueOf(totalCost));
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    String dateStr = dateFormat.format(new Date());
+                    orderTimestamp.setText("订单时间："+dateStr);
+                    String orderSeqNum = String.format("%04d",orderSequenceNum);
+                    orderSequence.setText("订单号："+orderSeqNum);
+                    // store order info
+                    OrderSheet order = new OrderSheet();
+                    order.setDateStr(dateStr);
+                    order.setGoodsName(orderItemNameStr);
+                    order.setGoodsNum(purchaseNum);
+                    order.setGoodsPrice(purchasePrice);
+                    order.setOrderSeq(orderSeqNum);
+                    order.setIcon(icon);
+                    myOrder.add(order);
+//                    showOrderList();
+                    purchaseDetailPane.setVisible(false);
+                    orderDetailPane.setVisible(true);
+                } else {
+                    System.out.println("[ERROR] left coin not enough");
                 }
             }
         });
+        orderDetailRetBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                orderDetailPane.setVisible(false);
+                purchaseDetailPane.setVisible(true);
+            }
+        });
+        // set advertisement events in "make money" page
         JLabel adsLabels[] = {ads1Label,ads2Label,ads3Label,ads4Label,ads5Label};
         for(JLabel label: adsLabels) {
-            changeCursor(label);
+            changeCursor(label,"advertisement");
         }
+        // set purchase events in "purchase" page
+        JLabel purchaseLabels[] = {purchase1Label,purchase2Label,purchase3Label,purchase4Label,purchase5Label};
+        for(JLabel label: purchaseLabels) {
+            changeCursor(label,"purchase");
+        }
+        orderListPanel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                super.componentShown(e);
+            }
+        });
+        orderListPanel.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+            }
+        });
+        orderListPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                showOrderList();
+                System.out.println("=================");
+            }
+        });
     }
 
-    private void changeCursor(Component component) {
+    private void changeCursor(Component component, String pageType) {
         component.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -505,26 +690,59 @@ public class HomePage {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                pageHomeTabbedPane.add(showAdsPanel);
-                pageHomeTabbedPane.setSelectedComponent(showAdsPanel);
-                pageHomeTabbedPane.setTitleAt(pageHomeTabbedPane.getSelectedIndex(),"广告");
-                Component cmp = e.getComponent();
-                if(cmp instanceof JLabel) {
-                    JLabel label = (JLabel)cmp;
-                    // get indicated text
-                    String text = label.getText();
-                    Document doc = Jsoup.parse(text);
-                    Elements element = doc.getElementsByTag("p");
-                    text = element.text();
-                    // reset image size
-                    ImageIcon icon = (ImageIcon) label.getIcon();
-                    String filePath = icon.getDescription();
-                    adsDetailText.setSize((int)(rootPanel.getWidth()*0.95),0);
-                    setJLabelIcon(adsDetailIcon,filePath,rootWidth,0.93);
-                    setJLabelText(adsDetailText,text);
+                switch (pageType) {
+                    case "advertisement": pressAds(e);break;
+                    case "purchase": pressPurchase(e);break;
+                    default: System.out.println("[ERROR] invalid page type!");
                 }
             }
         });
+    }
+
+    private void pressAds(MouseEvent e) {
+        allAdsPane.setVisible(false);
+        Component cmp = e.getComponent();
+        if(cmp instanceof JLabel) {
+            JLabel label = (JLabel)cmp;
+            // get indicated text
+            String text = label.getText();
+            Document doc = Jsoup.parse(text);
+            Elements element = doc.getElementsByTag("p");
+            text = element.text();
+            // reset image size
+            ImageIcon icon = (ImageIcon) label.getIcon();
+            String filePath = icon.getDescription();
+            adsDetailText.setSize((int)(rootPanel.getWidth()*0.95),0);
+            setJLabelIcon(adsDetailIcon,filePath,rootWidth,0.93);
+            setJLabelText(adsDetailText,text);
+            adsDetailPane.setVisible(true);
+            fJFrame.pack();
+        }
+    }
+
+    private void pressPurchase(MouseEvent e) {
+        allPurchasePane.setVisible(false);
+        Component cmp = e.getComponent();
+        if(cmp instanceof JLabel) {
+            JLabel label = (JLabel)cmp;
+            // get indicated text
+            String text = label.getText();
+            Document doc = Jsoup.parse(text);
+            Elements desElement = doc.getElementsByTag("p");
+            Elements priceElement = doc.getElementsByTag("font");
+            String des = desElement.text();
+            String price = priceElement.text();
+            String priceNum = price.split(" ")[1];
+            purchasePrice = Double.valueOf(priceNum);
+            purchaseDesLabel.setText(des);
+            purchasePriceLabel.setText("<html><font color='#8C7853'>"+price+"</font></html>");
+            // reset image size
+            ImageIcon icon = (ImageIcon) label.getIcon();
+            String filePath = icon.getDescription();
+            setJLabelIcon(purchaseIconLabel,filePath,rootWidth,0.82);
+            purchaseDetailPane.setVisible(true);
+            fJFrame.pack();
+        }
     }
 
     private void setJLabelIcon(JLabel jLabel,String iconPath,double fWidth,double ratio){
@@ -565,6 +783,11 @@ public class HomePage {
         jLabel.setText(builder.toString());
     }
 
+    private void changePurchaseNum(int purchaseNum) {
+        this.purchaseNum = purchaseNum;
+        purchaseNumField.setText(String.valueOf(purchaseNum));
+    }
+
     private void writeRecord(String record) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(historyFilePath,true));
@@ -597,6 +820,18 @@ public class HomePage {
         }
     }
 
+    private void writeLeftCoin(Double leftCoin) {
+        try {
+            this.leftCoin = leftCoin;
+            leftLabel.setText(String.valueOf(leftCoin));
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftCoin"))));
+            writer.write(String.valueOf(leftCoin));
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public JPanel getRootPanel() {
         return rootPanel;
     }
@@ -611,7 +846,6 @@ public class HomePage {
 
     public void setfJFrame(JFrame fJFrame) {
         this.fJFrame = fJFrame;
-        testScrollPanel();
     }
 
     public void setNextRegister(Register nextRegister) {
@@ -626,7 +860,7 @@ public class HomePage {
         this.retStatus = retStatus;
     }
 
-    public void setLeftCoin(int leftCoin) {
+    public void setLeftCoin(double leftCoin) {
         this.leftCoin = leftCoin;
     }
 
