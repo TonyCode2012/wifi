@@ -12,7 +12,6 @@ import org.jsoup.select.Elements;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -110,15 +109,26 @@ public class HomePage {
     private JLabel orderItemPrice;
     private JLabel orderItemNum;
     private JLabel orderItemTotal;
-    private JButton orderDetailRetBtn;
+    private JButton purchaseDetailRetBtn;
     private JLabel orderTimestamp;
     private JLabel orderSequence;
     private JPanel orderPanel;
     private JPanel orderListLoginPanel;
     private JPanel orderListLogoutPanel;
     private JPanel orderListPanel;
-    private JScrollPane orderScrollPane;
-    private JLabel testLabel;
+    private JScrollPane orderListScrollPane;
+    private JLabel order1Label;
+    private JLabel order2Label;
+    private JLabel order3Label;
+    private JLabel order4Label;
+    private JLabel order5Label;
+    private JLabel order6Label;
+    private JLabel order7Label;
+    private JPanel orderDetailPanel;
+    private JLabel orderDetailIconLabel;
+    private JLabel orderDetailTextLabel;
+    private JButton orderDetailRetBtn;
+    private JScrollPane orderDetailScrollPane;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -226,7 +236,7 @@ public class HomePage {
                     // set wallet left value
                     setLoginStatus(1);
                     // record item
-                    writeRecord("登陆: -1");
+                    writeRecord("-1: 登陆");
                     sleep(200);
                     String historyStr = readRecord(historyReadlineNum);
                     historyLabel.setText(historyStr);
@@ -271,11 +281,19 @@ public class HomePage {
         ImageIcon img5 = new ImageIcon(rootPath + "/img/kendeji2.jpg");
         JLabel seeAdsLabels[] = {ads1Label,ads2Label,ads3Label,ads4Label,ads5Label};
         ImageIcon icons[] = {img1,img2,img3,img4,img5};
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(new JSONObject("{'name':'经典热巧克力','payBack':0.3}"));
+        jsonArray.put(new JSONObject("{'name':'密思朵咖啡','payBack':0.2}"));
+        jsonArray.put(new JSONObject("{'name':'抹茶拿铁','payBack':0.4}"));
+        jsonArray.put(new JSONObject("{'name':'下午茶套餐','payBack':0.5}"));
+        jsonArray.put(new JSONObject("{'name':'鸡翅套餐','payBack':0.3}"));
         for(int i=0;i<seeAdsLabels.length;i++) {
             JLabel label = seeAdsLabels[i];
             setJLabelIcon(label,icons[i],rootPanel.getWidth(),0.3);
-            label.setText("<html><p>这仅仅是一个测试而已，测试看啊看我们的东西能在什么防霾的比较好哈哈哈，你都嗯" +
-                    "我的意思么</p><br/><font color='#32CD99'>￥ 0.1</font></html>");
+            JSONObject jsonObj = jsonArray.getJSONObject(i);
+            String name = jsonObj.getString("name");
+            double payBack = jsonObj.getDouble("payBack");
+            label.setText("<html><p>"+name+"</p><br/><font color='#32CD99'>报酬 "+payBack+"</font></html>");
             label.setVerticalTextPosition(SwingConstants.TOP);
         }
     }
@@ -316,9 +334,16 @@ public class HomePage {
         setJLabelIcon(addNumLabel,addNumIconPath,rWidth,addSubIconRatio);
         setJLabelIcon(minusNumLabel,minusNumIconPath,rWidth,addSubIconRatio);
         purchaseNumField.setText(String.valueOf(purchaseNum));
-        purchaseNumField.setPreferredSize(new Dimension(7,4));
+        purchaseNumField.setColumns(2);
         // set order detail pane
         orderDetailPane.setVisible(false);
+    }
+
+    private void setOrderListPage() {
+        JLabel labels[] = {order1Label,order2Label,order3Label,order4Label,order5Label,order6Label,order7Label};
+        for(JLabel label: labels) {
+            label.setVisible(false);
+        }
     }
 
     public void resetLaunchImgStatus() {
@@ -454,24 +479,33 @@ public class HomePage {
     private void showOrderList() {
         double rWidth = rootPanel.getWidth();
         JPanel testPanel = new JPanel();
+        JLabel labels[] = {order1Label,order2Label,order3Label,order4Label,order5Label,order6Label,order7Label};
+        int i=labels.length-1;
         for(OrderSheet order: myOrder) {
-            JLabel label = new JLabel();
-            setJLabelIcon(label,order.getIcon(),rWidth,0.3);
+//            JLabel label = new JLabel();
+            if(i < 0) break;
+            JLabel label = labels[i];i--;
+            if(label.getIcon() != null) continue;
+            label.setVisible(true);
+            Icon icon = order.getIcon();
+            String iconPath = ((ImageIcon) icon).getDescription();
+            setJLabelIcon(label,iconPath,rWidth,0.3);
             StringBuilder sb = new StringBuilder();
-            sb.append("<html>")
+            sb.append("<html><body>")
                     .append("订单日期：").append(order.getDateStr()).append("<br/>")
                     .append("商品名称：").append(order.getGoodsName()).append("<br/>")
-//                    .append("商品价格：").append(order.getGoodsPrice())
-//                    .append("商品数量：").append(order.getGoodsNum())
-//                    .append("商品总价：").append(Arith.mul(order.getGoodsNum(),order.getGoodsPrice()))
-                    .append("订单号：").append(order.getOrderSeq())
-              .append("</html>");
+                    .append("<!--div >商品价格：").append(order.getGoodsPrice()).append("<br>")
+                    .append("商品数量：").append(order.getGoodsNum()).append("<br>")
+                    .append("商品总价：").append(Arith.mul(order.getGoodsNum(),order.getGoodsPrice())).append("<br/>")
+                    .append("</div--!>订单号：").append(order.getOrderSeq())
+              .append("</body></html>");
             label.setText(sb.toString());
+            changeCursor(label,"orderList");
 //            orderListPanel.add(label,-1);
-            testPanel.add(label);
+//            testPanel.add(label);
         }
 //        orderListPanel.add(testPanel);
-        orderListLoginPanel.add(testPanel);
+//        orderListLoginPanel.add(testPanel);
     }
 
     private void _init() {
@@ -495,6 +529,9 @@ public class HomePage {
         // set purchase page
         setPurchasePage();
         purchaseDetailPane.setVisible(false);
+        // set order list page
+        setOrderListPage();
+        orderDetailScrollPane.setVisible(false);
         // set all page status
         setPageStatus();
     }
@@ -554,10 +591,14 @@ public class HomePage {
         adsPageRetBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                writeLeftCoin(Arith.add(leftCoin,0.1));
+                Document doc = Jsoup.parse(adsDetailText.getText());
+                Elements adsText = doc.getElementsByTag("font");
+                String price = adsText.text();
+                price = price.split(" ")[1];
+                writeRecord("+"+price+": 看广告");
+                writeLeftCoin(Arith.add(leftCoin,Double.valueOf(price)));
                 adsDetailPane.setVisible(false);
                 allAdsPane.setVisible(true);
-                writeRecord("看广告：+0.1");
                 String historyStr = readRecord(historyReadlineNum);
                 historyLabel.setText(historyStr);
             }
@@ -595,7 +636,7 @@ public class HomePage {
                 double cost = Arith.mul(purchasePrice,purchaseNum);
                 if (leftCoin > cost) {
                     String purchaseName = purchaseDesLabel.getText();
-                    writeRecord("购买"+purchaseName+": -"+purchasePrice+"x"+purchaseNum+"="+cost);
+                    writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName);
                     historyLabel.setText(readRecord(historyReadlineNum));
                     System.out.println("[INFO] purchase successfully!");
                     writeLeftCoin(Arith.sub(leftCoin,cost));
@@ -623,7 +664,9 @@ public class HomePage {
                     order.setOrderSeq(orderSeqNum);
                     order.setIcon(icon);
                     myOrder.add(order);
-//                    showOrderList();
+                    changePurchaseNum(1);
+                    // generate order list
+                    showOrderList();
                     purchaseDetailPane.setVisible(false);
                     orderDetailPane.setVisible(true);
                 } else {
@@ -631,11 +674,11 @@ public class HomePage {
                 }
             }
         });
-        orderDetailRetBtn.addActionListener(new ActionListener() {
+        purchaseDetailRetBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 orderDetailPane.setVisible(false);
-                purchaseDetailPane.setVisible(true);
+                allPurchasePane.setVisible(true);
             }
         });
         // set advertisement events in "make money" page
@@ -660,12 +703,11 @@ public class HomePage {
                 super.focusGained(e);
             }
         });
-        orderListPanel.addMouseListener(new MouseAdapter() {
+        orderDetailRetBtn.addActionListener(new ActionListener() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-                super.mouseEntered(e);
-                showOrderList();
-                System.out.println("=================");
+            public void actionPerformed(ActionEvent e) {
+                orderDetailScrollPane.setVisible(false);
+                orderListScrollPane.setVisible(true);
             }
         });
     }
@@ -693,6 +735,7 @@ public class HomePage {
                 switch (pageType) {
                     case "advertisement": pressAds(e);break;
                     case "purchase": pressPurchase(e);break;
+                    case "orderList": pressOrders(e);break;
                     default: System.out.println("[ERROR] invalid page type!");
                 }
             }
@@ -707,14 +750,18 @@ public class HomePage {
             // get indicated text
             String text = label.getText();
             Document doc = Jsoup.parse(text);
-            Elements element = doc.getElementsByTag("p");
-            text = element.text();
+            Elements nameEle = doc.getElementsByTag("p");
+            String name = nameEle.text();
+            Elements payBackEle = doc.getElementsByTag("font");
+            String payBack = payBackEle.text();
+            payBack = payBack.split(" ")[1];
+            text = "<html>"+name+"<br/><font color='#32CD99'>报酬 "+payBack+"<font><html/>";
             // reset image size
             ImageIcon icon = (ImageIcon) label.getIcon();
             String filePath = icon.getDescription();
             adsDetailText.setSize((int)(rootPanel.getWidth()*0.95),0);
             setJLabelIcon(adsDetailIcon,filePath,rootWidth,0.93);
-            setJLabelText(adsDetailText,text);
+            adsDetailText.setText(text);
             adsDetailPane.setVisible(true);
             fJFrame.pack();
         }
@@ -741,6 +788,25 @@ public class HomePage {
             String filePath = icon.getDescription();
             setJLabelIcon(purchaseIconLabel,filePath,rootWidth,0.82);
             purchaseDetailPane.setVisible(true);
+            fJFrame.pack();
+        }
+    }
+
+    private void pressOrders(MouseEvent e) {
+        orderListScrollPane.setVisible(false);
+        Component cmp = e.getComponent();
+        if(cmp instanceof JLabel) {
+            JLabel label = (JLabel)cmp;
+            // get order detail info
+            double rWidth = rootPanel.getWidth();
+            ImageIcon icon = (ImageIcon) label.getIcon();
+            String iconPath = icon.getDescription();
+            setJLabelIcon(orderDetailIconLabel,iconPath,rWidth,0.85);
+            String desStr = label.getText();
+            desStr = desStr.replaceAll("!--","");
+            desStr = desStr.replaceAll("--!","");
+            orderDetailTextLabel.setText(desStr);
+            orderDetailScrollPane.setVisible(true);
             fJFrame.pack();
         }
     }
@@ -800,19 +866,20 @@ public class HomePage {
 
     private String readRecord(int lineNum) {
         try {
-            int fontSize = Integer.parseInt(configSetting.getFontSize());
-            fontSize = 4;
+            int fontSize = 4;
             StringBuilder sb = new StringBuilder();
             String line;
-            sb.append("<html><font size='"+fontSize+"' color="+"'#4A766E'>");
+            sb.append("<html><body><table cellspacing='0' width='315'>");
             ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(historyFilePath),100,"UTF-8");
             while(lineNum > 0) {
                 line = reader.readLine();
                 if(line == null) break;
-                sb.append(line).append("<br/>");
+                sb.append("<tr><td style='border:1px solid black;'><font size='"+fontSize+"' color='#4A766E'>");
+                sb.append(line);
+                sb.append("<font size='"+fontSize+"' color='#4A766E'></td></tr>");
                 lineNum--;
             }
-            sb.append("</font></html>");
+            sb.append("</table></font><body></html>");
             return sb.toString();
         } catch (IOException e) {
             System.out.println(e.getMessage());
