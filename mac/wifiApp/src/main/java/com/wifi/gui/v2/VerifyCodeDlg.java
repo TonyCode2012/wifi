@@ -291,6 +291,11 @@ public class VerifyCodeDlg extends JDialog {
                                 unregStatLabel.setText("注销失败！");
                             }
                             sleep(1500);
+                            // delete history record file
+                            File historyFile = new File(rootPath.concat("/config/records"));
+                            if(historyFile.exists()) {
+                                historyFile.delete();
+                            }
                             register.setUnregStatusCode(unregStatusCode);
                         }
                         dispose();

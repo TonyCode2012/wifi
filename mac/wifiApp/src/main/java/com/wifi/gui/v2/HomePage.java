@@ -235,6 +235,28 @@ public class HomePage {
                     connectStatusL.setText("已连接   ");
                     // set wallet left value
                     setLoginStatus(1);
+                    // read balance from blockchain
+                    try {
+                        ProcessBuilder pb = new ProcessBuilder(
+                                "python3",
+                                rootPath.concat("/scripts/contactchain.py")
+                        );
+                        pb.redirectErrorStream(true);
+                        Process process = pb.start();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+                        while((line = reader.readLine()) != null) {
+                            sb.append(line);
+                            System.out.println(line);
+                        }
+                        String priceStr = sb.toString();
+                        priceStr = priceStr.split(":")[1];
+                        leftCoin = Double.valueOf(priceStr);
+                        process.waitFor();
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
                     // record item
                     writeRecord("-1: 登陆");
                     sleep(200);
@@ -293,7 +315,7 @@ public class HomePage {
             JSONObject jsonObj = jsonArray.getJSONObject(i);
             String name = jsonObj.getString("name");
             double payBack = jsonObj.getDouble("payBack");
-            label.setText("<html><p>"+name+"</p><br/><font color='#32CD99'>报酬 "+payBack+"</font></html>");
+            label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+"</font></html>");
             label.setVerticalTextPosition(SwingConstants.TOP);
         }
     }
@@ -755,7 +777,7 @@ public class HomePage {
             Elements payBackEle = doc.getElementsByTag("font");
             String payBack = payBackEle.text();
             payBack = payBack.split(" ")[1];
-            text = "<html>"+name+"<br/><font color='#32CD99'>报酬 "+payBack+"<font><html/>";
+            text = "<html>"+name+"<br/><font color='#5C4033'>报酬 "+payBack+"<font><html/>";
             // reset image size
             ImageIcon icon = (ImageIcon) label.getIcon();
             String filePath = icon.getDescription();
@@ -856,6 +878,10 @@ public class HomePage {
 
     private void writeRecord(String record) {
         try {
+            File file = new File(historyFilePath);
+            if(file.length() == 0) {
+                record = "+10: 注册";
+            }
             BufferedWriter writer = new BufferedWriter(new FileWriter(historyFilePath,true));
             writer.append(record.concat("\n"));
             writer.close();
