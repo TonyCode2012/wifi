@@ -5,7 +5,7 @@ basedir=`cd $basedir;pwd`
 
 statusCode=0
 
-#sleep 6
+sleep 3
 
 testLoginFile=$basedir/testLogin
 testLeftCoinFile=$basedir/testLeftCoin

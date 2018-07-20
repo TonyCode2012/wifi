@@ -26,29 +26,6 @@ public class HomePage {
     private JTabbedPane pageHomeTabbedPane;
     private JButton registerBtn;
     private JButton launchBtn;
-    private JPanel recommandPanel;
-    private JTextArea textArea2;
-    private JTextArea textArea3;
-    private JTextArea textArea4;
-    private JTextArea textArea5;
-    private JTextArea textArea6;
-    private JTextArea textArea7;
-    private JTextArea textArea8;
-    private JTextArea textArea9;
-    private JScrollPane newsScrollPanel;
-    private JPanel underPanel;
-    private JLabel n1pLabel;
-    private JLabel n1tLabel;
-    private JLabel n2pLabel;
-    private JLabel n2tLabel;
-    private JLabel n3pLabel;
-    private JLabel n3tLabel;
-    private JLabel n4pLabel;
-    private JLabel n4tLabel;
-    private JLabel n5pLabel;
-    private JLabel n5tLabel;
-    private JLabel n6pLabel;
-    private JLabel n6tLabel;
     private JLabel launchTipLabel;
     private JLabel fourthWifiLabel;
     private JLabel thirdWifiLabel;
@@ -76,7 +53,6 @@ public class HomePage {
     private JLabel adsDetailIcon;
     private JLabel adsDetailText;
     private JButton adsPageRetBtn;
-    private JPanel connectPanel;
     private JLabel ads4Label;
     private JLabel ads5Label;
     private JScrollPane allAdsPane;
@@ -129,6 +105,10 @@ public class HomePage {
     private JLabel orderDetailTextLabel;
     private JButton orderDetailRetBtn;
     private JScrollPane orderDetailScrollPane;
+    private JPanel connectPanel;
+    private JPanel connectMainPanel;
+    private JPanel loginAdsPanel;
+    private JLabel loginAdsLabel;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -400,7 +380,7 @@ public class HomePage {
         ImageIcon ads5Icon = new ImageIcon(rootPath.concat("/img/kendeji2.jpg"));
         JLabel adLabels[] = {ad1Label,ad2Label,ad3Label,ad4Label,ad5Label};
         ImageIcon adsIcons[] = {ads1Icon,ads2Icon,ads3Icon,ads4Icon,ads5Icon};
-        double raRatio = (1 - 0.35) / adLabels.length;
+        double raRatio = (1 - 0.25) / adLabels.length;
         for(int i=0;i<adLabels.length;i++){
             ImageIcon icon = adsIcons[i];
             JLabel tmpLabel = adLabels[i];
@@ -500,7 +480,6 @@ public class HomePage {
 
     private void showOrderList() {
         double rWidth = rootPanel.getWidth();
-        JPanel testPanel = new JPanel();
         JLabel labels[] = {order1Label,order2Label,order3Label,order4Label,order5Label,order6Label,order7Label};
         int i=labels.length-1;
         for(OrderSheet order: myOrder) {
@@ -523,22 +502,15 @@ public class HomePage {
               .append("</body></html>");
             label.setText(sb.toString());
             changeCursor(label,"orderList");
-//            orderListPanel.add(label,-1);
-//            testPanel.add(label);
         }
-//        orderListPanel.add(testPanel);
-//        orderListLoginPanel.add(testPanel);
     }
 
     private void _init() {
         this.rootPanel.setSize(360,500);
-        underPanel.revalidate();
         breakConnBtn.setVisible(false);
         connectStatusL.setText("");
         connectStatusL.setVisible(false);
         // remove new panel
-        pageHomeTabbedPane.remove(newsScrollPanel);
-        pageHomeTabbedPane.remove(recommandPanel);
         setLaunchImgStatus();
         // set recognise ssid label text to space
         ssidLabel.setText("blockchain");
@@ -556,6 +528,20 @@ public class HomePage {
         orderDetailScrollPane.setVisible(false);
         // set all page status
         setPageStatus();
+        // set login advertisement
+        new Thread(() -> {
+            try {
+                pageHomeTabbedPane.setVisible(false);
+                ImageIcon loginAdsIcon = new ImageIcon(rootPath.concat("/img/preAds4.jpg"));
+                int rWidth = rootPanel.getWidth();
+                setJLabelIcon(loginAdsLabel, loginAdsIcon, rWidth, 1);
+                Thread.sleep(3000);
+                loginAdsPanel.setVisible(false);
+                pageHomeTabbedPane.setVisible(true);
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        }).start();
     }
 
     public HomePage() {
