@@ -2,7 +2,6 @@ package com.wifi.gui.v2;
 
 import com.wifi.gui.v2.utils.Arith;
 import com.wifi.gui.v2.utils.Utils;
-import com.wifi.configSetting;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,17 +26,8 @@ public class HomePage {
     private JButton registerBtn;
     private JButton launchBtn;
     private JLabel launchTipLabel;
-    private JLabel fourthWifiLabel;
-    private JLabel thirdWifiLabel;
-    private JLabel secondWifiLabel;
-    private JLabel firstWifiLabel;
     private JButton breakConnBtn;
     private JLabel connectStatusL;
-    private JLabel ad1Label;
-    private JLabel ad2Label;
-    private JLabel ad3Label;
-    private JLabel ad4Label;
-    private JLabel ad5Label;
     private JLabel ssidLabel;
     private JPanel walletPanel;
     private JLabel leftTileLabel;
@@ -109,6 +99,8 @@ public class HomePage {
     private JPanel connectMainPanel;
     private JPanel loginAdsPanel;
     private JLabel loginAdsLabel;
+    private JLabel wifiIconLabel;
+    private JLabel launchAdsLabel;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -128,6 +120,12 @@ public class HomePage {
     private Cursor curCursor = rootPanel.getCursor();
     private int rootWidth;
     private String historyFilePath = rootPath.concat("/config/records");
+
+    // Login page status
+    // wifi launch icon
+    private ImageIcon wifiLaunchIcons[] = new ImageIcon[4];
+    // advertisement icons
+    private ImageIcon loginAdsIcons[] = new ImageIcon[5];
 
     // wallet page parameters
     private int historyReadlineNum = 30;
@@ -167,7 +165,6 @@ public class HomePage {
 
         // set break connection button to visible
         breakConnBtn.setVisible(true);
-
         registerBtn.setVisible(false);
         launchTipLabel.setVisible(true);
         launchTipLabel.setText("正在连接...");
@@ -175,42 +172,26 @@ public class HomePage {
             try {
                 // store img status icon thread to local
                 connStatusImgThread = Thread.currentThread();
-                // set advertisement icons
-                JLabel adLabels[] = {ad1Label,ad2Label,ad3Label,ad4Label,ad5Label};
-                for(JLabel adlabel : adLabels){
-                    adlabel.setVisible(true);
-                }
                 // set wifi icons
-                JLabel launchLabels[] = {firstWifiLabel,secondWifiLabel,thirdWifiLabel,fourthWifiLabel};
-
-                int index = 0;
+                int wifiIconIndex = 0;
+                int wifiIconLen = wifiLaunchIcons.length;
                 ImageIcon connStatusIcon = connectingIcon;
                 String connStr = "正在连接";
                 connectStatusL.setVisible(true);
                 connectStatusL.setText(connStr);
                 while(retStatus == -1) {
-                    JLabel llabel = launchLabels[index];
-                    llabel.setVisible(true);
                     connectStatusL.setIcon(connStatusIcon);
-                    Icon icon0 = adLabels[0].getIcon();
-                    for(int i=0;i<adLabels.length;i++) {
-                        if(i != adLabels.length - 1) {
-                            adLabels[i].setIcon(adLabels[i+1].getIcon());
-                        } else {
-                            adLabels[i].setIcon(icon0);
-                        }
-                    }
+                    wifiIconLabel.setIcon(wifiLaunchIcons[wifiIconIndex]);
                     connStatusIcon = (connStatusIcon == connectingIcon ? connectedOpaqueIcon : connectingIcon);
                     sleep(600);
-                    llabel.setVisible(false);
-                    index = (++index) % 4;
+                    wifiIconIndex = (++wifiIconIndex) % wifiIconLen;
                 }
                 ssidLabel.setForeground(Color.black);
                 if(retStatus == 0) {
                     setBreakdownStatus();
                 } else if(retStatus == 64) {
                     launchTipLabel.setText("连接成功!");
-                    launchLabels[3].setVisible(true);
+                    wifiIconLabel.setIcon(wifiLaunchIcons[3]);
                     connectStatusL.setIcon(connectedIcon);
                     connectStatusL.setText("已连接   ");
                     // set wallet left value
@@ -244,8 +225,7 @@ public class HomePage {
                     historyLabel.setText(historyStr);
                 } else {
                     launchTipLabel.setText("连接失败!");
-                    launchLabels[3].setIcon(unLaunchIcon);
-                    launchLabels[3].setVisible(true);
+                    wifiIconLabel.setIcon(unLaunchIcon);
                     connectStatusL.setIcon(unconnectedIcon);
                     connectStatusL.setText("未连接   ");
                 }
@@ -254,19 +234,20 @@ public class HomePage {
                 System.out.println(ex.getMessage());
             }
         }).start();
-    }
-
-    private void setIcon(double ratio,double fWidth,ImageIcon icon) {
-        if(ratio > 1) {
-            System.out.println("[ERROR] Can't set ratio more than 1!");
-            ratio = 1;
-        }
-        double iWidth = icon.getIconWidth();
-        double iHeight = icon.getIconHeight();
-        double iRatio = iHeight / iWidth;
-        int iconWidth = (int) (fWidth * ratio);
-        int iconHeight = (int) (iconWidth * iRatio);
-        icon.setImage(icon.getImage().getScaledInstance(iconWidth,iconHeight,Image.SCALE_DEFAULT));
+        // set login page advertisement
+        new Thread(() -> {
+            try {
+                int adsIndex = 0;
+                int adsLen = loginAdsIcons.length;
+                while (true) {
+                    launchAdsLabel.setIcon(loginAdsIcons[adsIndex]);
+                    sleep(2500);
+                    adsIndex = ++adsIndex % adsLen;
+                }
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        }).start();
     }
 
     private void seeAds() {
@@ -349,18 +330,14 @@ public class HomePage {
     }
 
     public void resetLaunchImgStatus() {
-        firstWifiLabel.setVisible(false);
-        secondWifiLabel.setVisible(false);
-        thirdWifiLabel.setVisible(false);
-        fourthWifiLabel.setVisible(false);
-        fourthWifiLabel.setIcon(launchIcon);
+        wifiIconLabel.setVisible(true);
         ssidLabel.setForeground(rootPanel.getBackground());
         setRetStatus(-1);
     }
 
     private void setBreakdownStatus() {
+        wifiIconLabel.setVisible(false);
         launchTipLabel.setVisible(false);
-        fourthWifiLabel.setVisible(false);
         connectStatusL.setVisible(false);
         breakConnBtn.setVisible(false);
         nextRegister.setBreakNetwork(true);
@@ -371,46 +348,31 @@ public class HomePage {
 
     private void setLaunchImgStatus() {
         // get root panel width and height
-        int width = rootPanel.getWidth();
-        // set advertisement icon
-        ImageIcon ads1Icon = new ImageIcon(rootPath.concat("/img/xingbake1.jpg"));
-        ImageIcon ads2Icon = new ImageIcon(rootPath.concat("/img/xingbake2.jpg"));
-        ImageIcon ads3Icon = new ImageIcon(rootPath.concat("/img/xingbake3.jpg"));
-        ImageIcon ads4Icon = new ImageIcon(rootPath.concat("/img/kendeji1.jpg"));
-        ImageIcon ads5Icon = new ImageIcon(rootPath.concat("/img/kendeji2.jpg"));
-        JLabel adLabels[] = {ad1Label,ad2Label,ad3Label,ad4Label,ad5Label};
-        ImageIcon adsIcons[] = {ads1Icon,ads2Icon,ads3Icon,ads4Icon,ads5Icon};
-        double raRatio = (1 - 0.25) / adLabels.length;
-        for(int i=0;i<adLabels.length;i++){
-            ImageIcon icon = adsIcons[i];
-            JLabel tmpLabel = adLabels[i];
-            tmpLabel.setVisible(false);
-            tmpLabel.setText("");
-            setJLabelIcon(tmpLabel,icon,rootPanel.getWidth(),raRatio);
+        double rWidth = rootPanel.getWidth();
+        double rHeight = rootPanel.getHeight();
+        // set login page advertisement icon
+        loginAdsIcons[0] = new ImageIcon(rootPath.concat("/img/xingbake1.jpg"));
+        loginAdsIcons[1] = new ImageIcon(rootPath.concat("/img/xingbake2.jpg"));
+        loginAdsIcons[2] = new ImageIcon(rootPath.concat("/img/xingbake3.jpg"));
+        loginAdsIcons[3] = new ImageIcon(rootPath.concat("/img/kendeji1.jpg"));
+        loginAdsIcons[4] = new ImageIcon(rootPath.concat("/img/kendeji2.jpg"));
+        double raRatio = 0.33;
+        for(ImageIcon icon: loginAdsIcons) {
+            Utils.setIconByHeight(raRatio,rHeight,icon);
         }
+        launchAdsLabel.setText("");
         // set wifi icons
-        ImageIcon launchIcon1 = new ImageIcon(rootPath + "/img/launch1.png");
-        ImageIcon launchIcon2 = new ImageIcon(rootPath + "/img/launch2.png");
-        ImageIcon launchIcon3 = new ImageIcon(rootPath + "/img/launch3.png");
-        ImageIcon launchIcon4 = new ImageIcon(rootPath + "/img/launch4.png");
-        JLabel wifiLaunchLabels[] = {firstWifiLabel,secondWifiLabel,thirdWifiLabel,fourthWifiLabel};
-        ImageIcon wifiLaunchIcons[] = {launchIcon1,launchIcon2,launchIcon3,launchIcon4};
-        double lWidth = launchIcon1.getIconWidth();
-        double lHeight = launchIcon1.getIconHeight();
-        double iRatio = lHeight / lWidth;
-        double rlRatio = 0.3;
-        int launchIconW = (int) (width * rlRatio);
-        int launchIconH = (int) (launchIconW * iRatio);
-        for(int i=0;i<wifiLaunchIcons.length;i++) {
-            JLabel wifiLabel = wifiLaunchLabels[i];
-            ImageIcon wifiIcon = wifiLaunchIcons[i];
-            wifiLabel.setVisible(false);
-            wifiLabel.setText("");
-            setJLabelIcon(wifiLabel,wifiIcon,width,rlRatio);
+        wifiLaunchIcons[0] = new ImageIcon(rootPath + "/img/launch1.png");
+        wifiLaunchIcons[1] = new ImageIcon(rootPath + "/img/launch2.png");
+        wifiLaunchIcons[2] = new ImageIcon(rootPath + "/img/launch3.png");
+        wifiLaunchIcons[3] = new ImageIcon(rootPath + "/img/launch4.png");
+        double rlRatio = 0.2;
+        for(ImageIcon icon: wifiLaunchIcons) {
+            Utils.setIconByWidth(rlRatio,rWidth,icon);
         }
-        launchIcon = launchIcon4;
-        unLaunchIcon = new ImageIcon(rootPath + "/img/unLaunch.png");
-        unLaunchIcon.setImage(unLaunchIcon.getImage().getScaledInstance(launchIconW, launchIconH, Image.SCALE_DEFAULT));
+        launchIcon = wifiLaunchIcons[3];
+        Utils.setIconByWidth(rlRatio,rWidth,rootPath.concat("/img/unLaunch.png"));
+        wifiIconLabel.setText("");
         // set visibility
         launchTipLabel.setVisible(false);
         connectStatusL.setVisible(false);
@@ -421,20 +383,15 @@ public class HomePage {
         connectedOpaqueIcon = new ImageIcon(rootPath + "/img/connected_opaque.png");
         unconnectedIcon = new ImageIcon(rootPath + "/img/unconnected.png");
         connectingIcon = new ImageIcon(rootPath + "/img/connecting.png");
-        double cWidth = connectedIcon.getIconWidth();
-        double cHeight = connectedIcon.getIconHeight();
-        double cRatio = cHeight / cWidth;
         double rcRatio = 0.03;
-        int connectIconW = (int) (width * rcRatio);
-        int connectIconH = (int) (connectIconW * cRatio);
         ImageIcon connIcons[] = {connectedIcon,connectedOpaqueIcon,unconnectedIcon,connectingIcon};
         for(ImageIcon icon: connIcons) {
-            icon.setImage(icon.getImage().getScaledInstance(connectIconW, connectIconH, Image.SCALE_DEFAULT));
+            Utils.setIconByWidth(rcRatio,rWidth,icon);
         }
         // set icons
         connectStatusL.setIcon(connectedIcon);
         // set coin image
-        setJLabelIcon(leftLabel,rootPath + "/img/goldCoin.png",width,0.08);
+        setJLabelIcon(leftLabel,rootPath + "/img/goldCoin.png",rWidth,0.08);
         leftLabel.setHorizontalTextPosition(SwingConstants.LEFT);
     }
 
@@ -821,12 +778,12 @@ public class HomePage {
 
     private void setJLabelIcon(JLabel jLabel,String iconPath,double fWidth,double ratio){
         ImageIcon icon = new ImageIcon(iconPath);
-        setIcon(ratio,fWidth,icon);
+        Utils.setIconByWidth(ratio,fWidth,icon);
         jLabel.setIcon(icon);
     }
 
     private void setJLabelIcon(JLabel jLabel,ImageIcon icon,double fWidth,double ratio){
-        setIcon(ratio,fWidth,icon);
+        Utils.setIconByWidth(ratio,fWidth,icon);
         jLabel.setIcon(icon);
     }
 
