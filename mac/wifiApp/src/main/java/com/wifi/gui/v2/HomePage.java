@@ -166,8 +166,8 @@ public class HomePage {
         // set break connection button to visible
         breakConnBtn.setVisible(true);
         registerBtn.setVisible(false);
-        launchTipLabel.setVisible(true);
-        launchTipLabel.setText("正在连接...");
+//        launchTipLabel.setVisible(true);
+//        launchTipLabel.setText("正在连接...");
         new Thread(() -> {
             try {
                 // store img status icon thread to local
@@ -190,7 +190,7 @@ public class HomePage {
                 if(retStatus == 0) {
                     setBreakdownStatus();
                 } else if(retStatus == 64) {
-                    launchTipLabel.setText("连接成功!");
+//                    launchTipLabel.setText("连接成功!");
                     wifiIconLabel.setIcon(wifiLaunchIcons[3]);
                     connectStatusL.setIcon(connectedIcon);
                     connectStatusL.setText("已连接   ");
@@ -224,7 +224,7 @@ public class HomePage {
                     String historyStr = readRecord(historyReadlineNum);
                     historyLabel.setText(historyStr);
                 } else {
-                    launchTipLabel.setText("连接失败!");
+//                    launchTipLabel.setText("连接失败!");
                     wifiIconLabel.setIcon(unLaunchIcon);
                     connectStatusL.setIcon(unconnectedIcon);
                     connectStatusL.setText("未连接   ");
@@ -440,7 +440,6 @@ public class HomePage {
         JLabel labels[] = {order1Label,order2Label,order3Label,order4Label,order5Label,order6Label,order7Label};
         int i=labels.length-1;
         for(OrderSheet order: myOrder) {
-//            JLabel label = new JLabel();
             if(i < 0) break;
             JLabel label = labels[i];i--;
             if(label.getIcon() != null) continue;
