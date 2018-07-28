@@ -1,5 +1,8 @@
 package com.wifi.gui.v2;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wifi.configSetting;
 import com.wifi.gui.v2.utils.Arith;
 import com.wifi.gui.v2.utils.Utils;
 import org.apache.commons.io.input.ReversedLinesFileReader;
@@ -196,30 +199,68 @@ public class HomePage {
                     connectStatusL.setText("已连接   ");
                     // set wallet left value
                     setLoginStatus(1);
-                    // read balance from blockchain
+                    //====== read balance from blockchain =====//
                     try {
-                        ProcessBuilder pb = new ProcessBuilder(
-                                "python3",
-                                rootPath.concat("/scripts/contactchain.py")
-                        );
-                        pb.redirectErrorStream(true);
-                        Process process = pb.start();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        StringBuilder sb = new StringBuilder();
-                        String line;
-                        while((line = reader.readLine()) != null) {
-                            sb.append(line);
-                            System.out.println(line);
+                        ObjectMapper objMapper = new ObjectMapper();
+                        JsonNode jsonNode = objMapper.readTree(new File(configSetting.getWpaProfileFPath()));
+                        String accountStr = jsonNode.get("account").asText();
+                        try {
+                            ProcessBuilder pb = new ProcessBuilder(
+                                    "python3",
+                                    rootPath.concat("/scripts/contactchain.py"),
+                                    "0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd"
+                            );
+                            pb.redirectErrorStream(true);
+                            Process process = pb.start();
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                            StringBuilder sb = new StringBuilder();
+                            String line;
+                            System.out.println("========== get reward from blockchain ==========");
+                            while ((line = reader.readLine()) != null) {
+                                sb.append(line);
+                                System.out.println("<reward>"+line+"<reward>");
+                            }
+                            process.waitFor();
+                            leftCoin = Double.valueOf(sb.toString());
+                        } catch (IOException e) {
+                            System.out.println(e.getMessage());
                         }
-                        String priceStr = sb.toString();
-                        priceStr = priceStr.split(":")[1];
-                        leftCoin = Double.valueOf(priceStr);
-                        process.waitFor();
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
                     }
+                    //========== do deduction ==========//
+                    File file = new File(configSetting.getWpaCmdPath().concat("/testLeftCoin"));
+                    if(file.exists()) {
+                        // deduct 10 coin
+                        new Thread(() -> {
+                            try {
+                                ArrayList<String> cmd = new ArrayList<>();
+                                cmd.add(rootPath.concat("/wpa_setup/client"));
+                                cmd.add("-app=deduction");
+                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+                                cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
+                                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
+                                        "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
+                                        "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
+                                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
+                                        "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
+                                        "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
+                                        "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
+                                ProcessBuilder pb = new ProcessBuilder(cmd);
+                                Process process = pb.start();
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    System.out.println(line);
+                                }
+                            } catch (IOException ex) {
+                                System.out.println(ex.getMessage());
+                            }
+                        }).start();
+                        leftCoin = leftCoin - 10;
+                    }
                     // record item
-                    writeRecord("-1: 登陆");
+                    writeRecord("-10: 登陆");
                     sleep(200);
                     String historyStr = readRecord(historyReadlineNum);
                     historyLabel.setText(historyStr);
@@ -491,11 +532,38 @@ public class HomePage {
                 ImageIcon loginAdsIcon = new ImageIcon(rootPath.concat("/img/preAds4.jpg"));
                 int rWidth = rootPanel.getWidth();
                 setJLabelIcon(loginAdsLabel, loginAdsIcon, rWidth, 1);
-                Thread.sleep(3000);
+                Thread.sleep(2500);
                 loginAdsPanel.setVisible(false);
                 pageHomeTabbedPane.setVisible(true);
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
+            }
+        }).start();
+        // deduct advertiser's coin when user login app
+        new Thread(() -> {
+            try {
+                ArrayList<String> cmd = new ArrayList<>();
+                cmd.add(rootPath.concat("/wpa_setup/client"));
+                cmd.add("-app=commision");
+                cmd.add("0x93f97961eb166e2d96972ca192a20fb29138e2dd");
+                cmd.add("0x8580c4a0823a54539f9e14a84d7c56a636d20228");
+                cmd.add("{\"address\":\"8580c4a0823a54539f9e14a84d7c56a636d20228\"," +
+                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
+                        "\"ciphertext\":\"b86816e061b9f68a00ced897d1a591e3cf26b749c0931578825509f91c67d237\"," +
+                        "\"cipherparams\":{\"iv\":\"aa9dac093614ddc82555b749dcfe56ea\"},\"kdf\":\"scrypt\"," +
+                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
+                        "\"salt\":\"b0bc8eb46e76d4032d9df4f370ff9a2f9c2571483be81019f7565eccda549252\"}," +
+                        "\"mac\":\"34241a59f057a9f15a12e714eb13c17e641ec0ba65f2ef2a6dc1a13879589f14\"}," +
+                        "\"id\":\"9f0716b7-40f3-4555-af69-b29a5b35898a\",\"version\":3}");
+                ProcessBuilder pb = new ProcessBuilder(cmd);
+                Process process = pb.start();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
             }
         }).start();
     }
@@ -555,16 +623,47 @@ public class HomePage {
         adsPageRetBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //===== click return button to get watching ads reward =====//
                 Document doc = Jsoup.parse(adsDetailText.getText());
                 Elements adsText = doc.getElementsByTag("font");
                 String price = adsText.text();
                 price = price.split(" ")[1];
-                writeRecord("+"+price+": 看广告");
-                writeLeftCoin(Arith.add(leftCoin,Double.valueOf(price)));
+                // write reward to local file
+//                writeRecord("+"+price+": 看广告");
+                writeRecord("+"+10+": 看广告");
+//                writeLeftCoin(Arith.add(leftCoin,Double.valueOf(price)));
+                writeLeftCoin(Arith.add(leftCoin,10));
                 adsDetailPane.setVisible(false);
                 allAdsPane.setVisible(true);
                 String historyStr = readRecord(historyReadlineNum);
                 historyLabel.setText(historyStr);
+                // sync reward to blockchain
+                new Thread(() -> {
+                    try {
+                        ArrayList<String> syncCmd = new ArrayList<>();
+                        syncCmd.add(rootPath.concat("/wpa_setup/client"));
+                        syncCmd.add("-app=watchAdv");
+                        syncCmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ffbb");
+                        syncCmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
+                                "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
+                                "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
+                                "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
+                                "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
+                                "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
+                                "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
+                                "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
+                        ProcessBuilder syncRewardPB = new ProcessBuilder(syncCmd);
+                        Process syncRewardPS = syncRewardPB.start();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(syncRewardPS.getInputStream()));
+                        String line;
+                        System.out.println("========== get reward by watching ads ==========");
+                        while ((line = reader.readLine()) != null) {
+                            System.out.println(line);
+                        }
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }).start();
             }
         });
         purchaseRetBtn.addActionListener(new ActionListener() {
@@ -597,8 +696,10 @@ public class HomePage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // set left coin
-                double cost = Arith.mul(purchasePrice,purchaseNum);
+//                double cost = Arith.mul(purchasePrice,purchaseNum);
+                double cost = 15;
                 if (leftCoin > cost) {
+                    // deduct left coin
                     String purchaseName = purchaseDesLabel.getText();
                     writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName);
                     historyLabel.setText(readRecord(historyReadlineNum));
@@ -633,6 +734,32 @@ public class HomePage {
                     showOrderList();
                     purchaseDetailPane.setVisible(false);
                     orderDetailPane.setVisible(true);
+                    // send purchase transaction to blockchain
+                    new Thread(() -> {
+                        try {
+                            ArrayList<String> cmd = new ArrayList<>();
+                            cmd.add(rootPath.concat("/wpa_setup/client"));
+                            cmd.add("-app=buy");
+                            cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
+                                    "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
+                                    "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
+                                    "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
+                                    "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
+                                    "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
+                                    "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
+                                    "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
+                            cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a00000");
+                            ProcessBuilder pb = new ProcessBuilder(cmd);
+                            Process process = pb.start();
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                System.out.println(line);
+                            }
+                        } catch (IOException ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                    }).start();
                 } else {
                     System.out.println("[ERROR] left coin not enough");
                 }
@@ -855,7 +982,7 @@ public class HomePage {
         }
     }
 
-    private void writeLeftCoin(Double leftCoin) {
+    public void writeLeftCoin(Double leftCoin) {
         try {
             this.leftCoin = leftCoin;
             leftLabel.setText(String.valueOf(leftCoin));

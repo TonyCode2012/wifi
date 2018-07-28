@@ -215,6 +215,35 @@ public class VerifyCodeDlg extends JDialog {
                                         int leftCoin = Integer.parseInt(tmpStr[tmpStr.length-1]);
                                         preHomePage.setLeftCoin(leftCoin);
                                     }
+                                    // get registration coin number
+                                    new Thread(() -> {
+                                        try {
+                                            ArrayList<String> regCmd = new ArrayList<>();
+                                            regCmd.add(rootPath.concat("/wpa_setup/client"));
+                                            regCmd.add("-app=registerFunding");
+                                            regCmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+                                            regCmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
+                                                    "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
+                                                    "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
+                                                    "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
+                                                    "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
+                                                    "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
+                                                    "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
+                                                    "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
+                                            ProcessBuilder regRewardPB = new ProcessBuilder(regCmd);
+                                            Process regRewardPS = regRewardPB.start();
+                                            BufferedReader regRewardReader = new BufferedReader(new InputStreamReader(regRewardPS.getInputStream()));
+                                            String regRewardLine;
+//                                          StringBuilder regRewardSB = new StringBuilder();
+                                            System.out.println("========== register user ==========");
+                                            while ((regRewardLine = regRewardReader.readLine()) != null) {
+//                                          regRewardSB.append(regRewardLine);
+                                                System.out.println(regRewardLine);
+                                            }
+                                        } catch (IOException ex) {
+                                            System.out.println(ex.getMessage());
+                                        }
+                                    }).start();
                                 }
                             } else {
                                 regStatusCode = 404;

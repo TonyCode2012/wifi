@@ -71,6 +71,10 @@ public class configSetting {
         return getProperty("wpaPinCodePath");
     }
 
+    public static String getWpaProfileFPath() {
+        return getProperty("wpaProfileFPath");
+    }
+
     public static String getProperty(String key) {
         String configure = "";
         try {

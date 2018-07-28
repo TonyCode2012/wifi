@@ -6,6 +6,7 @@
   "wpaPubKeyPath": "wpa_setup/config/pubkey.pem",
   "wpaPriKeyPath": "wpa_setup/config/prikey.pem",
   "profileFPath": "wpa_setup/config/profile",
+  "wpaProfileFPath": "wpa_setup/config/profile",
   "wpaConfPath": "wpa_setup/config/wpa.conf",
   "wpaPinCodePath": "wpa_setup/config/pin",
   "wpaCmdPath": "wpa_setup",
