@@ -277,10 +277,6 @@ public class Register {
                     cmds.add("disconnect");
                 }
                 ProcessBuilder pbDis = new ProcessBuilder(cmds);
-//            ProcessBuilder pbDis = new ProcessBuilder(
-//                    "wlan.sh",
-//                    "disconnect"
-//            );
                 Process processDis = pbDis.start();
                 pbDis.redirectErrorStream(true);
                 BufferedReader disReader = new BufferedReader(new InputStreamReader(processDis.getInputStream()));
@@ -321,17 +317,6 @@ public class Register {
                     sendUnregCmds.add(wpaCmdPath.concat("/wpa.log"));
                 }
                 ProcessBuilder pbCloseProfile = new ProcessBuilder(sendUnregCmds);
-//            ProcessBuilder pbCloseProfile = new ProcessBuilder(
-//                    "wlan.sh",
-//                    "connect",
-//                    wpaCmdPath.concat("/config/prikey.pem"),
-//                    wpaCmdPath.concat("/config/profile"),
-//                    wpaCmdPath.concat("/config/wpa.conf"),
-//                    wpaCmdPath.concat("/wpa.log")
-//            );
-//            ProcessBuilder pbCloseProfile = new ProcessBuilder(
-//                    rootPath + "/wpa_setup/testConnect2.sh"
-//            );
                 Process processCloseProfile = pbCloseProfile.start();
                 BufferedReader closeProfileReader = new BufferedReader(new InputStreamReader(processCloseProfile.getInputStream()));
                 StringBuilder sbCloseProfile  = new StringBuilder();
@@ -450,17 +435,6 @@ public class Register {
                         cmds.add(wpaCmdPath + "/wpa.log");
                     }
                     ProcessBuilder pb = new ProcessBuilder(cmds);
-//                    ProcessBuilder pb = new ProcessBuilder(
-//                            "wlan.sh",
-//                            "connect",
-//                            wpaCmdPath + "/config/prikey.pem",
-//                            wpaCmdPath + "/config/profile",
-//                            wpaCmdPath + "/config/wpa.conf",
-//                            wpaCmdPath + "/wpa.log"
-//                    );
-//                    ProcessBuilder pb = new ProcessBuilder(
-//                            rootPath + "/wpa_setup/testConnect.sh"
-//                    );
                     pb.redirectErrorStream(true);
 //                    pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
 //                    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);

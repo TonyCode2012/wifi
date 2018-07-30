@@ -306,11 +306,11 @@ public class HomePage {
         JLabel seeAdsLabels[] = {ads1Label,ads2Label,ads3Label,ads4Label,ads5Label};
         ImageIcon icons[] = {img1,img2,img3,img4,img5};
         JSONArray jsonArray = new JSONArray();
-        jsonArray.put(new JSONObject("{'name':'经典热巧克力','payBack':0.3}"));
-        jsonArray.put(new JSONObject("{'name':'密思朵咖啡','payBack':0.2}"));
-        jsonArray.put(new JSONObject("{'name':'抹茶拿铁','payBack':0.4}"));
-        jsonArray.put(new JSONObject("{'name':'下午茶套餐','payBack':0.5}"));
-        jsonArray.put(new JSONObject("{'name':'鸡翅套餐','payBack':0.3}"));
+        jsonArray.put(new JSONObject("{'name':'经典热巧克力','payBack':10}"));
+        jsonArray.put(new JSONObject("{'name':'密思朵咖啡','payBack':10}"));
+        jsonArray.put(new JSONObject("{'name':'抹茶拿铁','payBack':11}"));
+        jsonArray.put(new JSONObject("{'name':'下午茶套餐','payBack':13}"));
+        jsonArray.put(new JSONObject("{'name':'鸡翅套餐','payBack':10}"));
         for(int i=0;i<seeAdsLabels.length;i++) {
             JLabel label = seeAdsLabels[i];
             setJLabelIcon(label,icons[i],rootPanel.getWidth(),0.3);
@@ -332,11 +332,11 @@ public class HomePage {
         ImageIcon purchaseIcons[] = {pIcon1,pIcon2,pIcon3,pIcon4,pIcon5};
         JLabel purchaseLabels[] = {purchase1Label,purchase2Label,purchase3Label,purchase4Label,purchase5Label};
         JSONArray jsonArray = new JSONArray();
-        jsonArray.put(new JSONObject("{'des':'焦糖咖啡星冰乐','price':'3'}"));
-        jsonArray.put(new JSONObject("{'des':'密思朵咖啡','price':'2.5'}"));
-        jsonArray.put(new JSONObject("{'des':'抹茶拿铁','price':'3'}"));
-        jsonArray.put(new JSONObject("{'des':'英式红茶','price':'4'}"));
-        jsonArray.put(new JSONObject("{'des':'经典热巧克力','price':'3.5'}"));
+        jsonArray.put(new JSONObject("{'des':'焦糖咖啡星冰乐','price':'15'}"));
+        jsonArray.put(new JSONObject("{'des':'密思朵咖啡','price':'11'}"));
+        jsonArray.put(new JSONObject("{'des':'抹茶拿铁','price':'10'}"));
+        jsonArray.put(new JSONObject("{'des':'英式红茶','price':'10'}"));
+        jsonArray.put(new JSONObject("{'des':'经典热巧克力','price':'15'}"));
         for(int i=0;i<purchaseLabels.length;i++) {
             ImageIcon icon = purchaseIcons[i];
             JLabel label = purchaseLabels[i];

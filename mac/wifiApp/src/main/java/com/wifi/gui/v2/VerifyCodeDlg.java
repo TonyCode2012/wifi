@@ -180,17 +180,6 @@ public class VerifyCodeDlg extends JDialog {
                                 cmds.add(rootPath.concat("/wpa_setup/wpa.log"));
                             }
                             ProcessBuilder pb = new ProcessBuilder(cmds);
-//                            ProcessBuilder pb = new ProcessBuilder(
-//                                    "wlan.sh",
-//                                    "connect",
-//                                    rootPath.concat("/").concat(configSetting.getWpaPriKeyPath()),
-//                                    pinCodePath,
-//                                    rootPath.concat("/").concat(configSetting.getWpaConfPath()),
-//                                    rootPath.concat("/wpa_setup/wpa.log")
-//                            );
-//                            ProcessBuilder pb = new ProcessBuilder(
-//                                    rootPath + "/wpa_setup/testPinCode.sh"
-//                            );
                             Process process = pb.start();
                             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                             String line;
@@ -270,14 +259,6 @@ public class VerifyCodeDlg extends JDialog {
                                 cmds.add(wpaCmdPath.concat("/wpa.log"));
                             }
                             ProcessBuilder pbSendPinCode = new ProcessBuilder(cmds);
-//                            ProcessBuilder pbSendPinCode = new ProcessBuilder(
-//                                    "wlan.sh",
-//                                    "connect",
-//                                    wpaCmdPath.concat("/config/prikey.pem"),
-//                                    wpaCmdPath.concat("/config/pin"),
-//                                    wpaCmdPath.concat("/config/wpa.conf"),
-//                                    wpaCmdPath.concat("/wpa.log")
-//                            );
                             Process processSendPinCode = pbSendPinCode.start();
                             BufferedReader sendPinCodeReader = new BufferedReader(new InputStreamReader(processSendPinCode.getInputStream()));
                             StringBuilder sbSendPinCode = new StringBuilder();
