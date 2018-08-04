@@ -287,12 +287,13 @@ public class Register {
                 }
                 processDis.waitFor();
                 String disRetStr = sb.toString();
-                if(disRetStr.contains("main connect return code")) {
+                if(disRetStr.contains("main disconnect return code")) {
                     String[] retStr = disRetStr.split(" ");
                     unregStatusCode = Integer.parseInt(retStr[retStr.length - 1]);
                 } else {
                     unregStatusCode = 304;
                 }
+//                System.out.println("=======unregStatusCode:"+unregStatusCode);
                 switch (unregStatusCode) {
                     case 64:
                         System.out.println("[INFO] Disconnect network successfully!");

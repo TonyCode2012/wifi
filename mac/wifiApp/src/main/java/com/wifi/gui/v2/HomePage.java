@@ -118,6 +118,7 @@ public class HomePage {
     private ImageIcon unconnectedIcon;
     private ImageIcon connectingIcon;
     private Thread connStatusImgThread;
+    // used to remind other pages of login status
     private int loginStatus = 0;
     private Color bgColor = rootPanel.getBackground();
     private Cursor curCursor = rootPanel.getCursor();
@@ -169,8 +170,10 @@ public class HomePage {
         // set break connection button to visible
         breakConnBtn.setVisible(true);
         registerBtn.setVisible(false);
+
 //        launchTipLabel.setVisible(true);
 //        launchTipLabel.setText("正在连接...");
+        // set launch status based on login info
         new Thread(() -> {
             try {
                 // store img status icon thread to local
@@ -199,39 +202,44 @@ public class HomePage {
                     connectStatusL.setText("已连接   ");
                     // set wallet left value
                     setLoginStatus(1);
-                    //====== read balance from blockchain =====//
-                    try {
-                        ObjectMapper objMapper = new ObjectMapper();
-                        JsonNode jsonNode = objMapper.readTree(new File(configSetting.getWpaProfileFPath()));
-                        String accountStr = jsonNode.get("account").asText();
+                    //========== do deduction ==========//
+                    File file = new File(configSetting.getWpaCmdPath().concat("/testLeftCoin"));
+                    BufferedReader leftCoinReader = new BufferedReader(new FileReader(file));
+                    String leftCoinStr = leftCoinReader.readLine();
+                    if(! leftCoinStr.contains("registerReward")) {
+                        //====== read balance from blockchain =====//
                         try {
-                            ProcessBuilder pb = new ProcessBuilder(
-                                    "python3",
-                                    rootPath.concat("/scripts/contactchain.py"),
-                                    "0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd"
-                            );
-                            pb.redirectErrorStream(true);
-                            Process process = pb.start();
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                            StringBuilder sb = new StringBuilder();
-                            String line;
-                            System.out.println("========== get reward from blockchain ==========");
-                            while ((line = reader.readLine()) != null) {
-                                sb.append(line);
-                                System.out.println("<reward>"+line+"<reward>");
+                            ObjectMapper objMapper = new ObjectMapper();
+                            JsonNode jsonNode = objMapper.readTree(new File(configSetting.getWpaProfileFPath()));
+                            String accountStr = jsonNode.get("account").asText();
+                            try {
+                                ProcessBuilder pb = new ProcessBuilder(
+                                        "python3",
+                                        rootPath.concat("/scripts/contactchain.py"),
+                                        "0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd"
+                                );
+                                pb.redirectErrorStream(true);
+                                Process process = pb.start();
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                StringBuilder sb = new StringBuilder();
+                                String line;
+                                System.out.println("========== get reward from blockchain ==========");
+                                while ((line = reader.readLine()) != null) {
+                                    sb.append(line);
+                                    System.out.println("<reward>"+line+"<reward>");
+                                }
+                                process.waitFor();
+                                leftCoin = Double.valueOf(sb.toString());
+                            } catch (IOException e) {
+                                System.out.println(e.getMessage());
                             }
-                            process.waitFor();
-                            leftCoin = Double.valueOf(sb.toString());
                         } catch (IOException e) {
                             System.out.println(e.getMessage());
                         }
-                    } catch (IOException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    //========== do deduction ==========//
-                    File file = new File(configSetting.getWpaCmdPath().concat("/testLeftCoin"));
-                    if(file.exists()) {
-                        // deduct 10 coin
+                        leftCoin = leftCoin - 10;
+                        // record item
+                        writeRecord("-10: 登陆");
+                        // deduct 10 coin back up
                         new Thread(() -> {
                             try {
                                 ArrayList<String> cmd = new ArrayList<>();
@@ -257,10 +265,11 @@ public class HomePage {
                                 System.out.println(ex.getMessage());
                             }
                         }).start();
-                        leftCoin = leftCoin - 10;
+                    } else {
+                        String[] tmpStr = leftCoinStr.split(":");
+                        leftCoin = Double.valueOf(tmpStr[0]);
+                        writeRecord("+"+leftCoin+": 注册");
                     }
-                    // record item
-                    writeRecord("-10: 登陆");
                     sleep(200);
                     String historyStr = readRecord(historyReadlineNum);
                     historyLabel.setText(historyStr);
@@ -271,7 +280,7 @@ public class HomePage {
                     connectStatusL.setText("未连接   ");
                 }
                 setPageStatus();
-            } catch (InterruptedException ex) {
+            } catch (InterruptedException|IOException ex) {
                 System.out.println(ex.getMessage());
             }
         }).start();
@@ -698,7 +707,7 @@ public class HomePage {
                 // set left coin
 //                double cost = Arith.mul(purchasePrice,purchaseNum);
                 double cost = 15;
-                if (leftCoin > cost) {
+                if (leftCoin >= cost) {
                     // deduct left coin
                     String purchaseName = purchaseDesLabel.getText();
                     writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName);
@@ -949,7 +958,7 @@ public class HomePage {
         try {
             File file = new File(historyFilePath);
             if(file.length() == 0) {
-                record = "+10: 注册";
+                record = "+100: 注册";
             }
             BufferedWriter writer = new BufferedWriter(new FileWriter(historyFilePath,true));
             writer.append(record.concat("\n"));
