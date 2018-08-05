@@ -252,7 +252,7 @@ public class Register {
         breakNetwork = false;
         regTabbedPane.setVisible(false);
         preHomePage.getPageHomeTabbedPane().setVisible(true);
-        preHomePage.setLaunchImg();
+        preHomePage.setLaunchPage();
         fJFrame.setContentPane(preHomePage.getRootPanel());
     }
 

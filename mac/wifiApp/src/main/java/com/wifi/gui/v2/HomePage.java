@@ -40,7 +40,7 @@ public class HomePage {
     private JLabel ads1Label;
     private JLabel ads2Label;
     private JLabel ads3Label;
-    private JScrollPane seeAdsScrollPane;
+    private JScrollPane setAdsScrollPane;
     private JLabel spacer1Label;
     private JLabel spacer2Label;
     private JLabel adsDetailIcon;
@@ -142,9 +142,9 @@ public class HomePage {
     private int orderSequenceNum = 0;
     private ArrayList<OrderSheet> myOrder = new ArrayList<>();
 
-    public void setLaunchImg() {
+    public void setLaunchPage() {
         // reset launch img status
-        resetLaunchImgStatus();
+        resetLaunchPageStatus();
 
         // set recognised ssid
         ssidLabel.setVisible(true);
@@ -206,6 +206,7 @@ public class HomePage {
                     File file = new File(configSetting.getWpaCmdPath().concat("/testLeftCoin"));
                     BufferedReader leftCoinReader = new BufferedReader(new FileReader(file));
                     String leftCoinStr = leftCoinReader.readLine();
+                    String balanceRecord;
                     if(! leftCoinStr.contains("registerReward")) {
                         //====== read balance from blockchain =====//
                         try {
@@ -300,19 +301,20 @@ public class HomePage {
         }).start();
     }
 
-    private void seeAds() {
+    private void setAdsPage() {
         double rWidth = rootPanel.getWidth();
         // set wallet page layout
         spacer1Label.setBorder(new LineBorder(bgColor));
         spacer1Label.setPreferredSize(new Dimension(10,(int)rWidth/15));
         spacer2Label.setBorder(new LineBorder(bgColor));
         spacer2Label.setPreferredSize(new Dimension(10,(int)rWidth/15));
+        // set advertisement icons
         ImageIcon img1 = new ImageIcon(rootPath + "/img/xingbake1.jpg");
         ImageIcon img2 = new ImageIcon(rootPath + "/img/xingbake2.jpg");
         ImageIcon img3 = new ImageIcon(rootPath + "/img/xingbake3.jpg");
         ImageIcon img4 = new ImageIcon(rootPath + "/img/kendeji1.jpg");
         ImageIcon img5 = new ImageIcon(rootPath + "/img/kendeji2.jpg");
-        JLabel seeAdsLabels[] = {ads1Label,ads2Label,ads3Label,ads4Label,ads5Label};
+        JLabel setAdsPageLabels[] = {ads1Label,ads2Label,ads3Label,ads4Label,ads5Label};
         ImageIcon icons[] = {img1,img2,img3,img4,img5};
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(new JSONObject("{'name':'经典热巧克力','payBack':10}"));
@@ -320,8 +322,8 @@ public class HomePage {
         jsonArray.put(new JSONObject("{'name':'抹茶拿铁','payBack':11}"));
         jsonArray.put(new JSONObject("{'name':'下午茶套餐','payBack':13}"));
         jsonArray.put(new JSONObject("{'name':'鸡翅套餐','payBack':10}"));
-        for(int i=0;i<seeAdsLabels.length;i++) {
-            JLabel label = seeAdsLabels[i];
+        for(int i=0;i<setAdsPageLabels.length;i++) {
+            JLabel label = setAdsPageLabels[i];
             setJLabelIcon(label,icons[i],rootPanel.getWidth(),0.3);
             JSONObject jsonObj = jsonArray.getJSONObject(i);
             String name = jsonObj.getString("name");
@@ -379,7 +381,7 @@ public class HomePage {
         }
     }
 
-    public void resetLaunchImgStatus() {
+    public void resetLaunchPageStatus() {
         wifiIconLabel.setVisible(true);
         ssidLabel.setForeground(rootPanel.getBackground());
         setRetStatus(-1);
@@ -396,7 +398,7 @@ public class HomePage {
 //        ssidLabel.setForeground(rootPanel.getBackground());
     }
 
-    private void setLaunchImgStatus() {
+    private void setLaunchPageStatus() {
         // get root panel width and height
         double rWidth = rootPanel.getWidth();
         double rHeight = rootPanel.getHeight();
@@ -457,7 +459,7 @@ public class HomePage {
         }
         leftTileLabel.setVisible(status);
         getCoinPanel.setVisible(status);
-        seeAdsScrollPane.setVisible(status);
+        setAdsScrollPane.setVisible(status);
     }
 
     private void setMakeMoneyStatus() {
@@ -517,12 +519,12 @@ public class HomePage {
         connectStatusL.setText("");
         connectStatusL.setVisible(false);
         // remove new panel
-        setLaunchImgStatus();
+        setLaunchPageStatus();
         // set recognise ssid label text to space
         ssidLabel.setText("blockchain");
         ssidLabel.setForeground(rootPanel.getBackground());
         // users can get coins by reading ads
-        seeAds();
+        setAdsPage();
         adsDetailPane.setVisible(false);
         // get root panel width and height
         rootWidth = rootPanel.getWidth();
@@ -956,10 +958,6 @@ public class HomePage {
 
     private void writeRecord(String record) {
         try {
-            File file = new File(historyFilePath);
-            if(file.length() == 0) {
-                record = "+100: 注册";
-            }
             BufferedWriter writer = new BufferedWriter(new FileWriter(historyFilePath,true));
             writer.append(record.concat("\n"));
             writer.close();
