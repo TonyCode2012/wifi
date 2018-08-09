@@ -41,8 +41,8 @@ public class HomePage {
     private JLabel ads2Label;
     private JLabel ads3Label;
     private JScrollPane setAdsScrollPane;
-    private JLabel spacer1Label;
-    private JLabel spacer2Label;
+//    private JLabel spacer1Label;
+//    private JLabel spacer2Label;
     private JLabel adsDetailIcon;
     private JLabel adsDetailText;
     private JButton adsPageRetBtn;
@@ -104,6 +104,11 @@ public class HomePage {
     private JLabel loginAdsLabel;
     private JLabel wifiIconLabel;
     private JLabel launchAdsLabel;
+    private JLabel coinLabel;
+    private JPanel walletLogoutPanel;
+    private JPanel walletLoginPanel;
+    private JTabbedPane tabbedPane1;
+    private JTabbedPane tabbedPane2;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -304,10 +309,10 @@ public class HomePage {
     private void setAdsPage() {
         double rWidth = rootPanel.getWidth();
         // set wallet page layout
-        spacer1Label.setBorder(new LineBorder(bgColor));
-        spacer1Label.setPreferredSize(new Dimension(10,(int)rWidth/15));
-        spacer2Label.setBorder(new LineBorder(bgColor));
-        spacer2Label.setPreferredSize(new Dimension(10,(int)rWidth/15));
+//        spacer1Label.setBorder(new LineBorder(bgColor));
+//        spacer1Label.setPreferredSize(new Dimension(10,(int)rWidth/15));
+//        spacer2Label.setBorder(new LineBorder(bgColor));
+//        spacer2Label.setPreferredSize(new Dimension(10,(int)rWidth/15));
         // set advertisement icons
         ImageIcon img1 = new ImageIcon(rootPath + "/img/xingbake1.jpg");
         ImageIcon img2 = new ImageIcon(rootPath + "/img/xingbake2.jpg");
@@ -442,24 +447,32 @@ public class HomePage {
         }
         // set icons
         connectStatusL.setIcon(connectedIcon);
-        // set coin image
+        // set token coin image
         setJLabelIcon(leftLabel,rootPath + "/img/goldCoin.png",rWidth,0.08);
         leftLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+        // set real coin image
+        setJLabelIcon(coinLabel,rootPath + "/img/coinCash.png",rWidth,0.08);
+        coinLabel.setHorizontalTextPosition(SwingConstants.LEFT);
     }
 
     private void setWalletStatus() {
-        boolean status = false;
-        if(loginStatus == 1) {
-            status = true;
-        }
-        loginStatusLabel.setVisible(!status);
-        leftLabel.setVisible(status);
+//        boolean status = false;
+//        if(loginStatus == 1) {
+//            status = true;
+//        }
+//        loginStatusLabel.setVisible(!status);
+//        leftLabel.setVisible(status);
+//        coinLabel.setVisible(status);
+        boolean status = (loginStatus == 1);
         if(status) {
-            leftLabel.setText(String.valueOf(leftCoin));
+            leftLabel.setText(setLeftCoinFormat(leftCoin));
+            coinLabel.setText(setLeftCoinFormat(10.0));
         }
-        leftTileLabel.setVisible(status);
-        getCoinPanel.setVisible(status);
-        setAdsScrollPane.setVisible(status);
+        walletLoginPanel.setVisible(status);
+        walletLogoutPanel.setVisible(!status);
+//        leftTileLabel.setVisible(status);
+//        getCoinPanel.setVisible(status);
+//        setAdsScrollPane.setVisible(status);
     }
 
     private void setMakeMoneyStatus() {
@@ -992,7 +1005,7 @@ public class HomePage {
     public void writeLeftCoin(Double leftCoin) {
         try {
             this.leftCoin = leftCoin;
-            leftLabel.setText(String.valueOf(leftCoin));
+            leftLabel.setText(setLeftCoinFormat(leftCoin));
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftCoin"))));
             writer.write(String.valueOf(leftCoin));
             writer.close();
@@ -1035,6 +1048,10 @@ public class HomePage {
 
     public void setLoginStatus(int loginStatus) {
         this.loginStatus = loginStatus;
+    }
+
+    private String setLeftCoinFormat(double leftCoin) {
+        return String.format("%-10.2f",leftCoin);
     }
 
     private void createUIComponents() {
