@@ -13,7 +13,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -37,18 +36,13 @@ public class HomePage {
     private JLabel leftLabel;
     private JLabel loginStatusLabel;
     private JPanel getCoinPanel;
-    private JLabel ads1Label;
-    private JLabel ads2Label;
-    private JLabel ads3Label;
     private JScrollPane setAdsScrollPane;
 //    private JLabel spacer1Label;
 //    private JLabel spacer2Label;
     private JLabel adsDetailIcon;
     private JLabel adsDetailText;
     private JButton adsPageRetBtn;
-    private JLabel ads4Label;
-    private JLabel ads5Label;
-    private JScrollPane allAdsPane;
+    private JTabbedPane allAdsPane;
     private JScrollPane adsDetailPane;
     private JLabel historyLabel;
     private JLabel purchase1Label;
@@ -107,8 +101,11 @@ public class HomePage {
     private JLabel coinLabel;
     private JPanel walletLogoutPanel;
     private JPanel walletLoginPanel;
-    private JTabbedPane tabbedPane1;
     private JTabbedPane tabbedPane2;
+    private JPanel allRewardPanel;
+    private JPanel tokenRewardPanel;
+    private JPanel coinRewardPanel;
+    private JPanel giftRewardPanel;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -138,6 +135,12 @@ public class HomePage {
 
     // wallet page parameters
     private int historyReadlineNum = 30;
+    
+    // reward page
+    private ArrayList<JLabel> allAdsLabels = new ArrayList<>();
+    private ArrayList<JLabel> tokenLabels = new ArrayList<>();
+    private ArrayList<JLabel> coinLabels = new ArrayList<>();
+    private ArrayList<JLabel> giftLabels = new ArrayList<>();
 
     // purchase page parameters
     private int purchaseNum = 1;
@@ -246,31 +249,31 @@ public class HomePage {
                         // record item
                         writeRecord("-10: 登陆");
                         // deduct 10 coin back up
-                        new Thread(() -> {
-                            try {
-                                ArrayList<String> cmd = new ArrayList<>();
-                                cmd.add(rootPath.concat("/wpa_setup/client"));
-                                cmd.add("-app=deduction");
-                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
-                                cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
-                                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
-                                        "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
-                                        "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
-                                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
-                                        "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
-                                        "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
-                                        "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
-                                ProcessBuilder pb = new ProcessBuilder(cmd);
-                                Process process = pb.start();
-                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                                String line;
-                                while ((line = reader.readLine()) != null) {
-                                    System.out.println(line);
-                                }
-                            } catch (IOException ex) {
-                                System.out.println(ex.getMessage());
-                            }
-                        }).start();
+//                        new Thread(() -> {
+//                            try {
+//                                ArrayList<String> cmd = new ArrayList<>();
+//                                cmd.add(rootPath.concat("/wpa_setup/client"));
+//                                cmd.add("-app=deduction");
+//                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+//                                cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
+//                                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
+//                                        "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
+//                                        "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
+//                                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
+//                                        "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
+//                                        "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
+//                                        "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
+//                                ProcessBuilder pb = new ProcessBuilder(cmd);
+//                                Process process = pb.start();
+//                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//                                String line;
+//                                while ((line = reader.readLine()) != null) {
+//                                    System.out.println(line);
+//                                }
+//                            } catch (IOException ex) {
+//                                System.out.println(ex.getMessage());
+//                            }
+//                        }).start();
                     } else {
                         String[] tmpStr = leftCoinStr.split(":");
                         leftCoin = Double.valueOf(tmpStr[0]);
@@ -306,35 +309,50 @@ public class HomePage {
         }).start();
     }
 
+    /*
+    * 生成广告页面
+    * */
     private void setAdsPage() {
-        double rWidth = rootPanel.getWidth();
-        // set wallet page layout
-//        spacer1Label.setBorder(new LineBorder(bgColor));
-//        spacer1Label.setPreferredSize(new Dimension(10,(int)rWidth/15));
-//        spacer2Label.setBorder(new LineBorder(bgColor));
-//        spacer2Label.setPreferredSize(new Dimension(10,(int)rWidth/15));
-        // set advertisement icons
-        ImageIcon img1 = new ImageIcon(rootPath + "/img/xingbake1.jpg");
-        ImageIcon img2 = new ImageIcon(rootPath + "/img/xingbake2.jpg");
-        ImageIcon img3 = new ImageIcon(rootPath + "/img/xingbake3.jpg");
-        ImageIcon img4 = new ImageIcon(rootPath + "/img/kendeji1.jpg");
-        ImageIcon img5 = new ImageIcon(rootPath + "/img/kendeji2.jpg");
-        JLabel setAdsPageLabels[] = {ads1Label,ads2Label,ads3Label,ads4Label,ads5Label};
-        ImageIcon icons[] = {img1,img2,img3,img4,img5};
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(new JSONObject("{'name':'经典热巧克力','payBack':10}"));
-        jsonArray.put(new JSONObject("{'name':'密思朵咖啡','payBack':10}"));
-        jsonArray.put(new JSONObject("{'name':'抹茶拿铁','payBack':11}"));
-        jsonArray.put(new JSONObject("{'name':'下午茶套餐','payBack':13}"));
-        jsonArray.put(new JSONObject("{'name':'鸡翅套餐','payBack':10}"));
-        for(int i=0;i<setAdsPageLabels.length;i++) {
-            JLabel label = setAdsPageLabels[i];
-            setJLabelIcon(label,icons[i],rootPanel.getWidth(),0.3);
-            JSONObject jsonObj = jsonArray.getJSONObject(i);
-            String name = jsonObj.getString("name");
-            double payBack = jsonObj.getDouble("payBack");
-            label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+"</font></html>");
-            label.setVerticalTextPosition(SwingConstants.TOP);
+        // set token advertisement
+        JSONArray tokenJsonarry = new JSONArray();
+        tokenJsonarry.put(new JSONObject("{'name':'经典热巧克力','payBack':10,'imgPath':'"+rootPath.concat("/img/kendeji1.jpg")+"'}"));
+        tokenJsonarry.put(new JSONObject("{'name':'密思朵咖啡','payBack':10,'imgPath':'"+rootPath.concat("/img/kendeji1.jpg")+"'}}"));
+        tokenJsonarry.put(new JSONObject("{'name':'抹茶拿铁','payBack':15,'imgPath':'"+rootPath.concat("/img/kendeji1.jpg")+"'}}"));
+        tokenJsonarry.put(new JSONObject("{'name':'下午茶套餐','payBack':14,'imgPath':'"+rootPath.concat("/img/kendeji1.jpg")+"'}}"));
+        tokenJsonarry.put(new JSONObject("{'name':'鸡翅套餐','payBack':10,'imgPath':'"+rootPath.concat("/img/kendeji1.jpg")+"'}}"));
+        // set coin advertisement
+        JSONArray coinJsonarry = new JSONArray();
+        coinJsonarry.put(new JSONObject("{'name':'经典热巧克力','payBack':10,'imgPath':'"+rootPath.concat("/img/kendeji2.jpg")+"'}"));
+        coinJsonarry.put(new JSONObject("{'name':'密思朵咖啡','payBack':10,'imgPath':'"+rootPath.concat("/img/kendeji2.jpg")+"'}}"));
+        coinJsonarry.put(new JSONObject("{'name':'抹茶拿铁','payBack':15,'imgPath':'"+rootPath.concat("/img/kendeji2.jpg")+"'}}"));
+        coinJsonarry.put(new JSONObject("{'name':'下午茶套餐','payBack':14,'imgPath':'"+rootPath.concat("/img/kendeji2.jpg")+"'}}"));
+        coinJsonarry.put(new JSONObject("{'name':'鸡翅套餐','payBack':10,'imgPath':'"+rootPath.concat("/img/kendeji2.jpg")+"'}}"));
+        // set gift advertisement
+        JSONArray giftJsonarry = new JSONArray();
+        giftJsonarry.put(new JSONObject("{'name':'经典热巧克力','payBack':10,'imgPath':'"+rootPath.concat("/img/xingbake1.jpg")+"'}"));
+        giftJsonarry.put(new JSONObject("{'name':'密思朵咖啡','payBack':10,'imgPath':'"+rootPath.concat("/img/xingbake1.jpg")+"'}}"));
+        giftJsonarry.put(new JSONObject("{'name':'抹茶拿铁','payBack':15,'imgPath':'"+rootPath.concat("/img/xingbake1.jpg")+"'}}"));
+        giftJsonarry.put(new JSONObject("{'name':'下午茶套餐','payBack':14,'imgPath':'"+rootPath.concat("/img/xingbake1.jpg")+"'}}"));
+        giftJsonarry.put(new JSONObject("{'name':'鸡翅套餐','payBack':10,'imgPath':'"+rootPath.concat("/img/xingbake1.jpg")+"'}}"));
+        JSONArray[] jsonArrys = {tokenJsonarry,coinJsonarry,giftJsonarry};
+        ArrayList[] typeArrys = {tokenLabels,coinLabels,giftLabels};
+        // set labels
+        for(int i=0;i<jsonArrys.length;i++) {
+            JSONArray jsonArry = jsonArrys[i];
+            ArrayList<JLabel> typeArry = typeArrys[i];
+            for(int j=0;j<jsonArry.length();j++) {
+                JSONObject jsonObj = jsonArry.getJSONObject(j);
+                // get properties
+                String name = jsonObj.getString("name");
+                double payBack = jsonObj.getDouble("payBack");
+                String imgPath = jsonObj.getString("imgPath");
+                JLabel label = new JLabel();
+                setJLabelIcon(label,imgPath,rootPanel.getWidth(),0.3);
+                label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+"</font></html>");
+                label.setVerticalTextPosition(SwingConstants.TOP);
+                typeArry.add(label);
+                allAdsLabels.add((JLabel) deepClone(label));
+            }
         }
     }
 
@@ -386,7 +404,41 @@ public class HomePage {
         }
     }
 
-    public void resetLaunchPageStatus() {
+    private void setRewardPage() {
+        ArrayList[] typeArrys = {tokenLabels,coinLabels,giftLabels};
+        JPanel[] panels = {tokenRewardPanel,coinRewardPanel,giftRewardPanel};
+        int adsNum = tokenLabels.size() + coinLabels.size() + giftLabels.size();
+        allRewardPanel.setLayout(new GridLayout(adsNum,1));
+        for(int i=0;i<typeArrys.length;i++) {
+            ArrayList<JLabel> typeArry = typeArrys[i];
+            JPanel panel = panels[i];
+            panel.setLayout(new GridLayout(typeArry.size(),1));
+            typeArry.forEach(panel::add);
+//            typeArry.forEach(item->{
+//                allRewardPanel.add(item);
+//                panel.add((JLabel)deepClone(item));
+//            });
+        }
+        allAdsLabels.forEach(allRewardPanel::add);
+    }
+
+    private Object deepClone(JLabel label){
+        try {
+            //将对象写到流里
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(label);
+            //从流里读回来
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bis);
+            return ois.readObject();
+        } catch (IOException|ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    private void resetLaunchPageStatus() {
         wifiIconLabel.setVisible(true);
         ssidLabel.setForeground(rootPanel.getBackground());
         setRetStatus(-1);
@@ -456,13 +508,6 @@ public class HomePage {
     }
 
     private void setWalletStatus() {
-//        boolean status = false;
-//        if(loginStatus == 1) {
-//            status = true;
-//        }
-//        loginStatusLabel.setVisible(!status);
-//        leftLabel.setVisible(status);
-//        coinLabel.setVisible(status);
         boolean status = (loginStatus == 1);
         if(status) {
             leftLabel.setText(setLeftCoinFormat(leftCoin));
@@ -470,12 +515,9 @@ public class HomePage {
         }
         walletLoginPanel.setVisible(status);
         walletLogoutPanel.setVisible(!status);
-//        leftTileLabel.setVisible(status);
-//        getCoinPanel.setVisible(status);
-//        setAdsScrollPane.setVisible(status);
     }
 
-    private void setMakeMoneyStatus() {
+    private void setRewardStatus() {
         boolean status = (loginStatus == 1);
         mmLoginPanel.setVisible(status);
         mmLogoutPanel.setVisible(!status);
@@ -495,7 +537,7 @@ public class HomePage {
 
     private void setPageStatus() {
         setWalletStatus();
-        setMakeMoneyStatus();
+        setRewardStatus();
         setPurchaseStatus();
         setOrderStatus();
     }
@@ -547,7 +589,9 @@ public class HomePage {
         // set order list page
         setOrderListPage();
         orderDetailScrollPane.setVisible(false);
-        // set all page status
+        // set getting reward page status
+        setRewardPage();
+        // set all page display status
         setPageStatus();
         // set login advertisement
         new Thread(() -> {
@@ -797,10 +841,11 @@ public class HomePage {
             }
         });
         // set advertisement events in "make money" page
-        JLabel adsLabels[] = {ads1Label,ads2Label,ads3Label,ads4Label,ads5Label};
-        for(JLabel label: adsLabels) {
-            changeCursor(label,"advertisement");
+        ArrayList[] adsArrys = {tokenLabels,coinLabels,giftLabels};
+        for(ArrayList<JLabel> adsArry: adsArrys) {
+            adsArry.forEach(item->changeCursor(item,"advertisement"));
         }
+        allAdsLabels.forEach(item->changeCursor(item,"advertisement"));
         // set purchase events in "purchase" page
         JLabel purchaseLabels[] = {purchase1Label,purchase2Label,purchase3Label,purchase4Label,purchase5Label};
         for(JLabel label: purchaseLabels) {
