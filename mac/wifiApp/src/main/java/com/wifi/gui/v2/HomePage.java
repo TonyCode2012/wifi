@@ -13,6 +13,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -45,17 +47,12 @@ public class HomePage {
     private JTabbedPane allAdsPane;
     private JScrollPane adsDetailPane;
     private JLabel historyLabel;
-    private JLabel purchase1Label;
-    private JLabel purchase2Label;
-    private JLabel purchase3Label;
-    private JLabel purchase4Label;
-    private JLabel purchase5Label;
     private JPanel pLogoutPanel;
     private JPanel pLoginPanel;
     private JPanel mmLogoutPanel;
     private JPanel mmLoginPanel;
     private JPanel purchaseDetailPanel;
-    private JScrollPane allPurchasePane;
+    private JTabbedPane allPurchasePane;
     private JLabel purchaseIconLabel;
     private JLabel purchaseDesLabel;
     private JButton purchaseBtn;
@@ -101,11 +98,14 @@ public class HomePage {
     private JLabel coinLabel;
     private JPanel walletLogoutPanel;
     private JPanel walletLoginPanel;
-    private JTabbedPane tabbedPane2;
-    private JPanel allRewardPanel;
-    private JPanel tokenRewardPanel;
-    private JPanel coinRewardPanel;
-    private JPanel giftRewardPanel;
+    private JPanel allAdsPanel;
+    private JPanel tokenAdsPanel;
+    private JPanel coinAdsPanel;
+    private JPanel giftAdsPanel;
+    private JPanel allGoodsPanel;
+    private JPanel tokenGoodsPanel;
+    private JPanel coinGoodsPanel;
+    private JPanel giftGoodsPanel;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -138,13 +138,17 @@ public class HomePage {
     
     // reward page
     private ArrayList<JLabel> allAdsLabels = new ArrayList<>();
-    private ArrayList<JLabel> tokenLabels = new ArrayList<>();
-    private ArrayList<JLabel> coinLabels = new ArrayList<>();
-    private ArrayList<JLabel> giftLabels = new ArrayList<>();
+    private ArrayList<JLabel> tokenAdsLabels = new ArrayList<>();
+    private ArrayList<JLabel> coinAdsLabels = new ArrayList<>();
+    private ArrayList<JLabel> giftAdsLabels = new ArrayList<>();
 
     // purchase page parameters
     private int purchaseNum = 1;
     private double purchasePrice = 1.0;
+    private ArrayList<JLabel> allGoodsLabels = new ArrayList<>();
+    private ArrayList<JLabel> tokenGoodsLabels = new ArrayList<>();
+    private ArrayList<JLabel> coinGoodsLabels = new ArrayList<>();
+    private ArrayList<JLabel> giftGoodsLabels = new ArrayList<>();
 
     // order page parameters
     private int orderSequenceNum = 0;
@@ -249,31 +253,31 @@ public class HomePage {
                         // record item
                         writeRecord("-10: 登陆");
                         // deduct 10 coin back up
-//                        new Thread(() -> {
-//                            try {
-//                                ArrayList<String> cmd = new ArrayList<>();
-//                                cmd.add(rootPath.concat("/wpa_setup/client"));
-//                                cmd.add("-app=deduction");
-//                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
-//                                cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
-//                                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
-//                                        "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
-//                                        "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
-//                                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
-//                                        "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
-//                                        "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
-//                                        "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
-//                                ProcessBuilder pb = new ProcessBuilder(cmd);
-//                                Process process = pb.start();
-//                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//                                String line;
-//                                while ((line = reader.readLine()) != null) {
-//                                    System.out.println(line);
-//                                }
-//                            } catch (IOException ex) {
-//                                System.out.println(ex.getMessage());
-//                            }
-//                        }).start();
+                        new Thread(() -> {
+                            try {
+                                ArrayList<String> cmd = new ArrayList<>();
+                                cmd.add(rootPath.concat("/wpa_setup/client"));
+                                cmd.add("-app=deduction");
+                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+                                cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
+                                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
+                                        "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
+                                        "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
+                                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
+                                        "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
+                                        "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
+                                        "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
+                                ProcessBuilder pb = new ProcessBuilder(cmd);
+                                Process process = pb.start();
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    System.out.println(line);
+                                }
+                            } catch (IOException ex) {
+                                System.out.println(ex.getMessage());
+                            }
+                        }).start();
                     } else {
                         String[] tmpStr = leftCoinStr.split(":");
                         leftCoin = Double.valueOf(tmpStr[0]);
@@ -310,9 +314,9 @@ public class HomePage {
     }
 
     /*
-    * 生成广告页面
+    * 生成广告奖励页面
     * */
-    private void setAdsPage() {
+    private void setRewardPage() {
         // set token advertisement
         JSONArray tokenJsonarry = new JSONArray();
         tokenJsonarry.put(new JSONObject("{'name':'经典热巧克力','payBack':10,'imgPath':'"+rootPath.concat("/img/kendeji1.jpg")+"'}"));
@@ -335,7 +339,7 @@ public class HomePage {
         giftJsonarry.put(new JSONObject("{'name':'下午茶套餐','payBack':14,'imgPath':'"+rootPath.concat("/img/xingbake1.jpg")+"'}}"));
         giftJsonarry.put(new JSONObject("{'name':'鸡翅套餐','payBack':10,'imgPath':'"+rootPath.concat("/img/xingbake1.jpg")+"'}}"));
         JSONArray[] jsonArrys = {tokenJsonarry,coinJsonarry,giftJsonarry};
-        ArrayList[] typeArrys = {tokenLabels,coinLabels,giftLabels};
+        ArrayList[] typeArrys = {tokenAdsLabels,coinAdsLabels,giftAdsLabels};
         // set labels
         for(int i=0;i<jsonArrys.length;i++) {
             JSONArray jsonArry = jsonArrys[i];
@@ -351,38 +355,64 @@ public class HomePage {
                 label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+"</font></html>");
                 label.setVerticalTextPosition(SwingConstants.TOP);
                 typeArry.add(label);
-                allAdsLabels.add((JLabel) deepClone(label));
+                allAdsLabels.add(label);
             }
         }
+
+        // add label to corresponding tab
+        ArrayList[] typeLabelArrys = {tokenAdsLabels,coinAdsLabels,giftAdsLabels};
+        JPanel[] panels = {tokenAdsPanel, coinAdsPanel, giftAdsPanel};
+        for(int i=0;i<typeLabelArrys.length;i++) {
+            ArrayList<JLabel> typeArry = typeLabelArrys[i];
+            JPanel panel = panels[i];
+            panel.setLayout(new GridLayout(typeArry.size(),1));
+        }
+        int adsNum = tokenAdsLabels.size() + coinAdsLabels.size() + giftAdsLabels.size();
+        allAdsPanel.setLayout(new GridLayout(adsNum,1));
+        allAdsLabels.forEach(allAdsPanel::add);
     }
 
     private void setPurchasePage() {
-        // set all purchase page
-        ImageIcon pIcon1 = new ImageIcon(rootPath.concat("/img/purchase1.jpg"));
-        ImageIcon pIcon2 = new ImageIcon(rootPath.concat("/img/purchase2.jpg"));
-        ImageIcon pIcon3 = new ImageIcon(rootPath.concat("/img/purchase3.jpg"));
-        ImageIcon pIcon4 = new ImageIcon(rootPath.concat("/img/purchase4.jpg"));
-        ImageIcon pIcon5 = new ImageIcon(rootPath.concat("/img/purchase5.jpg"));
-        ImageIcon purchaseIcons[] = {pIcon1,pIcon2,pIcon3,pIcon4,pIcon5};
-        JLabel purchaseLabels[] = {purchase1Label,purchase2Label,purchase3Label,purchase4Label,purchase5Label};
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(new JSONObject("{'des':'焦糖咖啡星冰乐','price':'15'}"));
-        jsonArray.put(new JSONObject("{'des':'密思朵咖啡','price':'11'}"));
-        jsonArray.put(new JSONObject("{'des':'抹茶拿铁','price':'10'}"));
-        jsonArray.put(new JSONObject("{'des':'英式红茶','price':'10'}"));
-        jsonArray.put(new JSONObject("{'des':'经典热巧克力','price':'15'}"));
-        for(int i=0;i<purchaseLabels.length;i++) {
-            ImageIcon icon = purchaseIcons[i];
-            JLabel label = purchaseLabels[i];
-            // set icon
-            setJLabelIcon(label,icon,rootWidth,0.3);
-            JSONObject jsonObj = jsonArray.getJSONObject(i);
-            // set text
-            String des = jsonObj.getString("des");
-            double price = jsonObj.getDouble("price");
-            String text = "<html><p>"+des+"</p><br/><br/><font color='#8C7853'>价格 "+price+"</font></html>";
-            label.setText(text);
-            label.setVerticalTextPosition(SwingConstants.TOP);
+        // set token goods
+        JSONArray tokenJsonarry = new JSONArray();
+        tokenJsonarry.put(new JSONObject("{'name':'经典热巧克力','price':10,'imgPath':'"+rootPath.concat("/img/purchase1.jpg")+"'}"));
+        tokenJsonarry.put(new JSONObject("{'name':'密思朵咖啡','price':10,'imgPath':'"+rootPath.concat("/img/purchase1.jpg")+"'}}"));
+        tokenJsonarry.put(new JSONObject("{'name':'抹茶拿铁','price':15,'imgPath':'"+rootPath.concat("/img/purchase1.jpg")+"'}}"));
+        tokenJsonarry.put(new JSONObject("{'name':'下午茶套餐','price':14,'imgPath':'"+rootPath.concat("/img/purchase1.jpg")+"'}}"));
+        tokenJsonarry.put(new JSONObject("{'name':'鸡翅套餐','price':10,'imgPath':'"+rootPath.concat("/img/purchase1.jpg")+"'}}"));
+        // set coin goods
+        JSONArray coinJsonarry = new JSONArray();
+        coinJsonarry.put(new JSONObject("{'name':'经典热巧克力','price':10,'imgPath':'"+rootPath.concat("/img/purchase2.jpg")+"'}"));
+        coinJsonarry.put(new JSONObject("{'name':'密思朵咖啡','price':10,'imgPath':'"+rootPath.concat("/img/purchase2.jpg")+"'}}"));
+        coinJsonarry.put(new JSONObject("{'name':'抹茶拿铁','price':15,'imgPath':'"+rootPath.concat("/img/purchase2.jpg")+"'}}"));
+        coinJsonarry.put(new JSONObject("{'name':'下午茶套餐','price':14,'imgPath':'"+rootPath.concat("/img/purchase2.jpg")+"'}}"));
+        coinJsonarry.put(new JSONObject("{'name':'鸡翅套餐','price':10,'imgPath':'"+rootPath.concat("/img/purchase2.jpg")+"'}}"));
+        // set gift goods
+        JSONArray giftJsonarry = new JSONArray();
+        giftJsonarry.put(new JSONObject("{'name':'经典热巧克力','price':10,'imgPath':'"+rootPath.concat("/img/purchase3.jpg")+"'}"));
+        giftJsonarry.put(new JSONObject("{'name':'密思朵咖啡','price':10,'imgPath':'"+rootPath.concat("/img/purchase3.jpg")+"'}}"));
+        giftJsonarry.put(new JSONObject("{'name':'抹茶拿铁','price':15,'imgPath':'"+rootPath.concat("/img/purchase3.jpg")+"'}}"));
+        giftJsonarry.put(new JSONObject("{'name':'下午茶套餐','price':14,'imgPath':'"+rootPath.concat("/img/purchase3.jpg")+"'}}"));
+        giftJsonarry.put(new JSONObject("{'name':'鸡翅套餐','price':10,'imgPath':'"+rootPath.concat("/img/purchase3.jpg")+"'}}"));
+        // set labels
+        JSONArray[] jsonArrys = {tokenJsonarry,coinJsonarry,giftJsonarry};
+        ArrayList[] typeArrys = {tokenGoodsLabels,coinGoodsLabels,giftGoodsLabels};
+        for(int i=0;i<jsonArrys.length;i++) {
+            JSONArray jsonArry = jsonArrys[i];
+            ArrayList<JLabel> typeArry = typeArrys[i];
+            for(int j=0;j<jsonArry.length();j++) {
+                JSONObject jsonObj = jsonArry.getJSONObject(j);
+                // get properties
+                String name = jsonObj.getString("name");
+                double price = jsonObj.getDouble("price");
+                String imgPath = jsonObj.getString("imgPath");
+                JLabel label = new JLabel();
+                setJLabelIcon(label,imgPath,rootWidth,0.3);
+                label.setText("<html><p>"+name+"</p><br/><br/><font color='#8C7853'>价格 "+price+"</font></html>");
+                label.setVerticalTextPosition(SwingConstants.TOP);
+                typeArry.add(label);
+                allGoodsLabels.add(label);
+            }
         }
         // set detail purchase page
         int rWidth = rootPanel.getWidth();
@@ -395,6 +425,18 @@ public class HomePage {
         purchaseNumField.setColumns(2);
         // set order detail pane
         orderDetailPane.setVisible(false);
+
+        // add labels to corresponding tab
+        ArrayList[] typeLabelArrys = {tokenGoodsLabels,coinGoodsLabels,giftGoodsLabels};
+        JPanel[] panels = {tokenGoodsPanel,coinGoodsPanel,giftGoodsPanel};
+        for(int i=0;i<typeLabelArrys.length;i++) {
+            ArrayList<JLabel> typeLabelArry = typeLabelArrys[i];
+            JPanel panel = panels[i];
+            panel.setLayout(new GridLayout(typeLabelArry.size(),1));
+        }
+        int goodsNum = tokenGoodsLabels.size() + coinGoodsLabels.size() + giftGoodsLabels.size();
+        allGoodsPanel.setLayout(new GridLayout(goodsNum,1));
+        allGoodsLabels.forEach(allGoodsPanel::add);
     }
 
     private void setOrderListPage() {
@@ -402,24 +444,6 @@ public class HomePage {
         for(JLabel label: labels) {
             label.setVisible(false);
         }
-    }
-
-    private void setRewardPage() {
-        ArrayList[] typeArrys = {tokenLabels,coinLabels,giftLabels};
-        JPanel[] panels = {tokenRewardPanel,coinRewardPanel,giftRewardPanel};
-        int adsNum = tokenLabels.size() + coinLabels.size() + giftLabels.size();
-        allRewardPanel.setLayout(new GridLayout(adsNum,1));
-        for(int i=0;i<typeArrys.length;i++) {
-            ArrayList<JLabel> typeArry = typeArrys[i];
-            JPanel panel = panels[i];
-            panel.setLayout(new GridLayout(typeArry.size(),1));
-            typeArry.forEach(panel::add);
-//            typeArry.forEach(item->{
-//                allRewardPanel.add(item);
-//                panel.add((JLabel)deepClone(item));
-//            });
-        }
-        allAdsLabels.forEach(allRewardPanel::add);
     }
 
     private Object deepClone(JLabel label){
@@ -578,8 +602,6 @@ public class HomePage {
         // set recognise ssid label text to space
         ssidLabel.setText("blockchain");
         ssidLabel.setForeground(rootPanel.getBackground());
-        // users can get coins by reading ads
-        setAdsPage();
         adsDetailPane.setVisible(false);
         // get root panel width and height
         rootWidth = rootPanel.getWidth();
@@ -840,17 +862,20 @@ public class HomePage {
                 allPurchasePane.setVisible(true);
             }
         });
+        //========== set reward and purchase page ==========//
         // set advertisement events in "make money" page
-        ArrayList[] adsArrys = {tokenLabels,coinLabels,giftLabels};
+        ArrayList[] adsArrys = {tokenAdsLabels,coinAdsLabels,giftAdsLabels};
         for(ArrayList<JLabel> adsArry: adsArrys) {
             adsArry.forEach(item->changeCursor(item,"advertisement"));
         }
         allAdsLabels.forEach(item->changeCursor(item,"advertisement"));
         // set purchase events in "purchase" page
-        JLabel purchaseLabels[] = {purchase1Label,purchase2Label,purchase3Label,purchase4Label,purchase5Label};
-        for(JLabel label: purchaseLabels) {
-            changeCursor(label,"purchase");
+        ArrayList[] goodsArrys = {tokenGoodsLabels,coinGoodsLabels,giftGoodsLabels};
+        for(ArrayList<JLabel> goodsArry: goodsArrys) {
+            goodsArry.forEach(item->changeCursor(item,"purchase"));
         }
+        allGoodsLabels.forEach(item->changeCursor(item,"purchase"));
+        //========== end ==========//
         orderListPanel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
@@ -868,6 +893,32 @@ public class HomePage {
             public void actionPerformed(ActionEvent e) {
                 orderDetailScrollPane.setVisible(false);
                 orderListScrollPane.setVisible(true);
+            }
+        });
+        allPurchasePane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int index = allPurchasePane.getSelectedIndex();
+                switch (index) {
+                    case 0: allGoodsLabels.forEach(allGoodsPanel::add);break;
+                    case 1: tokenGoodsLabels.forEach(tokenGoodsPanel::add); break;
+                    case 2: coinGoodsLabels.forEach(coinGoodsPanel::add);break;
+                    case 3: giftGoodsLabels.forEach(giftGoodsPanel::add);break;
+                    default: System.out.println("[ERROR] Unknown error!");
+                }
+            }
+        });
+        allAdsPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int index = allAdsPane.getSelectedIndex();
+                switch (index) {
+                    case 0: allAdsLabels.forEach(allAdsPanel::add);break;
+                    case 1: tokenAdsLabels.forEach(tokenAdsPanel::add); break;
+                    case 2: coinAdsLabels.forEach(coinAdsPanel::add);break;
+                    case 3: giftAdsLabels.forEach(giftAdsPanel::add);break;
+                    default: System.out.println("[ERROR] Unknown error!");
+                }
             }
         });
     }
