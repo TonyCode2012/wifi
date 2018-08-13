@@ -18,16 +18,20 @@ When user logs in, the adv owner will pay coin to Ap owner, when Adv price is co
 
 ###Watch ADV with token award
 When user watch an ADV and the ADV is awared by token
+
 ```node test.js WatchAdvToken [Client Account] [Client PK] [AdvAddr] [ApAddr] ```
 
 ###Watch ADV with coin award
 When user watch an ADV and the ADV is awared by coin
+
 ```node test.js WatchAdvCoin [Client Account] [Client PK] [AdvAddr] [ApAddr]```
 
 ###Buy thing with token
 When client buy goods, which price is settlemented by token
+
 ```node test.js BuyThing [Client Account] [Client PK] [ThingAddr]```
 
 ###Buy thing with coin
 When client buy goods, which price is settlemented by coin
+
 ```node test.js BuyThingCoin [Client Account] [Client PK] [ThingAddr]```
