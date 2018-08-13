@@ -1,34 +1,30 @@
-Import config.js and sendTransactions.js
+'Support command line to call test.js
 
-```
-config = require("./config")
-transaction = require("./sendTransactions")
-```
+''For example:
+'''Client login
+When client logs in, client will pay some token to Ap owner
+```node test.js DeductionToken [Client Account] [Client PK] [ApAddr]
 
- For all functions, first parameter is the caller, second parameter is caller's private key 
-Attention: If a function ended with "Coin", it means all tokens related in this transaction are new token.
+'''Commission with Token
+When user logs in, the adv owner will pay token to Ap owner, when Adv price is token
+```node test.js CommissionToken [Client Account] [Client PK] [ApAddr] [AdvAddr]
 
-```
-transaction.sendRawTransfer([sender], [sender's privateKey], [reciever], [amount])
-```
+'''Commission with Coin
+When user logs in, the adv owner will pay coin to Ap owner, when Adv price is coin
+```node test.js CommissionCoin [Client Account] [Client PK] [ApAddr] [AdvAddr]
 
-when user loggin, commission will be sent from adv owner to ap owner
-```
-transaction.sendRawCommission([trigged client], [client privateKey], [AP Owner], [Adv Owner])
-```
+'''Watch ADV with token award
+When user watch an ADV and the ADV is awared by token
+```node test.js WatchAdvToken [Client Account] [Client PK] [AdvAddr] [ApAddr] 
 
-If function name endup by "Coin", the function is related to 2nd token
-```
-transaction.sendRawCommission([trigged client], [client privateKey], [AP Owner], [Adv Owner])
-```
+'''Watch ADV with coin award
+When user watch an ADV and the ADV is awared by coin
+```node test.js WatchAdvCoin [Client Account] [Client PK] [AdvAddr] [ApAddr]
 
-User login is only related to old token by default, because user could not choise when he have no network
-```
-transaction.sendRawDeduction([client], [client privateKey], [AP address])
-```
+'''Buy thing with token
+When client buy goods, which price is settlemented by token
+```node test.js BuyThing [Client Account] [Client PK] [ThingAddr]
 
-when client watch an adv, token flows from adv owner, client get 50%, AP owner get 30%, platform get 20% 
-```
-transaction.sendRawWatchAdv([client], [client privateKey], [AP address], [AVD address])
-```
-
+'''Buy thing with coin
+When client buy goods, which price is settlemented by coin
+```node test.js BuyThingCoin [Client Account] [Client PK] [ThingAddr]
