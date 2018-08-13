@@ -1,7 +1,7 @@
-#Support command line to call test.js
+#Support command line to call test.js#
 
-##For example:
-###Client login
+##For example:##
+###Client login###
 When client logs in, client will pay some token to Ap owner
 
 ```node test.js DeductionToken [Client Account] [Client PK] [ApAddr]```
