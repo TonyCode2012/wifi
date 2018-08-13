@@ -1,6 +1,6 @@
 config = require("./config")
 Web3 = require("web3");
-sendRawTransaction = require("./sendRawTransaction")
+sendRawTransaction = require("./utils")
 
 /*
 * account: caller's address
