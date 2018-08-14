@@ -20,3 +20,33 @@ exports.sendTransction = function(web3, privateKey, account, contractAddr, encod
         });
   });
 }
+
+exports.hexStrToInt = function(str){
+  var location=0;
+  for(var index = 2, jk = str.length; index < jk; index++) {  
+      if (str[index]!=0){
+          location = index
+          break
+      }
+  }
+  finalHexStr = str.substring(location-1)
+  intStr = hexToDec(finalHexStr)
+  return parseInt(intStr, 10)
+}
+
+function hexToDec(s) {
+  var i, j, digits = [0], carry;
+  for (i = 0; i < s.length; i += 1) {
+      carry = parseInt(s.charAt(i), 16);
+      for (j = 0; j < digits.length; j += 1) {
+          digits[j] = digits[j] * 16 + carry;
+          carry = digits[j] / 10 | 0;
+          digits[j] %= 10;
+      }
+      while (carry > 0) {
+          digits.push(carry % 10);
+          carry = carry / 10 | 0;
+      }
+  }
+  return digits.reverse().join('');
+}
