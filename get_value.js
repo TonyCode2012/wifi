@@ -17,7 +17,7 @@ getBalanceToken = function(account){
 		data: contractInstant.methods.balanceOf(account).encodeABI()
 	}).then(balance => {
         balanceDec = utils.hexStrToInt(balance)
-        console.log("Coin:" + balanceDec)
+        console.log("Token:" + balanceDec)
     })
 }
 
@@ -37,6 +37,7 @@ getBalanceCoin = function(account){
         
     })
 }
+
 
  
 getBalanceCoin("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd")
