@@ -13,6 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -35,18 +36,16 @@ public class HomePage {
     private JLabel ssidLabel;
     private JPanel walletPanel;
     private JLabel leftTileLabel;
-    private JLabel leftLabel;
+    private JLabel leftTokenLabel;
     private JLabel loginStatusLabel;
     private JPanel getCoinPanel;
     private JScrollPane setAdsScrollPane;
-//    private JLabel spacer1Label;
-//    private JLabel spacer2Label;
     private JLabel adsDetailIcon;
     private JLabel adsDetailText;
     private JButton adsPageRetBtn;
     private JTabbedPane allAdsPane;
     private JScrollPane adsDetailPane;
-    private JLabel historyLabel;
+    private JLabel tokenHistoryLabel;
     private JPanel pLogoutPanel;
     private JPanel pLoginPanel;
     private JPanel mmLogoutPanel;
@@ -95,24 +94,27 @@ public class HomePage {
     private JLabel loginAdsLabel;
     private JLabel wifiIconLabel;
     private JLabel launchAdsLabel;
-    private JLabel coinLabel;
+    private JLabel leftCoinLabel;
     private JPanel walletLogoutPanel;
     private JPanel walletLoginPanel;
     private JPanel allAdsPanel;
     private JPanel tokenAdsPanel;
     private JPanel coinAdsPanel;
-    private JPanel giftAdsPanel;
     private JPanel allGoodsPanel;
     private JPanel tokenGoodsPanel;
     private JPanel coinGoodsPanel;
-    private JPanel giftGoodsPanel;
+    private JLabel tokenSwitcherLabel;
+    private JLabel coinSwitcherLabel;
+    private JLabel coinHistoryLabel;
+    private JPanel recordSwitcherPanel;
 
     private JFrame fJFrame;
     private Register nextRegister;
     private Launch nextLaunch;
     private String rootPath = System.getProperty("user.dir");
     private int retStatus = -1;
-    private double leftCoin = 0.0;
+    private double leftToken = 0.0;
+    private double leftCoin = 10.0;
     private ImageIcon launchIcon;
     private ImageIcon unLaunchIcon;
     private ImageIcon connectedIcon;
@@ -242,50 +244,50 @@ public class HomePage {
                                     System.out.println("<reward>"+line+"<reward>");
                                 }
                                 process.waitFor();
-                                leftCoin = Double.valueOf(sb.toString());
+                                leftToken = Double.valueOf(sb.toString());
                             } catch (IOException e) {
                                 System.out.println(e.getMessage());
                             }
                         } catch (IOException e) {
                             System.out.println(e.getMessage());
                         }
-                        leftCoin = leftCoin - 10;
+                        leftToken = leftToken - 10;
                         // record item
-                        writeRecord("-10: 登陆");
+                        writeRecord("-10: 登陆",historyFilePath);
                         // deduct 10 coin back up
-                        new Thread(() -> {
-                            try {
-                                ArrayList<String> cmd = new ArrayList<>();
-                                cmd.add(rootPath.concat("/wpa_setup/client"));
-                                cmd.add("-app=deduction");
-                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
-                                cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
-                                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
-                                        "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
-                                        "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
-                                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
-                                        "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
-                                        "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
-                                        "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
-                                ProcessBuilder pb = new ProcessBuilder(cmd);
-                                Process process = pb.start();
-                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                                String line;
-                                while ((line = reader.readLine()) != null) {
-                                    System.out.println(line);
-                                }
-                            } catch (IOException ex) {
-                                System.out.println(ex.getMessage());
-                            }
-                        }).start();
+//                        new Thread(() -> {
+//                            try {
+//                                ArrayList<String> cmd = new ArrayList<>();
+//                                cmd.add(rootPath.concat("/wpa_setup/client"));
+//                                cmd.add("-app=deduction");
+//                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+//                                cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
+//                                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
+//                                        "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
+//                                        "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
+//                                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
+//                                        "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
+//                                        "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
+//                                        "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
+//                                ProcessBuilder pb = new ProcessBuilder(cmd);
+//                                Process process = pb.start();
+//                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//                                String line;
+//                                while ((line = reader.readLine()) != null) {
+//                                    System.out.println(line);
+//                                }
+//                            } catch (IOException ex) {
+//                                System.out.println(ex.getMessage());
+//                            }
+//                        }).start();
                     } else {
                         String[] tmpStr = leftCoinStr.split(":");
-                        leftCoin = Double.valueOf(tmpStr[0]);
-                        writeRecord("+"+leftCoin+": 注册");
+                        leftToken = Double.valueOf(tmpStr[0]);
+                        writeRecord("+"+leftToken+": 注册",historyFilePath);
                     }
                     sleep(200);
-                    String historyStr = readRecord(historyReadlineNum);
-                    historyLabel.setText(historyStr);
+                    String historyStr = readRecord(historyReadlineNum,historyFilePath);
+                    tokenHistoryLabel.setText(historyStr);
                 } else {
 //                    launchTipLabel.setText("连接失败!");
                     wifiIconLabel.setIcon(unLaunchIcon);
@@ -312,9 +314,49 @@ public class HomePage {
             }
         }).start();
     }
+    
+    /*
+    * 钱包页面
+    * */
+    private void setWalletPage() {
+        int rWidth = rootPanel.getWidth();
+//        Color myBlue = new Color(47,147,250);
+        tokenSwitcherLabel.setText("积分");
+        tokenSwitcherLabel.setOpaque(true);
+        tokenSwitcherLabel.setBorder(BorderFactory.createLoweredBevelBorder());
+        coinSwitcherLabel.setText("代币");
+        coinSwitcherLabel.setOpaque(true);
+        coinSwitcherLabel.setBorder(BorderFactory.createEtchedBorder());
+        tokenSwitcherLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                tokenHistoryLabel.setVisible(true);
+                coinHistoryLabel.setVisible(false);
+                tokenSwitcherLabel.setBorder(BorderFactory.createLoweredBevelBorder());
+                coinSwitcherLabel.setBorder(BorderFactory.createEtchedBorder());
+            }
+        });
+        coinSwitcherLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                coinHistoryLabel.setVisible(true);
+                tokenHistoryLabel.setVisible(false);
+                coinSwitcherLabel.setBorder(BorderFactory.createLoweredBevelBorder());
+                tokenSwitcherLabel.setBorder(BorderFactory.createEtchedBorder());
+            }
+        });
+        // set token coin image
+        setJLabelIcon(leftTokenLabel,rootPath + "/img/token.png",rWidth,0.08);
+        leftTokenLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+        // set real coin image
+        setJLabelIcon(leftCoinLabel,rootPath + "/img/coin.png",rWidth,0.08);
+        leftCoinLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+    }
 
     /*
-    * 生成广告奖励页面
+    * 广告奖励页面
     * */
     private void setRewardPage() {
         // set token advertisement
@@ -338,12 +380,14 @@ public class HomePage {
         giftJsonarry.put(new JSONObject("{'name':'抹茶拿铁','payBack':15,'imgPath':'"+rootPath.concat("/img/xingbake1.jpg")+"'}}"));
         giftJsonarry.put(new JSONObject("{'name':'下午茶套餐','payBack':14,'imgPath':'"+rootPath.concat("/img/xingbake1.jpg")+"'}}"));
         giftJsonarry.put(new JSONObject("{'name':'鸡翅套餐','payBack':10,'imgPath':'"+rootPath.concat("/img/xingbake1.jpg")+"'}}"));
-        JSONArray[] jsonArrys = {tokenJsonarry,coinJsonarry,giftJsonarry};
-        ArrayList[] typeArrys = {tokenAdsLabels,coinAdsLabels,giftAdsLabels};
+        JSONArray[] jsonArrys = {tokenJsonarry,coinJsonarry};
+        ArrayList[] typeArrys = {tokenAdsLabels,coinAdsLabels};
+        String[] rewardTypes = {"积分","代币"};
         // set labels
         for(int i=0;i<jsonArrys.length;i++) {
             JSONArray jsonArry = jsonArrys[i];
             ArrayList<JLabel> typeArry = typeArrys[i];
+            String rewardType = rewardTypes[i];
             for(int j=0;j<jsonArry.length();j++) {
                 JSONObject jsonObj = jsonArry.getJSONObject(j);
                 // get properties
@@ -352,7 +396,7 @@ public class HomePage {
                 String imgPath = jsonObj.getString("imgPath");
                 JLabel label = new JLabel();
                 setJLabelIcon(label,imgPath,rootPanel.getWidth(),0.3);
-                label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+"</font></html>");
+                label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+" "+rewardType+"</font></html>");
                 label.setVerticalTextPosition(SwingConstants.TOP);
                 typeArry.add(label);
                 allAdsLabels.add(label);
@@ -360,18 +404,22 @@ public class HomePage {
         }
 
         // add label to corresponding tab
-        ArrayList[] typeLabelArrys = {tokenAdsLabels,coinAdsLabels,giftAdsLabels};
-        JPanel[] panels = {tokenAdsPanel, coinAdsPanel, giftAdsPanel};
+        ArrayList[] typeLabelArrys = {tokenAdsLabels,coinAdsLabels};
+        JPanel[] panels = {tokenAdsPanel, coinAdsPanel};
+        int adsNum = 0;
         for(int i=0;i<typeLabelArrys.length;i++) {
             ArrayList<JLabel> typeArry = typeLabelArrys[i];
+            adsNum += typeArry.size();
             JPanel panel = panels[i];
             panel.setLayout(new GridLayout(typeArry.size(),1));
         }
-        int adsNum = tokenAdsLabels.size() + coinAdsLabels.size() + giftAdsLabels.size();
         allAdsPanel.setLayout(new GridLayout(adsNum,1));
         allAdsLabels.forEach(allAdsPanel::add);
     }
 
+    /*
+    * 商品页面
+    * */
     private void setPurchasePage() {
         // set token goods
         JSONArray tokenJsonarry = new JSONArray();
@@ -395,11 +443,13 @@ public class HomePage {
         giftJsonarry.put(new JSONObject("{'name':'下午茶套餐','price':14,'imgPath':'"+rootPath.concat("/img/purchase3.jpg")+"'}}"));
         giftJsonarry.put(new JSONObject("{'name':'鸡翅套餐','price':10,'imgPath':'"+rootPath.concat("/img/purchase3.jpg")+"'}}"));
         // set labels
-        JSONArray[] jsonArrys = {tokenJsonarry,coinJsonarry,giftJsonarry};
-        ArrayList[] typeArrys = {tokenGoodsLabels,coinGoodsLabels,giftGoodsLabels};
+        JSONArray[] jsonArrys = {tokenJsonarry,coinJsonarry};
+        ArrayList[] typeArrys = {tokenGoodsLabels,coinGoodsLabels};
+        String[] expenseTypes = {"积分","代币"};
         for(int i=0;i<jsonArrys.length;i++) {
             JSONArray jsonArry = jsonArrys[i];
             ArrayList<JLabel> typeArry = typeArrys[i];
+            String expenseType = expenseTypes[i];
             for(int j=0;j<jsonArry.length();j++) {
                 JSONObject jsonObj = jsonArry.getJSONObject(j);
                 // get properties
@@ -408,7 +458,7 @@ public class HomePage {
                 String imgPath = jsonObj.getString("imgPath");
                 JLabel label = new JLabel();
                 setJLabelIcon(label,imgPath,rootWidth,0.3);
-                label.setText("<html><p>"+name+"</p><br/><br/><font color='#8C7853'>价格 "+price+"</font></html>");
+                label.setText("<html><p>"+name+"</p><br/><br/><font color='#8C7853'>价格 "+price+" "+expenseType+"</font></html>");
                 label.setVerticalTextPosition(SwingConstants.TOP);
                 typeArry.add(label);
                 allGoodsLabels.add(label);
@@ -427,14 +477,15 @@ public class HomePage {
         orderDetailPane.setVisible(false);
 
         // add labels to corresponding tab
-        ArrayList[] typeLabelArrys = {tokenGoodsLabels,coinGoodsLabels,giftGoodsLabels};
-        JPanel[] panels = {tokenGoodsPanel,coinGoodsPanel,giftGoodsPanel};
+        ArrayList[] typeLabelArrys = {tokenGoodsLabels,coinGoodsLabels};
+        JPanel[] panels = {tokenGoodsPanel,coinGoodsPanel};
+        int goodsNum = 0;
         for(int i=0;i<typeLabelArrys.length;i++) {
             ArrayList<JLabel> typeLabelArry = typeLabelArrys[i];
+            goodsNum += typeLabelArry.size();
             JPanel panel = panels[i];
             panel.setLayout(new GridLayout(typeLabelArry.size(),1));
         }
-        int goodsNum = tokenGoodsLabels.size() + coinGoodsLabels.size() + giftGoodsLabels.size();
         allGoodsPanel.setLayout(new GridLayout(goodsNum,1));
         allGoodsLabels.forEach(allGoodsPanel::add);
     }
@@ -523,19 +574,13 @@ public class HomePage {
         }
         // set icons
         connectStatusL.setIcon(connectedIcon);
-        // set token coin image
-        setJLabelIcon(leftLabel,rootPath + "/img/goldCoin.png",rWidth,0.08);
-        leftLabel.setHorizontalTextPosition(SwingConstants.LEFT);
-        // set real coin image
-        setJLabelIcon(coinLabel,rootPath + "/img/coinCash.png",rWidth,0.08);
-        coinLabel.setHorizontalTextPosition(SwingConstants.LEFT);
     }
 
     private void setWalletStatus() {
         boolean status = (loginStatus == 1);
         if(status) {
-            leftLabel.setText(setLeftCoinFormat(leftCoin));
-            coinLabel.setText(setLeftCoinFormat(10.0));
+            leftTokenLabel.setText(setLeftCoinFormat(leftToken));
+            leftCoinLabel.setText(setLeftCoinFormat(10.0));
         }
         walletLoginPanel.setVisible(status);
         walletLogoutPanel.setVisible(!status);
@@ -605,6 +650,8 @@ public class HomePage {
         adsDetailPane.setVisible(false);
         // get root panel width and height
         rootWidth = rootPanel.getWidth();
+        // set wallet page
+        setWalletPage();
         // set purchase page
         setPurchasePage();
         purchaseDetailPane.setVisible(false);
@@ -716,17 +763,22 @@ public class HomePage {
                 //===== click return button to get watching ads reward =====//
                 Document doc = Jsoup.parse(adsDetailText.getText());
                 Elements adsText = doc.getElementsByTag("font");
-                String price = adsText.text();
-                price = price.split(" ")[1];
+                String[] desSession = adsText.text().split(" ");
+                String price = desSession[1];
+                String type = desSession[2];
                 // write reward to local file
 //                writeRecord("+"+price+": 看广告");
-                writeRecord("+"+10+": 看广告");
-//                writeLeftCoin(Arith.add(leftCoin,Double.valueOf(price)));
-                writeLeftCoin(Arith.add(leftCoin,10));
+                writeRecord("+"+10+": 看广告",historyFilePath);
+//                writeLeftCoin(Arith.add(leftToken,Double.valueOf(price)));
+                switch (type) {
+                    case "积分": writeLeftToken(Arith.add(leftToken,10));break;
+                    case "代币": writeLeftCoin(Arith.add(leftCoin,10));break;
+                    default: System.out.println("[ERROR] Unknown reward type!");
+                }
                 adsDetailPane.setVisible(false);
                 allAdsPane.setVisible(true);
-                String historyStr = readRecord(historyReadlineNum);
-                historyLabel.setText(historyStr);
+                String historyStr = readRecord(historyReadlineNum,historyFilePath);
+                tokenHistoryLabel.setText(historyStr);
                 // sync reward to blockchain
                 new Thread(() -> {
                     try {
@@ -788,13 +840,13 @@ public class HomePage {
                 // set left coin
 //                double cost = Arith.mul(purchasePrice,purchaseNum);
                 double cost = 15;
-                if (leftCoin >= cost) {
+                if (leftToken >= cost) {
                     // deduct left coin
                     String purchaseName = purchaseDesLabel.getText();
-                    writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName);
-                    historyLabel.setText(readRecord(historyReadlineNum));
+                    writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName,historyFilePath);
+                    tokenHistoryLabel.setText(readRecord(historyReadlineNum,historyFilePath));
                     System.out.println("[INFO] purchase successfully!");
-                    writeLeftCoin(Arith.sub(leftCoin,cost));
+                    writeLeftToken(Arith.sub(leftToken,cost));
                     orderSequenceNum++;
                     // set order page
                     ImageIcon icon = (ImageIcon) purchaseIconLabel.getIcon();
@@ -865,7 +917,9 @@ public class HomePage {
         //========== set reward and purchase page ==========//
         // set advertisement events in "make money" page
         ArrayList[] adsArrys = {tokenAdsLabels,coinAdsLabels,giftAdsLabels};
-        for(ArrayList<JLabel> adsArry: adsArrys) {
+//        for(ArrayList<JLabel> adsArry: adsArrys) {
+        for(int i=0;i<adsArrys.length;i++) {
+            ArrayList<JLabel> adsArry = adsArrys[i];
             adsArry.forEach(item->changeCursor(item,"advertisement"));
         }
         allAdsLabels.forEach(item->changeCursor(item,"advertisement"));
@@ -903,7 +957,6 @@ public class HomePage {
                     case 0: allGoodsLabels.forEach(allGoodsPanel::add);break;
                     case 1: tokenGoodsLabels.forEach(tokenGoodsPanel::add); break;
                     case 2: coinGoodsLabels.forEach(coinGoodsPanel::add);break;
-                    case 3: giftGoodsLabels.forEach(giftGoodsPanel::add);break;
                     default: System.out.println("[ERROR] Unknown error!");
                 }
             }
@@ -916,7 +969,6 @@ public class HomePage {
                     case 0: allAdsLabels.forEach(allAdsPanel::add);break;
                     case 1: tokenAdsLabels.forEach(tokenAdsPanel::add); break;
                     case 2: coinAdsLabels.forEach(coinAdsPanel::add);break;
-                    case 3: giftAdsLabels.forEach(giftAdsPanel::add);break;
                     default: System.out.println("[ERROR] Unknown error!");
                 }
             }
@@ -964,9 +1016,10 @@ public class HomePage {
             Elements nameEle = doc.getElementsByTag("p");
             String name = nameEle.text();
             Elements payBackEle = doc.getElementsByTag("font");
-            String payBack = payBackEle.text();
-            payBack = payBack.split(" ")[1];
-            text = "<html>"+name+"<br/><font color='#5C4033'>报酬 "+payBack+"<font><html/>";
+            String[] desSession = payBackEle.text().split(" ");
+            String payBackNum = desSession[1];
+            String payBackType = desSession[2];
+            text = "<html>"+name+"<br/><font color='#5C4033'>报酬 "+payBackNum+" "+payBackType+"<font><html/>";
             // reset image size
             ImageIcon icon = (ImageIcon) label.getIcon();
             String filePath = icon.getDescription();
@@ -1065,9 +1118,9 @@ public class HomePage {
         purchaseNumField.setText(String.valueOf(purchaseNum));
     }
 
-    private void writeRecord(String record) {
+    private void writeRecord(String record,String filePath) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(historyFilePath,true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,true));
             writer.append(record.concat("\n"));
             writer.close();
         } catch (IOException e) {
@@ -1075,13 +1128,13 @@ public class HomePage {
         }
     }
 
-    private String readRecord(int lineNum) {
+    private String readRecord(int lineNum,String filePath) {
         try {
             int fontSize = 4;
             StringBuilder sb = new StringBuilder();
             String line;
             sb.append("<html><body><table cellspacing='0' width='315'>");
-            ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(historyFilePath),100,"UTF-8");
+            ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(filePath),100,"UTF-8");
             while(lineNum > 0) {
                 line = reader.readLine();
                 if(line == null) break;
@@ -1098,10 +1151,22 @@ public class HomePage {
         }
     }
 
+    public void writeLeftToken(Double leftToken) {
+        try {
+            this.leftToken = leftToken;
+            leftTokenLabel.setText(setLeftCoinFormat(leftToken));
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftToken"))));
+            writer.write(String.valueOf(leftToken));
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public void writeLeftCoin(Double leftCoin) {
         try {
             this.leftCoin = leftCoin;
-            leftLabel.setText(setLeftCoinFormat(leftCoin));
+            leftCoinLabel.setText(setLeftCoinFormat(leftCoin));
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftCoin"))));
             writer.write(String.valueOf(leftCoin));
             writer.close();
@@ -1138,16 +1203,20 @@ public class HomePage {
         this.retStatus = retStatus;
     }
 
-    public void setLeftCoin(double leftCoin) {
-        this.leftCoin = leftCoin;
+    public void setLeftCoin(double leftToken) {
+        this.leftToken = leftToken;
+    }
+
+    public void setLeftToken(double leftToken) {
+        this.leftToken = leftToken;
     }
 
     public void setLoginStatus(int loginStatus) {
         this.loginStatus = loginStatus;
     }
 
-    private String setLeftCoinFormat(double leftCoin) {
-        return String.format("%-10.2f",leftCoin);
+    private String setLeftCoinFormat(double leftToken) {
+        return String.format("%-10.2f",leftToken);
     }
 
     private void createUIComponents() {

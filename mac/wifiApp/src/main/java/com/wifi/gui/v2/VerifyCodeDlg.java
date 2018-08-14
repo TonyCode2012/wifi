@@ -201,8 +201,8 @@ public class VerifyCodeDlg extends JDialog {
                                     // get user's left coin number
                                     if(leftCoinLine.contains("left coin")){
                                         String[] tmpStr = leftCoinLine.split(" ");
-                                        int leftCoin = Integer.parseInt(tmpStr[tmpStr.length-1]);
-                                        preHomePage.setLeftCoin(leftCoin);
+                                        int leftToken = Integer.parseInt(tmpStr[tmpStr.length-1]);
+                                        preHomePage.setLeftToken(leftToken);
                                     }
                                     // get registration coin number
 //                                    new Thread(() -> {

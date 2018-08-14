@@ -8,24 +8,24 @@ statusCode=0
 sleep 1
 
 testLoginFile=$basedir/testLogin
-testLeftCoinFile=$basedir/testLeftCoin
+testLeftTokenFile=$basedir/testLeftToken
 leftCoin=0
 
 # check if registration has been done
 if [ -e $testLoginFile ]; then
     statusCode=64
-    if [ ! -e $testLeftCoinFile ]; then
+    if [ ! -e $testLeftTokenFile ]; then
         echo "[ERROR] left coin file lost!"
     fi
-    leftCoin=`cat $testLeftCoinFile`
+    leftCoin=`cat $testLeftTokenFile`
     leftCoin=`echo "scale=2;$leftCoin*1-1" | bc`
     if [ "$leftCoin" = "0.00" ] || [[ "$leftCoin" =~ -.* ]]; then
        echo "[ERROR] your coin has been cost over!"
-       echo "0" > $testLeftCoinFile
+       echo "0" > $testLeftTokenFile
        statusCode=305
     else
        echo "left coin $leftCoin"
-       echo $leftCoin > $testLeftCoinFile
+       echo $leftCoin > $testLeftTokenFile
     fi
 else
     statusCode=9

@@ -464,8 +464,8 @@ public class Register {
                         // get user's left coin number
                         if(leftCoinLine.contains("left coin")){
                             String[] tmpStr = leftCoinLine.split(" ");
-                            double leftCoin = Double.valueOf(tmpStr[tmpStr.length-1]);
-                            preHomePage.setLeftCoin(leftCoin);
+                            double leftToken = Double.valueOf(tmpStr[tmpStr.length-1]);
+                            preHomePage.setLeftToken(leftToken);
                         }
                     } else {
                         connStatusCode = 404;
