@@ -2,6 +2,12 @@
 
 ## For example:
 
+### Client register
+
+When client register in, client will receive  some token
+
+```node test.js UserRegister [Client Account] [Client PK] [Signature]```
+
 ### Client login
 
 When client logs in, client will pay some token to Ap owner

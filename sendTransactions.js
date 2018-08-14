@@ -88,6 +88,26 @@ exports.sendRawWatchAdv = function(account, pk, advAddr, apAddr){
 * pk: caller's private key string
 * others: parameters of the contract
 */
+exports.sendRawUserRegister = function(account, pk, signatureation){
+	var aBI = config.ControllerABI
+	var addr = config.ControllerAddr
+	var httpProvider = config.HttpProvider
+	var web3 = new Web3(new Web3.providers.HttpProvider(httpProvider));
+
+	var privateKey = new Buffer(pk, 'hex')
+	console.log("coinbase:")
+	web3.eth.getCoinbase((err, coinbase) => {console.log(coinbase)})
+  	var abi = JSON.parse(aBI);
+  	var contractInstant = new web3.eth.Contract(abi, addr);
+	var encodedData = contractInstant.methods.userRegister(signatureation).encodeABI()
+    sendRawTransaction.sendTransction(web3, privateKey, account, addr, encodedData)
+}
+
+/*
+* account: caller's address
+* pk: caller's private key string
+* others: parameters of the contract
+*/
 exports.sendRawAdvSetPrice = function(account, pk, advAddr, price){
 	var aBI = config.ControllerABI
 	var addr = config.ControllerAddr

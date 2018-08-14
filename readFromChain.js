@@ -32,3 +32,5 @@ exports.getBalanceCoin = function(account){
 		data: contractInstant.methods.balanceOf(account).encodeABI()
 	}).then(balance => {console.log(balance)})
 }
+
+

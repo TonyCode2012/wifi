@@ -29,7 +29,15 @@ switch(parameters[2])  {
             transaction.sendRawCommission(parameters[3],parameters[4],parameters[5],parameters[6])
         }
         break
-
+    case "UserRegister":
+        if(parameters.length != 6){
+            console.log("Error: Parameter count not match! ")
+            break;
+        }
+        else{
+            transaction.sendRawUserRegister(parameters[3],parameters[4],parameters[5])
+        }
+        break
     case "DeductionToken":
         if(parameters.length != 6){
             console.log("Error: Parameter count not match! ")
