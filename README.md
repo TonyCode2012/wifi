@@ -49,3 +49,11 @@ When client buy goods, which price is settlemented by token
 When client buy goods, which price is settlemented by coin
 
 ```node test.js BuyThingCoin [Client Account] [Client PK] [ThingAddr]```
+
+## Some values
+
+TestApAddr token price is 10, coin price is 0
+TestApAddr2 token price is 0, coin price is 10
+TestAdvAddr token price is 30, coin price is 0
+TestAdvAddr2 token price is 0, coin price is 10
+
