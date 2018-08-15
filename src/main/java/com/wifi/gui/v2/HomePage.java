@@ -50,17 +50,14 @@ public class HomePage {
     private JPanel mmLogoutPanel;
     private JPanel mmLoginPanel;
     private JPanel purchaseDetailPanel;
-    private JTabbedPane allPurchasePane;
     private JLabel purchaseIconLabel;
     private JLabel purchaseDesLabel;
     private JButton purchaseBtn;
-    private JButton purchaseRetBtn;
     private JLabel purchasePriceLabel;
     private JScrollPane purchaseDetailPane;
     private JLabel addNumLabel;
     private JLabel minusNumLabel;
     private JTextField purchaseNumField;
-//    private JTabbedPane allPurchasePanel;
     private JScrollPane orderDetailPane;
     private JLabel orderItemIcon;
     private JLabel orderItemName;
@@ -96,9 +93,9 @@ public class HomePage {
     private JLabel leftCoinLabel;
     private JPanel walletLogoutPanel;
     private JPanel walletLoginPanel;
-    private JPanel allAdsPanel;
-    private JPanel tokenAdsPanel;
-    private JPanel coinAdsPanel;
+    private JPanel allAdvPanel;
+    private JPanel tokenAdvPanel;
+    private JPanel coinAdvPanel;
     private JPanel allGoodsPanel;
     private JPanel tokenGoodsPanel;
     private JPanel coinGoodsPanel;
@@ -107,13 +104,24 @@ public class HomePage {
     private JLabel coinHistoryLabel;
     private JPanel recordSwitcherPanel;
     private JPanel testLayoutPanel;
-    private JPanel allPurchasePanel;
+    private JPanel goodsContainerPanel;
     private JLabel allGoodsTabLabel;
     private JLabel tokenGoodsTabLabel;
     private JLabel coinGoodsTabLabel;
     private JScrollPane allGoodsScrollPane;
     private JScrollPane tokenGoodsScrollPane;
     private JScrollPane coinGoodsScrollPane;
+    private JLabel purchaseDetailRetLabel;
+    private JPanel adsContainerPanel;
+    private JLabel allAdsTabLabel;
+    private JLabel tokenAdsTabLabel;
+    private JLabel coinAdsTabLabel;
+    private JScrollPane allAdsScrollPane;
+    private JScrollPane tokenAdsScrollPane;
+    private JScrollPane coinAdsScrollPane;
+    private JPanel adsContainer;
+    private JTabbedPane purchaseTabPane;
+    private JScrollPane adsScrollPane;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -426,7 +434,7 @@ public class HomePage {
                 double payBack = jsonObj.getDouble("payBack");
                 String imgPath = jsonObj.getString("imgPath");
                 JLabel label = new JLabel();
-                setJLabelIcon(label,imgPath,rootPanel.getWidth(),0.3);
+                setJLabelIcon(label,imgPath,rootWidth,0.3);
                 label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+" "+rewardType+"</font></html>");
                 label.setVerticalTextPosition(SwingConstants.TOP);
                 typeArry.add(label);
@@ -434,18 +442,17 @@ public class HomePage {
             }
         }
 
-        // add label to corresponding tab
-        ArrayList[] typeLabelArrys = {tokenAdsLabels,coinAdsLabels};
-        JPanel[] panels = {tokenAdsPanel, coinAdsPanel};
-        int adsNum = 0;
-        for(int i=0;i<typeLabelArrys.length;i++) {
-            ArrayList<JLabel> typeArry = typeLabelArrys[i];
-            adsNum += typeArry.size();
-            JPanel panel = panels[i];
-            panel.setLayout(new GridLayout(typeArry.size(),1));
-        }
-        allAdsPanel.setLayout(new GridLayout(adsNum,1));
-        allAdsLabels.forEach(allAdsPanel::add);
+        // set tab format
+        JLabel[] tabLabelArry = {allAdsTabLabel,tokenAdsTabLabel,coinAdsTabLabel};
+        JScrollPane[] tabPanelArry = {allAdsScrollPane,tokenAdsScrollPane,coinAdsScrollPane};
+        JPanel[] innerPanelArry = {allAdvPanel,tokenAdvPanel,coinAdvPanel};
+        ArrayList[] dataLabelArry = {allAdsLabels,tokenAdsLabels,coinAdsLabels};
+//        JLabel[] tabLabelArry = {tokenAdsTabLabel,coinAdsTabLabel,allAdsTabLabel};
+//        JScrollPane[] tabPanelArry = {tokenAdsScrollPane,coinAdsScrollPane,allAdsScrollPane};
+//        JPanel[] innerPanelArry = {tokenAdvPanel,coinAdvPanel,allAdvPanel};
+//        ArrayList[] dataLabelArry = {tokenAdsLabels,coinAdsLabels,allAdsLabels};
+        setMyTabPanel(tabLabelArry,tabPanelArry,dataLabelArry,innerPanelArry, adsContainer);
+//        setMyTabPanel2(tabLabelArry,dataLabelArry,innerPanelArry,adsScrollPane);
     }
 
     /*
@@ -504,6 +511,31 @@ public class HomePage {
         setJLabelIcon(minusNumLabel,minusNumIconPath,rWidth,addSubIconRatio);
         purchaseNumField.setText(String.valueOf(purchaseNum));
         purchaseNumField.setColumns(2);
+        purchaseDetailRetLabel.setVisible(false);
+        purchaseDetailRetLabel.setBorder(BorderFactory.createRaisedBevelBorder());
+        purchaseDetailRetLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+                rootPanel.setCursor(cursor);
+                purchaseDetailRetLabel.setOpaque(true);
+                purchaseDetailRetLabel.setForeground(Color.blue);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                rootPanel.setCursor(curCursor);
+                purchaseDetailRetLabel.setForeground(Color.black);
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                purchaseDetailPane.setVisible(false);
+                goodsContainerPanel.setVisible(true);
+                purchaseDetailRetLabel.setVisible(false);
+                changePurchaseNum(1);
+            }
+        });
         // set order detail pane
         orderDetailPane.setVisible(false);
 
@@ -512,7 +544,7 @@ public class HomePage {
         JScrollPane[] tabPanelArry = {allGoodsScrollPane,tokenGoodsScrollPane,coinGoodsScrollPane};
         ArrayList[] dataLabelArry = {allGoodsLabels,tokenGoodsLabels,coinGoodsLabels};
         JPanel[] innerPanelArry = {allGoodsPanel,tokenGoodsPanel,coinGoodsPanel};
-        setMyTabPanel(tabLabelArry,tabPanelArry,dataLabelArry,innerPanelArry,allPurchasePanel);
+        setMyTabPanel(tabLabelArry,tabPanelArry,dataLabelArry,innerPanelArry, goodsContainerPanel);
     }
 
     private void setOrderListPage() {
@@ -661,14 +693,14 @@ public class HomePage {
         rootWidth = rootPanel.getWidth();
         // set wallet page
         setWalletPage();
+        // set getting reward page status
+        setRewardPage();
         // set purchase page
         setPurchasePage();
         purchaseDetailPane.setVisible(false);
         // set order list page
         setOrderListPage();
         orderDetailScrollPane.setVisible(false);
-        // set getting reward page status
-        setRewardPage();
         // set all page display status
         setPageStatus();
         // set login advertisement
@@ -707,6 +739,12 @@ public class HomePage {
                 System.out.println(ex.getMessage());
             }
         }).start();
+
+        // test
+//        adsContainer.setSize(rootPanel.getWidth(),rootPanel.getHeight());
+        adsContainer.setPreferredSize(new Dimension(purchaseTabPane.getWidth(),purchaseTabPane.getHeight()));
+//        allAdvPanel.setPreferredSize(new Dimension(adsContainer.getWidth(),adsContainer.getHeight()));
+//        allAdsScrollPane.setPreferredSize(new Dimension(adsContainer.getWidth()-20,adsContainer.getHeight()-20));
     }
 
     public HomePage() {
@@ -791,7 +829,9 @@ public class HomePage {
                         System.out.println("[ERROR] Unknown reward type!");
                 }
                 adsDetailPane.setVisible(false);
-                allAdsPane.setVisible(true);
+                adsContainer.setVisible(true);
+//                adsContainerPanel.setVisible(true);
+//                allAdsPane.setVisible(true);
                 // sync reward to blockchain
                 new Thread(() -> {
                     try {
@@ -815,14 +855,6 @@ public class HomePage {
                         System.out.println(ex.getMessage());
                     }
                 }).start();
-            }
-        });
-        purchaseRetBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                purchaseDetailPane.setVisible(false);
-                allPurchasePanel.setVisible(true);
-                changePurchaseNum(1);
             }
         });
         addNumLabel.addMouseListener(new MouseAdapter() {
@@ -928,7 +960,7 @@ public class HomePage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 orderDetailPane.setVisible(false);
-                allPurchasePanel.setVisible(true);
+                goodsContainerPanel.setVisible(true);
             }
         });
         //========== set reward and purchase page ==========//
@@ -965,57 +997,16 @@ public class HomePage {
                 orderListScrollPane.setVisible(true);
             }
         });
-//        if(allGoodsPanel.isVisible()) {
-//            allGoodsLabels.forEach(allGoodsPanel::add);
-//        } else if(tokenGoodsPanel.isVisible()) {
-//            tokenGoodsLabels.forEach(tokenGoodsPanel::add);
-//        } else if(coinGoodsPanel.isVisible()) {
-//            coinGoodsLabels.forEach(coinGoodsPanel::add);
-//        }
-//        allPurchasePanel.addChangeListener(new ChangeListener() {
+//        allAdsPane.addChangeListener(new ChangeListener() {
 //            @Override
 //            public void stateChanged(ChangeEvent e) {
-//                int index = allPurchasePanel.getSelectedIndex();
+//                int index = allAdsPane.getSelectedIndex();
 //                switch (index) {
-//                    case 0: allGoodsLabels.forEach(allGoodsPanel::add);break;
-//                    case 1: tokenGoodsLabels.forEach(tokenGoodsPanel::add); break;
-//                    case 2: coinGoodsLabels.forEach(coinGoodsPanel::add);break;
+//                    case 0: allAdsLabels.forEach(allAdvPanel::add);break;
+//                    case 1: tokenAdsLabels.forEach(tokenAdvPanel::add); break;
+//                    case 2: coinAdsLabels.forEach(coinAdvPanel::add);break;
 //                    default: System.out.println("[ERROR] Unknown error!");
 //                }
-//            }
-//        });
-        allAdsPane.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int index = allAdsPane.getSelectedIndex();
-                switch (index) {
-                    case 0: allAdsLabels.forEach(allAdsPanel::add);break;
-                    case 1: tokenAdsLabels.forEach(tokenAdsPanel::add); break;
-                    case 2: coinAdsLabels.forEach(coinAdsPanel::add);break;
-                    default: System.out.println("[ERROR] Unknown error!");
-                }
-            }
-        });
-//        allGoodsTabLabel.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                super.mousePressed(e);
-//                allGoodsLabels.forEach(allGoodsPanel::add);
-//            }
-//        });
-//        tokenGoodsTabLabel.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                super.mousePressed(e);
-//                tokenGoodsLabels.forEach(tokenGoodsPanel::add);
-//                System.out.println("This is a test");
-//            }
-//        });
-//        coinGoodsTabLabel.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                super.mousePressed(e);
-//                coinGoodsLabels.forEach(coinGoodsPanel::add);
 //            }
 //        });
     }
@@ -1051,7 +1042,7 @@ public class HomePage {
     }
 
     private void pressAds(MouseEvent e) {
-        allAdsPane.setVisible(false);
+//        allAdsPane.setVisible(false);
         Component cmp = e.getComponent();
         if(cmp instanceof JLabel) {
             JLabel label = (JLabel)cmp;
@@ -1072,12 +1063,14 @@ public class HomePage {
             setJLabelIcon(adsDetailIcon,filePath,rootWidth,0.93);
             adsDetailText.setText(text);
             adsDetailPane.setVisible(true);
+            adsContainer.setVisible(false);
+//            adsContainerPanel.setVisible(false);
             fJFrame.pack();
         }
     }
 
     private void pressPurchase(MouseEvent e) {
-        allPurchasePanel.setVisible(false);
+        goodsContainerPanel.setVisible(false);
         Component cmp = e.getComponent();
         if(cmp instanceof JLabel) {
             JLabel label = (JLabel)cmp;
@@ -1099,6 +1092,7 @@ public class HomePage {
             setJLabelIcon(purchaseIconLabel,filePath,rootWidth,0.82);
             purchaseDetailPane.setVisible(true);
             fJFrame.pack();
+            purchaseDetailRetLabel.setVisible(true);
         }
     }
 
@@ -1221,8 +1215,8 @@ public class HomePage {
         }
     }
 
-    public static void setMyTabPanel(JLabel[] labelArry,JScrollPane[] panelArry,ArrayList[] dataLabelArrys,JPanel[] innerPanelArry,JPanel outerPanel) {
-        if(labelArry.length != panelArry.length) {
+    public void setMyTabPanel(JLabel[] labelArry,JScrollPane[] scrollPanelArry,ArrayList[] dataLabelArrys,JPanel[] innerPanelArry,JPanel outerPanel) {
+        if(labelArry.length != scrollPanelArry.length) {
             System.out.println("[ERROR] tabPanel's tab label number must equal to panel number!");
             return;
         }
@@ -1231,15 +1225,16 @@ public class HomePage {
         Color releasedColor = labelArry[0].getBackground();
         for(int i=0;i<labelLength;i++) {
             JLabel label = labelArry[i];
-            JScrollPane panel = panelArry[i];
+            JScrollPane scrollPanel = scrollPanelArry[i];
             ArrayList<JLabel> dataLabelArry = dataLabelArrys[i];
             JPanel innerPanel = innerPanelArry[i];
             // set component properties
             label.setOpaque(true);
             label.setBackground(releasedColor);
             label.setBorder(BorderFactory.createEtchedBorder());
-            panel.setVisible(false);
-            innerPanel.setLayout(new GridLayout(dataLabelArry.size(),0));
+            scrollPanel.setVisible(false);
+            innerPanel.setLayout(new GridLayout(dataLabelArry.size(),1));
+//            innerPanel.setLayout(new BoxLayout(innerPanel,BoxLayout.PAGE_AXIS));
             // add component listener
             label.addMouseListener(new MouseAdapter() {
                 @Override
@@ -1247,12 +1242,12 @@ public class HomePage {
                     super.mouseClicked(e);
                     for(int j=0;j<labelArry.length;j++) {
                         JLabel nLabel = labelArry[j];
-                        JScrollPane nPanel = panelArry[j];
-                        nPanel.setVisible(false);
+                        JScrollPane nScrollPanel = scrollPanelArry[j];
+                        nScrollPanel.setVisible(false);
                         nLabel.setBorder(BorderFactory.createEtchedBorder());
                         nLabel.setBackground(releasedColor);
                     }
-                    panel.setVisible(true);
+                    scrollPanel.setVisible(true);
                     dataLabelArry.forEach(innerPanel::add);
                     label.setBorder(BorderFactory.createRaisedBevelBorder());
                     label.setBackground(pressedColor);
@@ -1263,7 +1258,55 @@ public class HomePage {
         ((ArrayList<JLabel>)dataLabelArrys[0]).forEach(innerPanelArry[0]::add);
         labelArry[0].setBackground(pressedColor);
         labelArry[0].setBorder(BorderFactory.createRaisedBevelBorder());
-        panelArry[0].setVisible(true);
+        scrollPanelArry[0].setVisible(true);
+//        System.out.println("====scroll view port:"+allAdsScrollPane.getViewport().getHeight()+",panel view port:"+allAdvPanel.getHeight());
+
+    }
+
+    public void setMyTabPanel2(JLabel[] labelArry,ArrayList[] dataLabelArrys,JPanel[] innerPanelArry,JScrollPane outerPanel) {
+        if(labelArry.length != dataLabelArrys.length) {
+            System.out.println("[ERROR] tabPanel's tab label number must equal to panel number!");
+            return;
+        }
+        int labelLength = labelArry.length;
+        Color pressedColor = new Color(181,180,181);
+        Color releasedColor = labelArry[0].getBackground();
+        for(int i=0;i<labelLength;i++) {
+            JLabel label = labelArry[i];
+            ArrayList<JLabel> dataLabelArry = dataLabelArrys[i];
+            JPanel innerPanel = innerPanelArry[i];
+            // set component properties
+            label.setOpaque(true);
+            label.setBackground(releasedColor);
+            label.setBorder(BorderFactory.createEtchedBorder());
+            innerPanel.setVisible(false);
+            innerPanel.setLayout(new GridLayout(dataLabelArry.size(),1));
+//            innerPanel.setLayout(new BoxLayout(innerPanel,BoxLayout.PAGE_AXIS));
+            // add component listener
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    super.mouseClicked(e);
+                    for(int j=0;j<labelArry.length;j++) {
+                        JLabel nLabel = labelArry[j];
+                        innerPanel.setVisible(false);
+                        nLabel.setBorder(BorderFactory.createEtchedBorder());
+                        nLabel.setBackground(releasedColor);
+                    }
+                    innerPanel.setVisible(true);
+                    dataLabelArry.forEach(innerPanel::add);
+                    label.setBorder(BorderFactory.createRaisedBevelBorder());
+                    label.setBackground(pressedColor);
+                    outerPanel.updateUI();
+                }
+            });
+        }
+        ((ArrayList<JLabel>)dataLabelArrys[0]).forEach(innerPanelArry[0]::add);
+        labelArry[0].setBackground(pressedColor);
+        labelArry[0].setBorder(BorderFactory.createRaisedBevelBorder());
+        innerPanelArry[0].setVisible(true);
+//        System.out.println("====scroll view port:"+allAdsScrollPane.getViewport().getHeight()+",panel view port:"+allAdvPanel.getHeight());
+
     }
 
     public JPanel getRootPanel() {
