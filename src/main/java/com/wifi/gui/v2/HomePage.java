@@ -59,14 +59,7 @@ public class HomePage {
     private JLabel minusNumLabel;
     private JTextField purchaseNumField;
     private JScrollPane orderDetailPane;
-    private JLabel orderItemIcon;
-    private JLabel orderItemName;
-    private JLabel orderItemPrice;
-    private JLabel orderItemNum;
-    private JLabel orderItemTotal;
     private JButton purchaseDetailRetBtn;
-    private JLabel orderTimestamp;
-    private JLabel orderSequence;
     private JPanel orderPanel;
     private JPanel orderListLoginPanel;
     private JPanel orderListLogoutPanel;
@@ -121,6 +114,8 @@ public class HomePage {
     private JScrollPane coinAdsScrollPane;
     private JPanel adsContainer;
     private JTabbedPane purchaseTabPane;
+    private JScrollPane orderDetailScrollPane2;
+    private JPanel orderDetailPanel2;
     private JScrollPane adsScrollPane;
 
     private JFrame fJFrame;
@@ -533,6 +528,7 @@ public class HomePage {
                 purchaseDetailPane.setVisible(false);
                 goodsContainerPanel.setVisible(true);
                 purchaseDetailRetLabel.setVisible(false);
+                orderDetailPane.setVisible(false);
                 changePurchaseNum(1);
             }
         });
@@ -741,10 +737,7 @@ public class HomePage {
         }).start();
 
         // test
-//        adsContainer.setSize(rootPanel.getWidth(),rootPanel.getHeight());
         adsContainer.setPreferredSize(new Dimension(purchaseTabPane.getWidth(),purchaseTabPane.getHeight()));
-//        allAdvPanel.setPreferredSize(new Dimension(adsContainer.getWidth(),adsContainer.getHeight()));
-//        allAdsScrollPane.setPreferredSize(new Dimension(adsContainer.getWidth()-20,adsContainer.getHeight()-20));
     }
 
     public HomePage() {
@@ -902,20 +895,32 @@ public class HomePage {
                     }
                     System.out.println("[INFO] purchase successfully!");
                     orderSequenceNum++;
-                    // set order page
+                    // generate order detail page
                     ImageIcon icon = (ImageIcon) purchaseIconLabel.getIcon();
                     String orderItemNameStr = purchaseDesLabel.getText();
                     double totalCost = Arith.mul(purchasePrice,purchaseNum);
-                    orderItemIcon.setIcon(icon);
-                    orderItemName.setText("商品名称："+orderItemNameStr);
-                    orderItemPrice.setText("商品价格："+String.valueOf(purchasePrice));
-                    orderItemNum.setText("购买数量："+String.valueOf(purchaseNum));
-                    orderItemTotal.setText("总额："+String.valueOf(totalCost));
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                     String dateStr = dateFormat.format(new Date());
-                    orderTimestamp.setText("订单时间："+dateStr);
                     String orderSeqNum = String.format("%04d",orderSequenceNum);
-                    orderSequence.setText("订单号："+orderSeqNum);
+                    JLabel tmpOrderIcon = new JLabel();
+                    tmpOrderIcon.setIcon(icon);
+                    JLabel tmpOrderName = new JLabel("商品名称："+orderItemNameStr);
+                    JLabel tmpOrderPirce = new JLabel("商品价格："+String.valueOf(purchasePrice));
+                    JLabel tmpOrderNum = new JLabel("购买数量："+String.valueOf(purchaseNum));
+                    JLabel tmpOrderTotal = new JLabel("总额："+String.valueOf(totalCost));
+                    JLabel tmpOrderTimestamp = new JLabel("订单时间："+dateStr);
+                    JLabel tmpOrderSequence = new JLabel("订单号："+orderSeqNum);
+                    JPanel tmpOrderDetailPanel = new JPanel();
+                    tmpOrderDetailPanel.setLayout(new BoxLayout(tmpOrderDetailPanel,BoxLayout.PAGE_AXIS));
+                    tmpOrderDetailPanel.add(tmpOrderIcon);
+                    tmpOrderDetailPanel.add(tmpOrderName);
+                    tmpOrderDetailPanel.add(tmpOrderPirce);
+                    tmpOrderDetailPanel.add(tmpOrderNum);
+                    tmpOrderDetailPanel.add(tmpOrderTotal);
+                    tmpOrderDetailPanel.add(tmpOrderTimestamp);
+                    tmpOrderDetailPanel.add(tmpOrderSequence);
+                    orderDetailPane.setVisible(true);
+                    orderDetailPane.setViewportView(tmpOrderDetailPanel);
                     // store order info
                     OrderSheet order = new OrderSheet();
                     order.setDateStr(dateStr);
@@ -956,13 +961,13 @@ public class HomePage {
                 }
             }
         });
-        purchaseDetailRetBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                orderDetailPane.setVisible(false);
-                goodsContainerPanel.setVisible(true);
-            }
-        });
+//        purchaseDetailRetBtn.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                orderDetailPane.setVisible(false);
+//                goodsContainerPanel.setVisible(true);
+//            }
+//        });
         //========== set reward and purchase page ==========//
         // set advertisement events in "make money" page
         ArrayList[] adsArrys = {tokenAdsLabels,coinAdsLabels,giftAdsLabels};
