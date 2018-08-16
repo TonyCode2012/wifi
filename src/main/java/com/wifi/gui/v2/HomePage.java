@@ -1264,54 +1264,6 @@ public class HomePage {
         labelArry[0].setBackground(pressedColor);
         labelArry[0].setBorder(BorderFactory.createRaisedBevelBorder());
         scrollPanelArry[0].setVisible(true);
-//        System.out.println("====scroll view port:"+allAdsScrollPane.getViewport().getHeight()+",panel view port:"+allAdvPanel.getHeight());
-
-    }
-
-    public void setMyTabPanel2(JLabel[] labelArry,ArrayList[] dataLabelArrys,JPanel[] innerPanelArry,JScrollPane outerPanel) {
-        if(labelArry.length != dataLabelArrys.length) {
-            System.out.println("[ERROR] tabPanel's tab label number must equal to panel number!");
-            return;
-        }
-        int labelLength = labelArry.length;
-        Color pressedColor = new Color(181,180,181);
-        Color releasedColor = labelArry[0].getBackground();
-        for(int i=0;i<labelLength;i++) {
-            JLabel label = labelArry[i];
-            ArrayList<JLabel> dataLabelArry = dataLabelArrys[i];
-            JPanel innerPanel = innerPanelArry[i];
-            // set component properties
-            label.setOpaque(true);
-            label.setBackground(releasedColor);
-            label.setBorder(BorderFactory.createEtchedBorder());
-            innerPanel.setVisible(false);
-            innerPanel.setLayout(new GridLayout(dataLabelArry.size(),1));
-//            innerPanel.setLayout(new BoxLayout(innerPanel,BoxLayout.PAGE_AXIS));
-            // add component listener
-            label.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    super.mouseClicked(e);
-                    for(int j=0;j<labelArry.length;j++) {
-                        JLabel nLabel = labelArry[j];
-                        innerPanel.setVisible(false);
-                        nLabel.setBorder(BorderFactory.createEtchedBorder());
-                        nLabel.setBackground(releasedColor);
-                    }
-                    innerPanel.setVisible(true);
-                    dataLabelArry.forEach(innerPanel::add);
-                    label.setBorder(BorderFactory.createRaisedBevelBorder());
-                    label.setBackground(pressedColor);
-                    outerPanel.updateUI();
-                }
-            });
-        }
-        ((ArrayList<JLabel>)dataLabelArrys[0]).forEach(innerPanelArry[0]::add);
-        labelArry[0].setBackground(pressedColor);
-        labelArry[0].setBorder(BorderFactory.createRaisedBevelBorder());
-        innerPanelArry[0].setVisible(true);
-//        System.out.println("====scroll view port:"+allAdsScrollPane.getViewport().getHeight()+",panel view port:"+allAdvPanel.getHeight());
-
     }
 
     public JPanel getRootPanel() {
