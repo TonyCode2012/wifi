@@ -116,6 +116,8 @@ public class HomePage {
     private JScrollPane coinAdsScrollPane;
     private JPanel adsContainer;
     private JTabbedPane purchaseTabPane;
+    private JLabel leftTokenIconLabel;
+    private JLabel leftCoinIconLabel;
     private JScrollPane orderDetailScrollPane2;
     private JPanel orderDetailPanel2;
     private JScrollPane adsScrollPane;
@@ -360,11 +362,17 @@ public class HomePage {
             }
         });
         // set token coin image
-        setJLabelIcon(leftTokenLabel,rootPath + "/img/token.png",rWidth,0.08);
-        leftTokenLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+        leftTokenIconLabel.setText("积分");
+        setJLabelIcon(leftTokenIconLabel,rootPath + "/img/token.png",rWidth,0.08);
+        leftTokenIconLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+//        setJLabelIcon(leftTokenLabel,rootPath + "/img/token.png",rWidth,0.08);
+//        leftTokenLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         // set real coin image
-        setJLabelIcon(leftCoinLabel,rootPath + "/img/coin.png",rWidth,0.08);
-        leftCoinLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+        leftCoinIconLabel.setText("代币");
+        setJLabelIcon(leftCoinIconLabel,rootPath + "/img/coin.png",rWidth,0.08);
+        leftCoinIconLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+//        setJLabelIcon(leftCoinLabel,rootPath + "/img/coin.png",rWidth,0.08);
+//        leftCoinLabel.setHorizontalTextPosition(SwingConstants.LEFT);
     }
 
     /*
