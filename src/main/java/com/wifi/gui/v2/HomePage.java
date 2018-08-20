@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wifi.configSetting;
 import com.wifi.gui.v2.utils.Arith;
 import com.wifi.gui.v2.utils.Utils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,14 +14,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
+import java.util.zip.Inflater;
 
 import static java.lang.Thread.sleep;
 
@@ -29,7 +32,6 @@ public class HomePage {
     private JTabbedPane pageHomeTabbedPane;
     private JButton registerBtn;
     private JButton launchBtn;
-    private JLabel launchTipLabel;
     private JButton breakConnBtn;
     private JLabel connectStatusL;
     private JLabel ssidLabel;
@@ -198,8 +200,6 @@ public class HomePage {
         breakConnBtn.setVisible(true);
         registerBtn.setVisible(false);
 
-//        launchTipLabel.setVisible(true);
-//        launchTipLabel.setText("正在连接...");
         // set launch status based on login info
         new Thread(() -> {
             try {
@@ -223,7 +223,6 @@ public class HomePage {
                 if(retStatus == 0) {
                     setBreakdownStatus();
                 } else if(retStatus == 64) {
-//                    launchTipLabel.setText("连接成功!");
                     wifiIconLabel.setIcon(wifiLaunchIcons[3]);
                     connectStatusL.setIcon(connectedIcon);
                     connectStatusL.setText("已连接   ");
@@ -233,45 +232,30 @@ public class HomePage {
                     File file = new File(configSetting.getWpaCmdPath().concat("/testLeftCoin"));
                     BufferedReader leftCoinReader = new BufferedReader(new FileReader(file));
                     String leftCoinStr = leftCoinReader.readLine();
-                    String balanceRecord;
                     if(! leftCoinStr.contains("registerReward")) {
                         //====== read balance from blockchain =====//
                         try {
-                            ObjectMapper objMapper = new ObjectMapper();
-                            JsonNode jsonNode = objMapper.readTree(new File(configSetting.getWpaProfileFPath()));
-                            String accountStr = jsonNode.get("account").asText();
-//                            try {
-//                                ProcessBuilder pb = new ProcessBuilder(
-//                                        "python3",
-//                                        rootPath.concat("/scripts/contactchain.py"),
-//                                        "0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd"
-//                                );
-//                                ProcessBuilder pb = new ProcessBuilder(
-//                                        "node",
-//                                        rootPath.concat("/js_contact_chain/get_value.js")
-//                                );
-//                                pb.redirectErrorStream(true);
-//                                Process process = pb.start();
-//                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//                                StringBuilder sb = new StringBuilder();
-//                                String line;
-//                                System.out.println("========== get reward from blockchain ==========");
-//                                while ((line = reader.readLine()) != null) {
-//                                    sb.append(line);
-//                                    if(line.contains("Token")) {
-//                                        leftToken = Double.valueOf(line.split(":")[1]);
-//                                    }
-//                                    if(line.contains("Coin")) {
-//                                        leftCoin = Double.valueOf(line.split(":")[1]);
-//                                    }
-//                                    System.out.println("<reward>"+line+"<reward>");
-//                                }
-                                leftToken = 10000;
-                                leftCoin = 1000;
-//                                process.waitFor();
-//                            } catch (IOException e) {
-//                                System.out.println(e.getMessage());
-//                            }
+                            ProcessBuilder pb = new ProcessBuilder(
+                                    "node",
+                                    rootPath.concat("/js_contact_chain/get_value.js")
+                            );
+                            pb.redirectErrorStream(true);
+                            Process process = pb.start();
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                            StringBuilder sb = new StringBuilder();
+                            String line;
+                            System.out.println("========== get reward from blockchain ==========");
+                            while ((line = reader.readLine()) != null) {
+                                sb.append(line);
+                                if(line.contains("Token")) {
+                                    leftToken = Double.valueOf(line.split(":")[1]);
+                                }
+                                if(line.contains("Coin")) {
+                                    leftCoin = Double.valueOf(line.split(":")[1]);
+                                }
+                                System.out.println("<reward>"+line+"<reward>");
+                            }
+                            process.waitFor();
                         } catch (IOException e) {
                             System.out.println(e.getMessage());
                         }
@@ -279,31 +263,26 @@ public class HomePage {
                         // record item
                         writeRecord("-10: 登陆",tokenHistoryFP);
                         // deduct 10 coin back up
-//                        new Thread(() -> {
-//                            try {
-//                                ArrayList<String> cmd = new ArrayList<>();
-//                                cmd.add(rootPath.concat("/wpa_setup/client"));
-//                                cmd.add("-app=deduction");
-//                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
-//                                cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
-//                                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
-//                                        "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
-//                                        "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
-//                                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
-//                                        "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
-//                                        "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
-//                                        "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
-//                                ProcessBuilder pb = new ProcessBuilder(cmd);
-//                                Process process = pb.start();
-//                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//                                String line;
-//                                while ((line = reader.readLine()) != null) {
-//                                    System.out.println(line);
-//                                }
-//                            } catch (IOException ex) {
-//                                System.out.println(ex.getMessage());
-//                            }
-//                        }).start();
+                        new Thread(() -> {
+                            try {
+                                ArrayList<String> cmd = new ArrayList<>();
+                                cmd.add("node");
+                                cmd.add(rootPath.concat("/js_contact_chain/test.js"));
+                                cmd.add("DeductionToken");
+                                cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                                cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+                                ProcessBuilder pb = new ProcessBuilder(cmd);
+                                Process process = pb.start();
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    System.out.println(line);
+                                }
+                            } catch (IOException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }).start();
                     } else {
                         String[] tmpStr = leftCoinStr.split(":");
                         leftToken = Double.valueOf(tmpStr[0]);
@@ -313,28 +292,27 @@ public class HomePage {
                     String historyStr = readRecord(historyReadlineNum,tokenHistoryFP);
                     tokenHistoryLabel.setText(historyStr);
                 } else {
-//                    launchTipLabel.setText("连接失败!");
                     wifiIconLabel.setIcon(unLaunchIcon);
                     connectStatusL.setIcon(unconnectedIcon);
                     connectStatusL.setText("未连接   ");
                 }
                 setPageStatus();
+                // set login page advertisement
+                new Thread(() -> {
+                    try {
+                        int adsIndex = 0;
+                        int adsLen = loginAdsIcons.length;
+                        while (loginStatus == 1) {
+                            launchAdsLabel.setIcon(loginAdsIcons[adsIndex]);
+                            sleep(2500);
+                            adsIndex = ++adsIndex % adsLen;
+                        }
+                    } catch (InterruptedException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }).start();
             } catch (InterruptedException|IOException ex) {
                 System.out.println(ex.getMessage());
-            }
-        }).start();
-        // set login page advertisement
-        new Thread(() -> {
-            try {
-                int adsIndex = 0;
-                int adsLen = loginAdsIcons.length;
-                while (true) {
-                    launchAdsLabel.setIcon(loginAdsIcons[adsIndex]);
-                    sleep(2500);
-                    adsIndex = ++adsIndex % adsLen;
-                }
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
             }
         }).start();
     }
@@ -442,12 +420,7 @@ public class HomePage {
         JScrollPane[] tabPanelArry = {allAdsScrollPane,tokenAdsScrollPane,coinAdsScrollPane};
         JPanel[] innerPanelArry = {allAdvPanel,tokenAdvPanel,coinAdvPanel};
         ArrayList[] dataLabelArry = {allAdsLabels,tokenAdsLabels,coinAdsLabels};
-//        JLabel[] tabLabelArry = {tokenAdsTabLabel,coinAdsTabLabel,allAdsTabLabel};
-//        JScrollPane[] tabPanelArry = {tokenAdsScrollPane,coinAdsScrollPane,allAdsScrollPane};
-//        JPanel[] innerPanelArry = {tokenAdvPanel,coinAdvPanel,allAdvPanel};
-//        ArrayList[] dataLabelArry = {tokenAdsLabels,coinAdsLabels,allAdsLabels};
         setMyTabPanel(tabLabelArry,tabPanelArry,dataLabelArry,innerPanelArry, adsContainer);
-//        setMyTabPanel2(tabLabelArry,dataLabelArry,innerPanelArry,adsScrollPane);
     }
 
     /*
@@ -558,7 +531,6 @@ public class HomePage {
 
     private void setBreakdownStatus() {
         wifiIconLabel.setVisible(false);
-        launchTipLabel.setVisible(false);
         connectStatusL.setVisible(false);
         breakConnBtn.setVisible(false);
         nextRegister.setBreakNetwork(true);
@@ -595,9 +567,7 @@ public class HomePage {
         Utils.setIconByWidth(rlRatio,rWidth,rootPath.concat("/img/unLaunch.png"));
         wifiIconLabel.setText("");
         // set visibility
-        launchTipLabel.setVisible(false);
         connectStatusL.setVisible(false);
-        launchTipLabel.setText("");
         connectStatusL.setText("");
         // set connect status icon
         connectedIcon = new ImageIcon(rootPath + "/img/connected.png");
@@ -617,7 +587,7 @@ public class HomePage {
         boolean status = (loginStatus == 1);
         if(status) {
             leftTokenLabel.setText(setLeftCoinFormat(leftToken));
-            leftCoinLabel.setText(setLeftCoinFormat(10.0));
+            leftCoinLabel.setText(setLeftCoinFormat(leftCoin));
         }
         walletLoginPanel.setVisible(status);
         walletLogoutPanel.setVisible(!status);
@@ -722,7 +692,7 @@ public class HomePage {
                 cmd.add("CommissionToken");
                 cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
                 cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
-                cmd.add("0x62cc335cde770babf06a39cb337ffa722bd87748");
+                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
                 cmd.add("0xeff1ec3378b7ee6dd1891b52ad46f281c7b9244e");
                 ProcessBuilder pb = new ProcessBuilder(cmd);
                 Process process = pb.start();
@@ -738,6 +708,9 @@ public class HomePage {
 
         // test
         adsContainer.setPreferredSize(new Dimension(purchaseTabPane.getWidth(),purchaseTabPane.getHeight()));
+
+        // get advertisement
+        getAdvertisement();
     }
 
     public HomePage() {
@@ -803,12 +776,18 @@ public class HomePage {
                 String type = desSession[2];
                 // write reward to local file
 //                writeLeftCoin(Arith.add(leftToken,Double.valueOf(price)));
+                String adsPaybackType;
+                String testAdsAdress;
+                String testApAdress;
                 switch (type) {
                     case "积分": {
                         writeLeftToken(Arith.add(leftToken, 10));
                         writeRecord("+" + 10 + ": 看广告", tokenHistoryFP);
                         String historyStr = readRecord(historyReadlineNum, tokenHistoryFP);
                         tokenHistoryLabel.setText(historyStr);
+                        adsPaybackType = "WatchAdvToken";
+                        testAdsAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ffbb";
+                        testApAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33";
                     }
                     break;
                     case "代币": {
@@ -816,26 +795,27 @@ public class HomePage {
                         writeRecord("+" + 10 + ": 看广告", coinHistoryFP);
                         String historyStr = readRecord(historyReadlineNum, coinHistoryFP);
                         coinHistoryLabel.setText(historyStr);
+                        adsPaybackType = "WatchAdvCoin";
+                        testAdsAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ffcc";
+                        testApAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff44";
                     }
                     break;
                     default:
-                        System.out.println("[ERROR] Unknown reward type!");
+                        System.out.println("[ERROR] Unknown reward type!");return;
                 }
                 adsDetailPane.setVisible(false);
                 adsContainer.setVisible(true);
-//                adsContainerPanel.setVisible(true);
-//                allAdsPane.setVisible(true);
                 // sync reward to blockchain
                 new Thread(() -> {
                     try {
                         ArrayList<String> syncCmd = new ArrayList<>();
                         syncCmd.add("node");
                         syncCmd.add(rootPath.concat("/js_contact_chain/test.js"));
-                        syncCmd.add("WatchAdvToken");
+                        syncCmd.add(adsPaybackType);
                         syncCmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
                         syncCmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
-                        syncCmd.add("0xeff1ec3378b7ee6dd1891b52ad46f281c7b9244e");
-                        syncCmd.add("0x62cc335cde770babf06a39cb337ffa722bd87748");
+                        syncCmd.add(testAdsAdress);
+                        syncCmd.add(testApAdress);
                         ProcessBuilder syncRewardPB = new ProcessBuilder(syncCmd);
                         Process syncRewardPS = syncRewardPB.start();
                         BufferedReader reader = new BufferedReader(new InputStreamReader(syncRewardPS.getInputStream()));
@@ -872,107 +852,107 @@ public class HomePage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // set left coin
-//                double cost = Arith.mul(purchasePrice,purchaseNum);
+//              double cost = Arith.mul(purchasePrice,purchaseNum);
                 double cost = 15;
-                if (leftToken >= cost) {
-                    // deduct left currency
-                    String purchaseName = purchaseDesLabel.getText();
-                    String buyGoodsCurrencyType;
-                    switch (purchaseExpenseType) {
-                        case "积分":{
-                            writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName,tokenHistoryFP);
-                            tokenHistoryLabel.setText(readRecord(historyReadlineNum,tokenHistoryFP));
-                            writeLeftToken(Arith.sub(leftToken,cost));
-                            buyGoodsCurrencyType = "BuyThing";
-                        }break;
-                        case "代币":{
-                            writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName,coinHistoryFP);
-                            coinHistoryLabel.setText(readRecord(historyReadlineNum,coinHistoryFP));
-                            writeLeftCoin(Arith.sub(leftCoin,cost));
-                            buyGoodsCurrencyType = "BuyThingCoin";
-                        }break;
-                        default: System.out.println("[ERROR] Unknown currency type!");return;
-                    }
-                    System.out.println("[INFO] purchase successfully!");
-                    orderSequenceNum++;
-                    // generate order detail page
-                    ImageIcon icon = (ImageIcon) purchaseIconLabel.getIcon();
-                    String orderItemNameStr = purchaseDesLabel.getText();
-                    double totalCost = Arith.mul(purchasePrice,purchaseNum);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                    String dateStr = dateFormat.format(new Date());
-                    String orderSeqNum = String.format("%04d",orderSequenceNum);
-                    JLabel tmpOrderIcon = new JLabel();
-                    tmpOrderIcon.setIcon(icon);
-                    JLabel tmpOrderName = new JLabel("商品名称："+orderItemNameStr);
-                    JLabel tmpOrderPirce = new JLabel("商品价格："+String.valueOf(purchasePrice));
-                    JLabel tmpOrderNum = new JLabel("购买数量："+String.valueOf(purchaseNum));
-                    JLabel tmpOrderTotal = new JLabel("总额："+String.valueOf(totalCost));
-                    JLabel tmpOrderTimestamp = new JLabel("订单时间："+dateStr);
-                    JLabel tmpOrderSequence = new JLabel("订单号："+orderSeqNum);
-                    JPanel tmpOrderDetailPanel = new JPanel();
-                    tmpOrderDetailPanel.setLayout(new BoxLayout(tmpOrderDetailPanel,BoxLayout.PAGE_AXIS));
-                    tmpOrderDetailPanel.add(tmpOrderIcon);
-                    tmpOrderDetailPanel.add(tmpOrderName);
-                    tmpOrderDetailPanel.add(tmpOrderPirce);
-                    tmpOrderDetailPanel.add(tmpOrderNum);
-                    tmpOrderDetailPanel.add(tmpOrderTotal);
-                    tmpOrderDetailPanel.add(tmpOrderTimestamp);
-                    tmpOrderDetailPanel.add(tmpOrderSequence);
-                    orderDetailPane.setVisible(true);
-                    orderDetailPane.setViewportView(tmpOrderDetailPanel);
-                    // store order info
-                    OrderSheet order = new OrderSheet();
-                    order.setDateStr(dateStr);
-                    order.setGoodsName(orderItemNameStr);
-                    order.setGoodsNum(purchaseNum);
-                    order.setGoodsPrice(purchasePrice);
-                    order.setOrderSeq(orderSeqNum);
-                    order.setIcon(icon);
-                    myOrder.add(order);
-                    changePurchaseNum(1);
-                    // generate order list
-                    showOrderList();
-                    purchaseDetailPane.setVisible(false);
-                    orderDetailPane.setVisible(true);
-                    // send purchase transaction to blockchain
-                    new Thread(() -> {
-                        try {
-                            ArrayList<String> cmd = new ArrayList<>();
-                            cmd.add("node");
-                            cmd.add(rootPath.concat("/js_contact_chain/test.js"));
-                            cmd.add(buyGoodsCurrencyType);
-                            cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
-                            cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
-                            cmd.add("0x90cccf70f164254cfe69bba296da088e5ab34923");
-                            ProcessBuilder pb = new ProcessBuilder(cmd);
-                            Process process = pb.start();
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                            String line;
-                            while ((line = reader.readLine()) != null) {
-                                System.out.println(line);
-                            }
-                        } catch (IOException ex) {
-                            System.out.println(ex.getMessage());
+                // deduct left currency
+                String purchaseName = purchaseDesLabel.getText();
+                String buyGoodsCurrencyType;
+                String testThingAddress;
+                switch (purchaseExpenseType) {
+                    case "积分":{
+                        if(leftToken < cost) {
+                            System.out.println("[ERROR] Left token is not enough");
+                            return;
                         }
-                    }).start();
-                } else {
-                    System.out.println("[ERROR] left coin not enough");
+                        writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName,tokenHistoryFP);
+                        tokenHistoryLabel.setText(readRecord(historyReadlineNum,tokenHistoryFP));
+                        writeLeftToken(Arith.sub(leftToken,cost));
+                        buyGoodsCurrencyType = "BuyThing";
+                        testThingAddress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff88";
+                    }break;
+                    case "代币":{
+                        if(leftCoin < cost) {
+                            System.out.println("[ERROR] Left coin is not enough");
+                            return;
+                        }
+                        writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName,coinHistoryFP);
+                        coinHistoryLabel.setText(readRecord(historyReadlineNum,coinHistoryFP));
+                        writeLeftCoin(Arith.sub(leftCoin,cost));
+                        buyGoodsCurrencyType = "BuyThingCoin";
+                        testThingAddress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff88";
+                    }break;
+                    default: System.out.println("[ERROR] Unknown currency type!");return;
                 }
+                System.out.println("[INFO] purchase successfully!");
+                orderSequenceNum++;
+                // generate order detail page
+                ImageIcon icon = (ImageIcon) purchaseIconLabel.getIcon();
+                String orderItemNameStr = purchaseDesLabel.getText();
+                double totalCost = Arith.mul(purchasePrice,purchaseNum);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                String dateStr = dateFormat.format(new Date());
+                String orderSeqNum = String.format("%04d",orderSequenceNum);
+                JLabel tmpOrderIcon = new JLabel();
+                tmpOrderIcon.setIcon(icon);
+                JLabel tmpOrderName = new JLabel("商品名称："+orderItemNameStr);
+                JLabel tmpOrderPirce = new JLabel("商品价格："+String.valueOf(purchasePrice));
+                JLabel tmpOrderNum = new JLabel("购买数量："+String.valueOf(purchaseNum));
+                JLabel tmpOrderTotal = new JLabel("总额："+String.valueOf(totalCost));
+                JLabel tmpOrderTimestamp = new JLabel("订单时间："+dateStr);
+                JLabel tmpOrderSequence = new JLabel("订单号："+orderSeqNum);
+                JPanel tmpOrderDetailPanel = new JPanel();
+                tmpOrderDetailPanel.setLayout(new BoxLayout(tmpOrderDetailPanel,BoxLayout.PAGE_AXIS));
+                tmpOrderDetailPanel.add(tmpOrderIcon);
+                tmpOrderDetailPanel.add(tmpOrderName);
+                tmpOrderDetailPanel.add(tmpOrderPirce);
+                tmpOrderDetailPanel.add(tmpOrderNum);
+                tmpOrderDetailPanel.add(tmpOrderTotal);
+                tmpOrderDetailPanel.add(tmpOrderTimestamp);
+                tmpOrderDetailPanel.add(tmpOrderSequence);
+                orderDetailPane.setVisible(true);
+                orderDetailPane.setViewportView(tmpOrderDetailPanel);
+                // store order info
+                OrderSheet order = new OrderSheet();
+                order.setDateStr(dateStr);
+                order.setGoodsName(orderItemNameStr);
+                order.setGoodsNum(purchaseNum);
+                order.setGoodsPrice(purchasePrice);
+                order.setOrderSeq(orderSeqNum);
+                order.setIcon(icon);
+                myOrder.add(order);
+                changePurchaseNum(1);
+                // generate order list
+                showOrderList();
+                purchaseDetailPane.setVisible(false);
+                orderDetailPane.setVisible(true);
+                // send purchase transaction to blockchain
+                new Thread(() -> {
+                    try {
+                        ArrayList<String> cmd = new ArrayList<>();
+                        cmd.add("node");
+                        cmd.add(rootPath.concat("/js_contact_chain/test.js"));
+                        cmd.add(buyGoodsCurrencyType);
+                        cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                        cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                        cmd.add(testThingAddress);
+                        ProcessBuilder pb = new ProcessBuilder(cmd);
+                        Process process = pb.start();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            System.out.println(line);
+                        }
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }).start();
             }
         });
-//        purchaseDetailRetBtn.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                orderDetailPane.setVisible(false);
-//                goodsContainerPanel.setVisible(true);
-//            }
-//        });
         //========== set reward and purchase page ==========//
         // set advertisement events in "make money" page
         ArrayList[] adsArrys = {tokenAdsLabels,coinAdsLabels,giftAdsLabels};
-        for(int i=0;i<adsArrys.length;i++) {
-            ArrayList<JLabel> adsArry = adsArrys[i];
+//        for(int i=0;i<adsArrys.length;i++) {
+        for(ArrayList<JLabel> adsArry: adsArrys) {
             adsArry.forEach(item->changeCursor(item,"advertisement"));
         }
         allAdsLabels.forEach(item->changeCursor(item,"advertisement"));
@@ -1002,18 +982,6 @@ public class HomePage {
                 orderListScrollPane.setVisible(true);
             }
         });
-//        allAdsPane.addChangeListener(new ChangeListener() {
-//            @Override
-//            public void stateChanged(ChangeEvent e) {
-//                int index = allAdsPane.getSelectedIndex();
-//                switch (index) {
-//                    case 0: allAdsLabels.forEach(allAdvPanel::add);break;
-//                    case 1: tokenAdsLabels.forEach(tokenAdvPanel::add); break;
-//                    case 2: coinAdsLabels.forEach(coinAdvPanel::add);break;
-//                    default: System.out.println("[ERROR] Unknown error!");
-//                }
-//            }
-//        });
     }
 
     private void changeCursor(Component component, String pageType) {
@@ -1069,7 +1037,6 @@ public class HomePage {
             adsDetailText.setText(text);
             adsDetailPane.setVisible(true);
             adsContainer.setVisible(false);
-//            adsContainerPanel.setVisible(false);
             fJFrame.pack();
         }
     }
@@ -1239,7 +1206,6 @@ public class HomePage {
             label.setBorder(BorderFactory.createEtchedBorder());
             scrollPanel.setVisible(false);
             innerPanel.setLayout(new GridLayout(dataLabelArry.size(),1));
-//            innerPanel.setLayout(new BoxLayout(innerPanel,BoxLayout.PAGE_AXIS));
             // add component listener
             label.addMouseListener(new MouseAdapter() {
                 @Override
@@ -1264,6 +1230,66 @@ public class HomePage {
         labelArry[0].setBackground(pressedColor);
         labelArry[0].setBorder(BorderFactory.createRaisedBevelBorder());
         scrollPanelArry[0].setVisible(true);
+    }
+
+    private void getAdvertisement() {
+        try {
+            String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/stream";
+            URL url = new URL(urlStr);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            int statusCode = con.getResponseCode();
+            if(statusCode != 200) {
+                System.out.println("[ERROR] Get advertisement failed!");
+                return;
+            }
+            ObjectMapper objMapper = new ObjectMapper();
+            JsonNode jsonNode = objMapper.readTree(con.getInputStream());
+            JSONArray jsonArry = new JSONArray(jsonNode.toString());
+            for(int i=0;i<jsonArry.length();i++){
+                JSONObject jsonObj = jsonArry.getJSONObject(i);
+                String picStr = jsonObj.getString("picture");
+                zlibDecompress(picStr.getBytes(),i+1);
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void zlibDecompress(byte[] data, int index) {
+//        byte[] output = new byte[0];
+//
+//        Inflater decompresser = new Inflater();
+//        decompresser.reset();
+//        decompresser.setInput(data);
+//
+//        ByteArrayOutputStream o = new ByteArrayOutputStream(data.length);
+//        try {
+//            byte[] buf = new byte[1024];
+//            while (!decompresser.finished()) {
+//                int i = decompresser.inflate(buf);
+//                o.write(buf, 0, i);
+//            }
+//            output = o.toByteArray();
+//        } catch (Exception e) {
+//            output = data;
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                o.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        decompresser.end();
+
+        try {
+            byte[] base64DecodeBytes = Base64.getDecoder().decode(data);
+            File file = new File(rootPath.concat("/config/testPicture"+index+".jpg"));
+            FileUtils.writeByteArrayToFile(file,base64DecodeBytes);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public JPanel getRootPanel() {
