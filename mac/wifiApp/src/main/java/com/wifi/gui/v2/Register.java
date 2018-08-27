@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.security.*;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import static java.lang.Thread.sleep;
 
@@ -293,7 +294,6 @@ public class Register {
                 } else {
                     unregStatusCode = 304;
                 }
-//                System.out.println("=======unregStatusCode:"+unregStatusCode);
                 switch (unregStatusCode) {
                     case 64:
                         System.out.println("[INFO] Disconnect network successfully!");
@@ -327,6 +327,7 @@ public class Register {
                 }
                 processCloseProfile.waitFor();
                 String closeProfileRetStr = sbCloseProfile.toString();
+                // tricky getting coin and token
                 if(closeProfileRetStr.contains("main connect return code")) {
                     String[] retStr = closeProfileRetStr.split(" ");
                     unregStatusCode = Integer.parseInt(retStr[retStr.length - 1]);
@@ -446,6 +447,7 @@ public class Register {
                     String line;
                     String leftCoinLine = "";
                     StringBuilder sb = new StringBuilder();
+                    // tricky getting coin and token
                     while ((line = reader.readLine()) != null) {
                         if(preHomePage.getRetStatus() == 0) {
                             process.destroy();
@@ -464,8 +466,14 @@ public class Register {
                         // get user's left coin number
                         if(leftCoinLine.contains("left coin")){
                             String[] tmpStr = leftCoinLine.split(" ");
-                            double leftToken = Double.valueOf(tmpStr[tmpStr.length-1]);
-                            preHomePage.setLeftToken(leftToken);
+                            String tokenVal = tmpStr[tmpStr.length-1];
+                            if(! Pattern.matches("[0-9]*\\.?[0-9]*",tokenVal)){
+                                System.out.println("[ERROR] Can't get left coin");
+                                connStatusCode = 404;
+                            } else {
+                                double leftToken = Double.valueOf(tokenVal);
+                                preHomePage.setLeftToken(leftToken);
+                            }
                         }
                     } else {
                         connStatusCode = 404;

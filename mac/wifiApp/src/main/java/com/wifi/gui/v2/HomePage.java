@@ -5,23 +5,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wifi.configSetting;
 import com.wifi.gui.v2.utils.Arith;
 import com.wifi.gui.v2.utils.Utils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
+import java.util.regex.Pattern;
+import java.util.zip.Inflater;
 
 import static java.lang.Thread.sleep;
 
@@ -30,7 +34,6 @@ public class HomePage {
     private JTabbedPane pageHomeTabbedPane;
     private JButton registerBtn;
     private JButton launchBtn;
-    private JLabel launchTipLabel;
     private JButton breakConnBtn;
     private JLabel connectStatusL;
     private JLabel ssidLabel;
@@ -51,26 +54,16 @@ public class HomePage {
     private JPanel mmLogoutPanel;
     private JPanel mmLoginPanel;
     private JPanel purchaseDetailPanel;
-    private JTabbedPane allPurchasePane;
     private JLabel purchaseIconLabel;
     private JLabel purchaseDesLabel;
     private JButton purchaseBtn;
-    private JButton purchaseRetBtn;
     private JLabel purchasePriceLabel;
     private JScrollPane purchaseDetailPane;
     private JLabel addNumLabel;
     private JLabel minusNumLabel;
     private JTextField purchaseNumField;
-    private JTabbedPane allPurchasePanel;
     private JScrollPane orderDetailPane;
-    private JLabel orderItemIcon;
-    private JLabel orderItemName;
-    private JLabel orderItemPrice;
-    private JLabel orderItemNum;
-    private JLabel orderItemTotal;
     private JButton purchaseDetailRetBtn;
-    private JLabel orderTimestamp;
-    private JLabel orderSequence;
     private JPanel orderPanel;
     private JPanel orderListLoginPanel;
     private JPanel orderListLogoutPanel;
@@ -97,9 +90,9 @@ public class HomePage {
     private JLabel leftCoinLabel;
     private JPanel walletLogoutPanel;
     private JPanel walletLoginPanel;
-    private JPanel allAdsPanel;
-    private JPanel tokenAdsPanel;
-    private JPanel coinAdsPanel;
+    private JPanel allAdvPanel;
+    private JPanel tokenAdvPanel;
+    private JPanel coinAdvPanel;
     private JPanel allGoodsPanel;
     private JPanel tokenGoodsPanel;
     private JPanel coinGoodsPanel;
@@ -107,6 +100,29 @@ public class HomePage {
     private JLabel coinSwitcherLabel;
     private JLabel coinHistoryLabel;
     private JPanel recordSwitcherPanel;
+    private JPanel testLayoutPanel;
+    private JPanel goodsContainerPanel;
+    private JLabel allGoodsTabLabel;
+    private JLabel tokenGoodsTabLabel;
+    private JLabel coinGoodsTabLabel;
+    private JScrollPane allGoodsScrollPane;
+    private JScrollPane tokenGoodsScrollPane;
+    private JScrollPane coinGoodsScrollPane;
+    private JLabel purchaseDetailRetLabel;
+    private JPanel adsContainerPanel;
+    private JLabel allAdsTabLabel;
+    private JLabel tokenAdsTabLabel;
+    private JLabel coinAdsTabLabel;
+    private JScrollPane allAdsScrollPane;
+    private JScrollPane tokenAdsScrollPane;
+    private JScrollPane coinAdsScrollPane;
+    private JPanel adsContainer;
+    private JTabbedPane purchaseTabPane;
+    private JLabel leftTokenIconLabel;
+    private JLabel leftCoinIconLabel;
+    private JScrollPane orderDetailScrollPane2;
+    private JPanel orderDetailPanel2;
+    private JScrollPane adsScrollPane;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -127,7 +143,8 @@ public class HomePage {
     private Color bgColor = rootPanel.getBackground();
     private Cursor curCursor = rootPanel.getCursor();
     private int rootWidth;
-    private String historyFilePath = rootPath.concat("/config/records");
+    private String tokenHistoryFP = rootPath.concat("/config/tokenRecords");
+    private String coinHistoryFP = rootPath.concat("/config/coinRecords");
 
     // Login page status
     // wifi launch icon
@@ -147,10 +164,12 @@ public class HomePage {
     // purchase page parameters
     private int purchaseNum = 1;
     private double purchasePrice = 1.0;
+    private String purchaseExpenseType;
     private ArrayList<JLabel> allGoodsLabels = new ArrayList<>();
     private ArrayList<JLabel> tokenGoodsLabels = new ArrayList<>();
     private ArrayList<JLabel> coinGoodsLabels = new ArrayList<>();
     private ArrayList<JLabel> giftGoodsLabels = new ArrayList<>();
+    private JPanel goodsTmpPanel;
 
     // order page parameters
     private int orderSequenceNum = 0;
@@ -185,8 +204,6 @@ public class HomePage {
         breakConnBtn.setVisible(true);
         registerBtn.setVisible(false);
 
-//        launchTipLabel.setVisible(true);
-//        launchTipLabel.setText("正在连接...");
         // set launch status based on login info
         new Thread(() -> {
             try {
@@ -210,28 +227,29 @@ public class HomePage {
                 if(retStatus == 0) {
                     setBreakdownStatus();
                 } else if(retStatus == 64) {
-//                    launchTipLabel.setText("连接成功!");
                     wifiIconLabel.setIcon(wifiLaunchIcons[3]);
                     connectStatusL.setIcon(connectedIcon);
                     connectStatusL.setText("已连接   ");
                     // set wallet left value
                     setLoginStatus(1);
                     //========== do deduction ==========//
-                    File file = new File(configSetting.getWpaCmdPath().concat("/testLeftCoin"));
+                    File file = new File(configSetting.getWpaCmdPath().concat("/testLeftToken"));
                     BufferedReader leftCoinReader = new BufferedReader(new FileReader(file));
                     String leftCoinStr = leftCoinReader.readLine();
-                    String balanceRecord;
                     if(! leftCoinStr.contains("registerReward")) {
                         //====== read balance from blockchain =====//
-                        try {
-                            ObjectMapper objMapper = new ObjectMapper();
-                            JsonNode jsonNode = objMapper.readTree(new File(configSetting.getWpaProfileFPath()));
-                            String accountStr = jsonNode.get("account").asText();
+                        if(Utils.getTestChain()) {
+                            BufferedReader tokenReader = new BufferedReader(new FileReader(rootPath.concat("/wpa_setup/testLeftToken")));
+                            BufferedReader coinReader = new BufferedReader(new FileReader(rootPath.concat("/wpa_setup/testLeftCoin")));
+                            leftToken = Double.valueOf(tokenReader.readLine());
+                            leftCoin = Double.valueOf(coinReader.readLine());
+                            tokenReader.close();
+                            coinReader.close();
+                        } else {
                             try {
                                 ProcessBuilder pb = new ProcessBuilder(
-                                        "python3",
-                                        rootPath.concat("/scripts/contactchain.py"),
-                                        "0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd"
+                                        "node",
+                                        rootPath.concat("/js_contact_chain/get_value.js")
                                 );
                                 pb.redirectErrorStream(true);
                                 Process process = pb.start();
@@ -239,78 +257,77 @@ public class HomePage {
                                 StringBuilder sb = new StringBuilder();
                                 String line;
                                 System.out.println("========== get reward from blockchain ==========");
+                                // tricky getting coin and token
                                 while ((line = reader.readLine()) != null) {
                                     sb.append(line);
-                                    System.out.println("<reward>"+line+"<reward>");
+                                    if (Pattern.matches("Token:[0-9]*",line)) {
+                                        leftToken = Double.valueOf(line.split(":")[1]);
+                                    }
+                                    if (Pattern.matches("Coin:[0-9]*",line)) {
+                                        leftCoin = Double.valueOf(line.split(":")[1]);
+                                    }
+                                    System.out.println("<reward>" + line + "<reward>");
                                 }
                                 process.waitFor();
-                                leftToken = Double.valueOf(sb.toString());
                             } catch (IOException e) {
                                 System.out.println(e.getMessage());
                             }
-                        } catch (IOException e) {
-                            System.out.println(e.getMessage());
                         }
                         leftToken = leftToken - 10;
                         // record item
-                        writeRecord("-10: 登陆",historyFilePath);
+                        writeRecord("-10: 登陆",tokenHistoryFP);
                         // deduct 10 coin back up
-//                        new Thread(() -> {
-//                            try {
-//                                ArrayList<String> cmd = new ArrayList<>();
-//                                cmd.add(rootPath.concat("/wpa_setup/client"));
-//                                cmd.add("-app=deduction");
-//                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
-//                                cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
-//                                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
-//                                        "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
-//                                        "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
-//                                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
-//                                        "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
-//                                        "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
-//                                        "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
-//                                ProcessBuilder pb = new ProcessBuilder(cmd);
-//                                Process process = pb.start();
-//                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//                                String line;
-//                                while ((line = reader.readLine()) != null) {
-//                                    System.out.println(line);
-//                                }
-//                            } catch (IOException ex) {
-//                                System.out.println(ex.getMessage());
-//                            }
-//                        }).start();
+                        new Thread(() -> {
+                            try {
+                                ArrayList<String> cmd = new ArrayList<>();
+                                cmd.add("node");
+                                cmd.add(rootPath.concat("/js_contact_chain/client.js"));
+                                cmd.add("DeductionToken");
+                                cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                                cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+                                ProcessBuilder pb = new ProcessBuilder(cmd);
+                                Process process = pb.start();
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    System.out.println(line);
+                                }
+                            } catch (IOException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }).start();
                     } else {
                         String[] tmpStr = leftCoinStr.split(":");
-                        leftToken = Double.valueOf(tmpStr[0]);
-                        writeRecord("+"+leftToken+": 注册",historyFilePath);
+                        leftToken = Double.valueOf(tmpStr[1]);
+                        leftCoin = 0;
+                        writeRecord("+"+leftToken+": 注册",tokenHistoryFP);
                     }
                     sleep(200);
-                    String historyStr = readRecord(historyReadlineNum,historyFilePath);
+                    String historyStr = readRecord(historyReadlineNum,tokenHistoryFP);
                     tokenHistoryLabel.setText(historyStr);
                 } else {
-//                    launchTipLabel.setText("连接失败!");
                     wifiIconLabel.setIcon(unLaunchIcon);
                     connectStatusL.setIcon(unconnectedIcon);
                     connectStatusL.setText("未连接   ");
                 }
                 setPageStatus();
+                // set login page advertisement
+                new Thread(() -> {
+                    try {
+                        int adsIndex = 0;
+                        int adsLen = loginAdsIcons.length;
+                        while (loginStatus == 1) {
+                            launchAdsLabel.setIcon(loginAdsIcons[adsIndex]);
+                            sleep(2500);
+                            adsIndex = ++adsIndex % adsLen;
+                        }
+                    } catch (InterruptedException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }).start();
             } catch (InterruptedException|IOException ex) {
                 System.out.println(ex.getMessage());
-            }
-        }).start();
-        // set login page advertisement
-        new Thread(() -> {
-            try {
-                int adsIndex = 0;
-                int adsLen = loginAdsIcons.length;
-                while (true) {
-                    launchAdsLabel.setIcon(loginAdsIcons[adsIndex]);
-                    sleep(2500);
-                    adsIndex = ++adsIndex % adsLen;
-                }
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
             }
         }).start();
     }
@@ -321,12 +338,18 @@ public class HomePage {
     private void setWalletPage() {
         int rWidth = rootPanel.getWidth();
 //        Color myBlue = new Color(47,147,250);
+        Color pressedColor = new Color(181,180,181);
+        Color releasedColor = tokenSwitcherLabel.getBackground();
         tokenSwitcherLabel.setText("积分");
         tokenSwitcherLabel.setOpaque(true);
         tokenSwitcherLabel.setBorder(BorderFactory.createLoweredBevelBorder());
+        tokenSwitcherLabel.setBackground(pressedColor);
         coinSwitcherLabel.setText("代币");
         coinSwitcherLabel.setOpaque(true);
         coinSwitcherLabel.setBorder(BorderFactory.createEtchedBorder());
+        coinHistoryLabel.setVisible(false);
+        coinHistoryLabel.setText(readRecord(historyReadlineNum,coinHistoryFP));
+        // add switcher actions
         tokenSwitcherLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -334,7 +357,9 @@ public class HomePage {
                 tokenHistoryLabel.setVisible(true);
                 coinHistoryLabel.setVisible(false);
                 tokenSwitcherLabel.setBorder(BorderFactory.createLoweredBevelBorder());
+                tokenSwitcherLabel.setBackground(pressedColor);
                 coinSwitcherLabel.setBorder(BorderFactory.createEtchedBorder());
+                coinSwitcherLabel.setBackground(releasedColor);
             }
         });
         coinSwitcherLabel.addMouseListener(new MouseAdapter() {
@@ -344,15 +369,23 @@ public class HomePage {
                 coinHistoryLabel.setVisible(true);
                 tokenHistoryLabel.setVisible(false);
                 coinSwitcherLabel.setBorder(BorderFactory.createLoweredBevelBorder());
+                coinSwitcherLabel.setBackground(pressedColor);
                 tokenSwitcherLabel.setBorder(BorderFactory.createEtchedBorder());
+                tokenSwitcherLabel.setBackground(releasedColor);
             }
         });
         // set token coin image
-        setJLabelIcon(leftTokenLabel,rootPath + "/img/token.png",rWidth,0.08);
-        leftTokenLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+        leftTokenIconLabel.setText("积分");
+        setJLabelIcon(leftTokenIconLabel,rootPath + "/img/token.png",rWidth,0.08);
+        leftTokenIconLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+//        setJLabelIcon(leftTokenLabel,rootPath + "/img/token.png",rWidth,0.08);
+//        leftTokenLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         // set real coin image
-        setJLabelIcon(leftCoinLabel,rootPath + "/img/coin.png",rWidth,0.08);
-        leftCoinLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+        leftCoinIconLabel.setText("代币");
+        setJLabelIcon(leftCoinIconLabel,rootPath + "/img/coin.png",rWidth,0.08);
+        leftCoinIconLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+//        setJLabelIcon(leftCoinLabel,rootPath + "/img/coin.png",rWidth,0.08);
+//        leftCoinLabel.setHorizontalTextPosition(SwingConstants.LEFT);
     }
 
     /*
@@ -395,7 +428,7 @@ public class HomePage {
                 double payBack = jsonObj.getDouble("payBack");
                 String imgPath = jsonObj.getString("imgPath");
                 JLabel label = new JLabel();
-                setJLabelIcon(label,imgPath,rootPanel.getWidth(),0.3);
+                setJLabelIcon(label,imgPath,rootWidth,0.3);
                 label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+" "+rewardType+"</font></html>");
                 label.setVerticalTextPosition(SwingConstants.TOP);
                 typeArry.add(label);
@@ -403,18 +436,12 @@ public class HomePage {
             }
         }
 
-        // add label to corresponding tab
-        ArrayList[] typeLabelArrys = {tokenAdsLabels,coinAdsLabels};
-        JPanel[] panels = {tokenAdsPanel, coinAdsPanel};
-        int adsNum = 0;
-        for(int i=0;i<typeLabelArrys.length;i++) {
-            ArrayList<JLabel> typeArry = typeLabelArrys[i];
-            adsNum += typeArry.size();
-            JPanel panel = panels[i];
-            panel.setLayout(new GridLayout(typeArry.size(),1));
-        }
-        allAdsPanel.setLayout(new GridLayout(adsNum,1));
-        allAdsLabels.forEach(allAdsPanel::add);
+        // set tab format
+        JLabel[] tabLabelArry = {allAdsTabLabel,tokenAdsTabLabel,coinAdsTabLabel};
+        JScrollPane[] tabPanelArry = {allAdsScrollPane,tokenAdsScrollPane,coinAdsScrollPane};
+        JPanel[] innerPanelArry = {allAdvPanel,tokenAdvPanel,coinAdvPanel};
+        ArrayList[] dataLabelArry = {allAdsLabels,tokenAdsLabels,coinAdsLabels};
+        setMyTabPanel(tabLabelArry,tabPanelArry,dataLabelArry,innerPanelArry, adsContainer);
     }
 
     /*
@@ -473,21 +500,41 @@ public class HomePage {
         setJLabelIcon(minusNumLabel,minusNumIconPath,rWidth,addSubIconRatio);
         purchaseNumField.setText(String.valueOf(purchaseNum));
         purchaseNumField.setColumns(2);
+        purchaseDetailRetLabel.setVisible(false);
+        purchaseDetailRetLabel.setBorder(BorderFactory.createRaisedBevelBorder());
+        purchaseDetailRetLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                Cursor cursor = new Cursor(Cursor.HAND_CURSOR);
+                rootPanel.setCursor(cursor);
+                purchaseDetailRetLabel.setOpaque(true);
+                purchaseDetailRetLabel.setForeground(Color.blue);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                rootPanel.setCursor(curCursor);
+                purchaseDetailRetLabel.setForeground(Color.black);
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                purchaseDetailPane.setVisible(false);
+                goodsContainerPanel.setVisible(true);
+                purchaseDetailRetLabel.setVisible(false);
+                orderDetailPane.setVisible(false);
+                changePurchaseNum(1);
+            }
+        });
         // set order detail pane
         orderDetailPane.setVisible(false);
 
-        // add labels to corresponding tab
-        ArrayList[] typeLabelArrys = {tokenGoodsLabels,coinGoodsLabels};
-        JPanel[] panels = {tokenGoodsPanel,coinGoodsPanel};
-        int goodsNum = 0;
-        for(int i=0;i<typeLabelArrys.length;i++) {
-            ArrayList<JLabel> typeLabelArry = typeLabelArrys[i];
-            goodsNum += typeLabelArry.size();
-            JPanel panel = panels[i];
-            panel.setLayout(new GridLayout(typeLabelArry.size(),1));
-        }
-        allGoodsPanel.setLayout(new GridLayout(goodsNum,1));
-        allGoodsLabels.forEach(allGoodsPanel::add);
+        // set tab format
+        JLabel[] tabLabelArry = {allGoodsTabLabel,tokenGoodsTabLabel, coinGoodsTabLabel};
+        JScrollPane[] tabPanelArry = {allGoodsScrollPane,tokenGoodsScrollPane,coinGoodsScrollPane};
+        ArrayList[] dataLabelArry = {allGoodsLabels,tokenGoodsLabels,coinGoodsLabels};
+        JPanel[] innerPanelArry = {allGoodsPanel,tokenGoodsPanel,coinGoodsPanel};
+        setMyTabPanel(tabLabelArry,tabPanelArry,dataLabelArry,innerPanelArry, goodsContainerPanel);
     }
 
     private void setOrderListPage() {
@@ -495,22 +542,6 @@ public class HomePage {
         for(JLabel label: labels) {
             label.setVisible(false);
         }
-    }
-
-    private Object deepClone(JLabel label){
-        try {
-            //将对象写到流里
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(label);
-            //从流里读回来
-            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            return ois.readObject();
-        } catch (IOException|ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
     }
 
     private void resetLaunchPageStatus() {
@@ -521,7 +552,6 @@ public class HomePage {
 
     private void setBreakdownStatus() {
         wifiIconLabel.setVisible(false);
-        launchTipLabel.setVisible(false);
         connectStatusL.setVisible(false);
         breakConnBtn.setVisible(false);
         nextRegister.setBreakNetwork(true);
@@ -558,9 +588,7 @@ public class HomePage {
         Utils.setIconByWidth(rlRatio,rWidth,rootPath.concat("/img/unLaunch.png"));
         wifiIconLabel.setText("");
         // set visibility
-        launchTipLabel.setVisible(false);
         connectStatusL.setVisible(false);
-        launchTipLabel.setText("");
         connectStatusL.setText("");
         // set connect status icon
         connectedIcon = new ImageIcon(rootPath + "/img/connected.png");
@@ -580,7 +608,7 @@ public class HomePage {
         boolean status = (loginStatus == 1);
         if(status) {
             leftTokenLabel.setText(setLeftCoinFormat(leftToken));
-            leftCoinLabel.setText(setLeftCoinFormat(10.0));
+            leftCoinLabel.setText(setLeftCoinFormat(leftCoin));
         }
         walletLoginPanel.setVisible(status);
         walletLogoutPanel.setVisible(!status);
@@ -652,14 +680,14 @@ public class HomePage {
         rootWidth = rootPanel.getWidth();
         // set wallet page
         setWalletPage();
+        // set getting reward page status
+        setRewardPage();
         // set purchase page
         setPurchasePage();
         purchaseDetailPane.setVisible(false);
         // set order list page
         setOrderListPage();
         orderDetailScrollPane.setVisible(false);
-        // set getting reward page status
-        setRewardPage();
         // set all page display status
         setPageStatus();
         // set login advertisement
@@ -680,18 +708,13 @@ public class HomePage {
         new Thread(() -> {
             try {
                 ArrayList<String> cmd = new ArrayList<>();
-                cmd.add(rootPath.concat("/wpa_setup/client"));
-                cmd.add("-app=commision");
-                cmd.add("0x93f97961eb166e2d96972ca192a20fb29138e2dd");
-                cmd.add("0x8580c4a0823a54539f9e14a84d7c56a636d20228");
-                cmd.add("{\"address\":\"8580c4a0823a54539f9e14a84d7c56a636d20228\"," +
-                        "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
-                        "\"ciphertext\":\"b86816e061b9f68a00ced897d1a591e3cf26b749c0931578825509f91c67d237\"," +
-                        "\"cipherparams\":{\"iv\":\"aa9dac093614ddc82555b749dcfe56ea\"},\"kdf\":\"scrypt\"," +
-                        "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
-                        "\"salt\":\"b0bc8eb46e76d4032d9df4f370ff9a2f9c2571483be81019f7565eccda549252\"}," +
-                        "\"mac\":\"34241a59f057a9f15a12e714eb13c17e641ec0ba65f2ef2a6dc1a13879589f14\"}," +
-                        "\"id\":\"9f0716b7-40f3-4555-af69-b29a5b35898a\",\"version\":3}");
+                cmd.add("node");
+                cmd.add(rootPath.concat("/js_contact_chain/client.js"));
+                cmd.add("CommissionToken");
+                cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+                cmd.add("0xeff1ec3378b7ee6dd1891b52ad46f281c7b9244e");
                 ProcessBuilder pb = new ProcessBuilder(cmd);
                 Process process = pb.start();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -703,6 +726,12 @@ public class HomePage {
                 System.out.println(ex.getMessage());
             }
         }).start();
+
+        // test
+        adsContainer.setPreferredSize(new Dimension(purchaseTabPane.getWidth(),purchaseTabPane.getHeight()));
+
+        // get advertisement
+        getAdvertisement();
     }
 
     public HomePage() {
@@ -767,33 +796,47 @@ public class HomePage {
                 String price = desSession[1];
                 String type = desSession[2];
                 // write reward to local file
-//                writeRecord("+"+price+": 看广告");
-                writeRecord("+"+10+": 看广告",historyFilePath);
 //                writeLeftCoin(Arith.add(leftToken,Double.valueOf(price)));
+                String adsPaybackType;
+                String testAdsAdress;
+                String testApAdress;
                 switch (type) {
-                    case "积分": writeLeftToken(Arith.add(leftToken,10));break;
-                    case "代币": writeLeftCoin(Arith.add(leftCoin,10));break;
-                    default: System.out.println("[ERROR] Unknown reward type!");
+                    case "积分": {
+                        writeLeftToken(Arith.add(leftToken, 10));
+                        writeRecord("+" + 10 + ": 看广告", tokenHistoryFP);
+                        String historyStr = readRecord(historyReadlineNum, tokenHistoryFP);
+                        tokenHistoryLabel.setText(historyStr);
+                        adsPaybackType = "WatchAdvToken";
+                        testAdsAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ffbb";
+                        testApAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33";
+                    }
+                    break;
+                    case "代币": {
+                        writeLeftCoin(Arith.add(leftCoin, 10));
+                        writeRecord("+" + 10 + ": 看广告", coinHistoryFP);
+                        String historyStr = readRecord(historyReadlineNum, coinHistoryFP);
+                        coinHistoryLabel.setText(historyStr);
+                        adsPaybackType = "WatchAdvCoin";
+                        testAdsAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ffcc";
+                        testApAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff44";
+                    }
+                    break;
+                    default:
+                        System.out.println("[ERROR] Unknown reward type!");return;
                 }
                 adsDetailPane.setVisible(false);
-                allAdsPane.setVisible(true);
-                String historyStr = readRecord(historyReadlineNum,historyFilePath);
-                tokenHistoryLabel.setText(historyStr);
+                adsContainer.setVisible(true);
                 // sync reward to blockchain
                 new Thread(() -> {
                     try {
                         ArrayList<String> syncCmd = new ArrayList<>();
-                        syncCmd.add(rootPath.concat("/wpa_setup/client"));
-                        syncCmd.add("-app=watchAdv");
-                        syncCmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ffbb");
-                        syncCmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
-                                "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
-                                "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
-                                "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
-                                "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
-                                "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
-                                "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
-                                "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
+                        syncCmd.add("node");
+                        syncCmd.add(rootPath.concat("/js_contact_chain/client.js"));
+                        syncCmd.add(adsPaybackType);
+                        syncCmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                        syncCmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                        syncCmd.add(testAdsAdress);
+                        syncCmd.add(testApAdress);
                         ProcessBuilder syncRewardPB = new ProcessBuilder(syncCmd);
                         Process syncRewardPS = syncRewardPB.start();
                         BufferedReader reader = new BufferedReader(new InputStreamReader(syncRewardPS.getInputStream()));
@@ -806,14 +849,6 @@ public class HomePage {
                         System.out.println(ex.getMessage());
                     }
                 }).start();
-            }
-        });
-        purchaseRetBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                purchaseDetailPane.setVisible(false);
-                allPurchasePane.setVisible(true);
-                changePurchaseNum(1);
             }
         });
         addNumLabel.addMouseListener(new MouseAdapter() {
@@ -838,88 +873,107 @@ public class HomePage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // set left coin
-//                double cost = Arith.mul(purchasePrice,purchaseNum);
+//              double cost = Arith.mul(purchasePrice,purchaseNum);
                 double cost = 15;
-                if (leftToken >= cost) {
-                    // deduct left coin
-                    String purchaseName = purchaseDesLabel.getText();
-                    writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName,historyFilePath);
-                    tokenHistoryLabel.setText(readRecord(historyReadlineNum,historyFilePath));
-                    System.out.println("[INFO] purchase successfully!");
-                    writeLeftToken(Arith.sub(leftToken,cost));
-                    orderSequenceNum++;
-                    // set order page
-                    ImageIcon icon = (ImageIcon) purchaseIconLabel.getIcon();
-                    String orderItemNameStr = purchaseDesLabel.getText();
-                    double totalCost = Arith.mul(purchasePrice,purchaseNum);
-                    orderItemIcon.setIcon(icon);
-                    orderItemName.setText("商品名称："+orderItemNameStr);
-                    orderItemPrice.setText("商品价格："+String.valueOf(purchasePrice));
-                    orderItemNum.setText("购买数量："+String.valueOf(purchaseNum));
-                    orderItemTotal.setText("总额："+String.valueOf(totalCost));
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                    String dateStr = dateFormat.format(new Date());
-                    orderTimestamp.setText("订单时间："+dateStr);
-                    String orderSeqNum = String.format("%04d",orderSequenceNum);
-                    orderSequence.setText("订单号："+orderSeqNum);
-                    // store order info
-                    OrderSheet order = new OrderSheet();
-                    order.setDateStr(dateStr);
-                    order.setGoodsName(orderItemNameStr);
-                    order.setGoodsNum(purchaseNum);
-                    order.setGoodsPrice(purchasePrice);
-                    order.setOrderSeq(orderSeqNum);
-                    order.setIcon(icon);
-                    myOrder.add(order);
-                    changePurchaseNum(1);
-                    // generate order list
-                    showOrderList();
-                    purchaseDetailPane.setVisible(false);
-                    orderDetailPane.setVisible(true);
-                    // send purchase transaction to blockchain
-                    new Thread(() -> {
-                        try {
-                            ArrayList<String> cmd = new ArrayList<>();
-                            cmd.add(rootPath.concat("/wpa_setup/client"));
-                            cmd.add("-app=buy");
-                            cmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
-                                    "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
-                                    "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
-                                    "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
-                                    "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
-                                    "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
-                                    "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
-                                    "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
-                            cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a00000");
-                            ProcessBuilder pb = new ProcessBuilder(cmd);
-                            Process process = pb.start();
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                            String line;
-                            while ((line = reader.readLine()) != null) {
-                                System.out.println(line);
-                            }
-                        } catch (IOException ex) {
-                            System.out.println(ex.getMessage());
+                // deduct left currency
+                String purchaseName = purchaseDesLabel.getText();
+                String buyGoodsCurrencyType;
+                String testThingAddress;
+                switch (purchaseExpenseType) {
+                    case "积分":{
+                        if(leftToken < cost) {
+                            System.out.println("[ERROR] Left token is not enough");
+                            return;
                         }
-                    }).start();
-                } else {
-                    System.out.println("[ERROR] left coin not enough");
+                        writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName,tokenHistoryFP);
+                        tokenHistoryLabel.setText(readRecord(historyReadlineNum,tokenHistoryFP));
+                        writeLeftToken(Arith.sub(leftToken,cost));
+                        buyGoodsCurrencyType = "BuyThing";
+                        testThingAddress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff88";
+                    }break;
+                    case "代币":{
+                        if(leftCoin < cost) {
+                            System.out.println("[ERROR] Left coin is not enough");
+                            return;
+                        }
+                        writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName,coinHistoryFP);
+                        coinHistoryLabel.setText(readRecord(historyReadlineNum,coinHistoryFP));
+                        writeLeftCoin(Arith.sub(leftCoin,cost));
+                        buyGoodsCurrencyType = "BuyThingCoin";
+                        testThingAddress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff88";
+                    }break;
+                    default: System.out.println("[ERROR] Unknown currency type!");return;
                 }
-            }
-        });
-        purchaseDetailRetBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                orderDetailPane.setVisible(false);
-                allPurchasePane.setVisible(true);
+                System.out.println("[INFO] purchase successfully!");
+                orderSequenceNum++;
+                // generate order detail page
+                ImageIcon icon = (ImageIcon) purchaseIconLabel.getIcon();
+                String orderItemNameStr = purchaseDesLabel.getText();
+                double totalCost = Arith.mul(purchasePrice,purchaseNum);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                String dateStr = dateFormat.format(new Date());
+                String orderSeqNum = String.format("%04d",orderSequenceNum);
+                JLabel tmpOrderIcon = new JLabel();
+                tmpOrderIcon.setIcon(icon);
+                JLabel tmpOrderName = new JLabel("商品名称："+orderItemNameStr);
+                JLabel tmpOrderPirce = new JLabel("商品价格："+String.valueOf(purchasePrice));
+                JLabel tmpOrderNum = new JLabel("购买数量："+String.valueOf(purchaseNum));
+                JLabel tmpOrderTotal = new JLabel("总额："+String.valueOf(totalCost));
+                JLabel tmpOrderTimestamp = new JLabel("订单时间："+dateStr);
+                JLabel tmpOrderSequence = new JLabel("订单号："+orderSeqNum);
+                JPanel tmpOrderDetailPanel = new JPanel();
+                tmpOrderDetailPanel.setLayout(new BoxLayout(tmpOrderDetailPanel,BoxLayout.PAGE_AXIS));
+                tmpOrderDetailPanel.add(tmpOrderIcon);
+                tmpOrderDetailPanel.add(tmpOrderName);
+                tmpOrderDetailPanel.add(tmpOrderPirce);
+                tmpOrderDetailPanel.add(tmpOrderNum);
+                tmpOrderDetailPanel.add(tmpOrderTotal);
+                tmpOrderDetailPanel.add(tmpOrderTimestamp);
+                tmpOrderDetailPanel.add(tmpOrderSequence);
+                orderDetailPane.setVisible(true);
+                orderDetailPane.setViewportView(tmpOrderDetailPanel);
+                // store order info
+                OrderSheet order = new OrderSheet();
+                order.setDateStr(dateStr);
+                order.setGoodsName(orderItemNameStr);
+                order.setGoodsNum(purchaseNum);
+                order.setGoodsPrice(purchasePrice);
+                order.setOrderSeq(orderSeqNum);
+                order.setIcon(icon);
+                myOrder.add(order);
+                changePurchaseNum(1);
+                // generate order list
+                showOrderList();
+                purchaseDetailPane.setVisible(false);
+                orderDetailPane.setVisible(true);
+                // send purchase transaction to blockchain
+                new Thread(() -> {
+                    try {
+                        ArrayList<String> cmd = new ArrayList<>();
+                        cmd.add("node");
+                        cmd.add(rootPath.concat("/js_contact_chain/client.js"));
+                        cmd.add(buyGoodsCurrencyType);
+                        cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                        cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                        cmd.add(testThingAddress);
+                        ProcessBuilder pb = new ProcessBuilder(cmd);
+                        Process process = pb.start();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            System.out.println(line);
+                        }
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }).start();
             }
         });
         //========== set reward and purchase page ==========//
         // set advertisement events in "make money" page
         ArrayList[] adsArrys = {tokenAdsLabels,coinAdsLabels,giftAdsLabels};
-//        for(ArrayList<JLabel> adsArry: adsArrys) {
-        for(int i=0;i<adsArrys.length;i++) {
-            ArrayList<JLabel> adsArry = adsArrys[i];
+//        for(int i=0;i<adsArrys.length;i++) {
+        for(ArrayList<JLabel> adsArry: adsArrys) {
             adsArry.forEach(item->changeCursor(item,"advertisement"));
         }
         allAdsLabels.forEach(item->changeCursor(item,"advertisement"));
@@ -947,30 +1001,6 @@ public class HomePage {
             public void actionPerformed(ActionEvent e) {
                 orderDetailScrollPane.setVisible(false);
                 orderListScrollPane.setVisible(true);
-            }
-        });
-        allPurchasePane.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int index = allPurchasePane.getSelectedIndex();
-                switch (index) {
-                    case 0: allGoodsLabels.forEach(allGoodsPanel::add);break;
-                    case 1: tokenGoodsLabels.forEach(tokenGoodsPanel::add); break;
-                    case 2: coinGoodsLabels.forEach(coinGoodsPanel::add);break;
-                    default: System.out.println("[ERROR] Unknown error!");
-                }
-            }
-        });
-        allAdsPane.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int index = allAdsPane.getSelectedIndex();
-                switch (index) {
-                    case 0: allAdsLabels.forEach(allAdsPanel::add);break;
-                    case 1: tokenAdsLabels.forEach(tokenAdsPanel::add); break;
-                    case 2: coinAdsLabels.forEach(coinAdsPanel::add);break;
-                    default: System.out.println("[ERROR] Unknown error!");
-                }
             }
         });
     }
@@ -1006,7 +1036,7 @@ public class HomePage {
     }
 
     private void pressAds(MouseEvent e) {
-        allAdsPane.setVisible(false);
+//        allAdsPane.setVisible(false);
         Component cmp = e.getComponent();
         if(cmp instanceof JLabel) {
             JLabel label = (JLabel)cmp;
@@ -1027,12 +1057,13 @@ public class HomePage {
             setJLabelIcon(adsDetailIcon,filePath,rootWidth,0.93);
             adsDetailText.setText(text);
             adsDetailPane.setVisible(true);
+            adsContainer.setVisible(false);
             fJFrame.pack();
         }
     }
 
     private void pressPurchase(MouseEvent e) {
-        allPurchasePane.setVisible(false);
+        goodsContainerPanel.setVisible(false);
         Component cmp = e.getComponent();
         if(cmp instanceof JLabel) {
             JLabel label = (JLabel)cmp;
@@ -1043,8 +1074,9 @@ public class HomePage {
             Elements priceElement = doc.getElementsByTag("font");
             String des = desElement.text();
             String price = priceElement.text();
-            String priceNum = price.split(" ")[1];
-            purchasePrice = Double.valueOf(priceNum);
+            String[] purchasePriceArry = price.split(" ");
+            purchasePrice = Double.valueOf(purchasePriceArry[1]);
+            purchaseExpenseType = purchasePriceArry[2];
             purchaseDesLabel.setText(des);
             purchasePriceLabel.setText("<html><font color='#8C7853'>"+price+"</font></html>");
             // reset image size
@@ -1053,6 +1085,7 @@ public class HomePage {
             setJLabelIcon(purchaseIconLabel,filePath,rootWidth,0.82);
             purchaseDetailPane.setVisible(true);
             fJFrame.pack();
+            purchaseDetailRetLabel.setVisible(true);
         }
     }
 
@@ -1173,6 +1206,132 @@ public class HomePage {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public void setMyTabPanel(JLabel[] labelArry,JScrollPane[] scrollPanelArry,ArrayList[] dataLabelArrys,JPanel[] innerPanelArry,JPanel outerPanel) {
+        if(labelArry.length != scrollPanelArry.length) {
+            System.out.println("[ERROR] tabPanel's tab label number must equal to panel number!");
+            return;
+        }
+        int labelLength = labelArry.length;
+        Color pressedColor = new Color(181,180,181);
+        Color releasedColor = labelArry[0].getBackground();
+        for(int i=0;i<labelLength;i++) {
+            JLabel label = labelArry[i];
+            JScrollPane scrollPanel = scrollPanelArry[i];
+            ArrayList<JLabel> dataLabelArry = dataLabelArrys[i];
+            JPanel innerPanel = innerPanelArry[i];
+            // set component properties
+            label.setOpaque(true);
+            label.setBackground(releasedColor);
+            label.setBorder(BorderFactory.createEtchedBorder());
+            scrollPanel.setVisible(false);
+//            innerPanel.setLayout(new GridLayout(3,1));
+//            innerPanel.setLayout(new GridLayout(dataLabelArry.size(),1));
+            innerPanel.setLayout(new BoxLayout(innerPanel,BoxLayout.PAGE_AXIS));
+            // add component listener
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    super.mouseClicked(e);
+                    for(int j=0;j<labelArry.length;j++) {
+                        JLabel nLabel = labelArry[j];
+                        JScrollPane nScrollPanel = scrollPanelArry[j];
+                        nScrollPanel.setVisible(false);
+                        nLabel.setBorder(BorderFactory.createEtchedBorder());
+                        nLabel.setBackground(releasedColor);
+                    }
+                    scrollPanel.setVisible(true);
+                    dataLabelArry.forEach(innerPanel::add);
+                    label.setBorder(BorderFactory.createRaisedBevelBorder());
+                    label.setBackground(pressedColor);
+                    outerPanel.updateUI();
+                }
+            });
+        }
+        ((ArrayList<JLabel>)dataLabelArrys[0]).forEach(innerPanelArry[0]::add);
+        labelArry[0].setBackground(pressedColor);
+        labelArry[0].setBorder(BorderFactory.createRaisedBevelBorder());
+        scrollPanelArry[0].setVisible(true);
+    }
+
+    private void getAdvertisement() {
+        new Thread(()->{
+            try {
+//            String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/stream";
+                String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/xxxxxx";
+                URL url = new URL(urlStr);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
+                int statusCode = con.getResponseCode();
+                if(statusCode != 200) {
+                    System.out.println("[ERROR] Get advertisement failed!");
+                    return;
+                }
+                ObjectMapper objMapper = new ObjectMapper();
+                JsonNode jsonNode = objMapper.readTree(con.getInputStream());
+                JSONArray jsonArry = new JSONArray(jsonNode.toString());
+                for(int i=0;i<jsonArry.length();i++){
+                    JSONObject jsonObj = jsonArry.getJSONObject(i);
+                    try {
+                        String picStr = jsonObj.getString("picture");
+                        String imgPath = zlibDecompress(picStr.getBytes(), i + 1);
+                        String name = jsonObj.getString("itemName");
+                        String rewardType = "积分";
+                        Double payBack = jsonObj.getDouble("price");
+                        //set got advertisement
+                        JLabel label = new JLabel();
+                        setJLabelIcon(label,imgPath,rootWidth,0.3);
+                        label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+" "+rewardType+"</font></html>");
+                        label.setVerticalTextPosition(SwingConstants.TOP);
+                        tokenAdvPanel.add(label);
+                    } catch (JSONException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }).start();
+    }
+
+    private String zlibDecompress(byte[] data, int index) {
+//        byte[] output = new byte[0];
+//
+//        Inflater decompresser = new Inflater();
+//        decompresser.reset();
+//        decompresser.setInput(data);
+//
+//        ByteArrayOutputStream o = new ByteArrayOutputStream(data.length);
+//        try {
+//            byte[] buf = new byte[1024];
+//            while (!decompresser.finished()) {
+//                int i = decompresser.inflate(buf);
+//                o.write(buf, 0, i);
+//            }
+//            output = o.toByteArray();
+//        } catch (Exception e) {
+//            output = data;
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                o.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        decompresser.end();
+
+        try {
+            byte[] base64DecodeBytes = Base64.getDecoder().decode(data);
+            String filePath = rootPath.concat("/config/testPicture"+index+".jpg");
+            File file = new File(filePath);
+            FileUtils.writeByteArrayToFile(file,base64DecodeBytes);
+            return filePath;
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     public JPanel getRootPanel() {

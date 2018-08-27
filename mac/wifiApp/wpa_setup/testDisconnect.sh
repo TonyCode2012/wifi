@@ -2,4 +2,4 @@
 
 #sleep 6
 
-echo "main connect return code 64"
+echo "main disconnect return code 64"

@@ -205,20 +205,21 @@ public class VerifyCodeDlg extends JDialog {
                                         preHomePage.setLeftToken(leftToken);
                                     }
                                     // get registration coin number
-//                                    new Thread(() -> {
+                                    if(Utils.getTestChain()) {
+                                        OutputStreamWriter tokenWriter = new OutputStreamWriter(new FileOutputStream(rootPath.concat("/wpa_setup/testLeftToken")));
+                                        OutputStreamWriter coinWriter = new OutputStreamWriter(new FileOutputStream(rootPath.concat("/wpa_setup/testLeftCoin")));
+                                        tokenWriter.write("registerReward:100");
+                                        coinWriter.write("0");
+                                        tokenWriter.close();
+                                        coinWriter.close();
+                                    } else {
                                         try {
                                             ArrayList<String> regCmd = new ArrayList<>();
-                                            regCmd.add(rootPath.concat("/wpa_setup/client"));
-                                            regCmd.add("-app=registerFunding");
+                                            regCmd.add("node");
+                                            regCmd.add(rootPath.concat("/js_contact_chain/client.js"));
+                                            regCmd.add("UserRegister");
                                             regCmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
-//                                            regCmd.add("{\"address\":\"01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd\"," +
-//                                                    "\"crypto\":{\"cipher\":\"aes-128-ctr\"," +
-//                                                    "\"ciphertext\":\"a18f5974b74abe2712ca489432723049748439d888ab92ede2f9a94c613fad48\"," +
-//                                                    "\"cipherparams\":{\"iv\":\"1fd8f3ec4e2496e23f4963eae54ac1a5\"},\"kdf\":\"scrypt\"," +
-//                                                    "\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8," +
-//                                                    "\"salt\":\"6351e5dc8d2273d1f038bf0d770773cb82fc30d6bd3a623287584e24e44d086c\"}," +
-//                                                    "\"mac\":\"edb0e6a6075f7e1c1ef3347745aff2b928a49d9300d4cd627f3d0403e83bf086\"}," +
-//                                                    "\"id\":\"1812d540-a745-4174-bb67-bc69a33fb15c\",\"version\":3}");
+                                            regCmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
                                             ProcessBuilder regRewardPB = new ProcessBuilder(regCmd);
                                             Process regRewardPS = regRewardPB.start();
                                             BufferedReader regRewardReader = new BufferedReader(new InputStreamReader(regRewardPS.getInputStream()));
@@ -227,7 +228,7 @@ public class VerifyCodeDlg extends JDialog {
                                             String regRewardCoin = "";
                                             System.out.println("========== register user ==========");
                                             while ((regRewardLine = regRewardReader.readLine()) != null) {
-                                                if(regRewardLine.contains("registerCoin")) {
+                                                if (regRewardLine.contains("registerCoin")) {
                                                     String[] tmpArry = regRewardLine.split(":");
                                                     regRewardCoin = tmpArry[tmpArry.length - 1];
                                                     File leftCoinFile = new File(rootPath.concat("/wpa_setup/testLeftCoin"));
@@ -239,13 +240,13 @@ public class VerifyCodeDlg extends JDialog {
                                                 System.out.println(regRewardLine);
                                             }
                                             regRewardPS.waitFor();
-                                            if(regRewardCoin.compareTo("") == 0) {
+                                            if (regRewardCoin.compareTo("") == 0) {
                                                 System.out.println("[ERROR] Get register reward failed!");
                                             }
                                         } catch (IOException ex) {
                                             System.out.println(ex.getMessage());
                                         }
-//                                    }).start();
+                                    }
                                 }
                             } else {
                                 regStatusCode = 404;
@@ -292,6 +293,8 @@ public class VerifyCodeDlg extends JDialog {
                             switch (unregStatusCode) {
                                 case 15:
                                     System.out.println("[INFO] Unregister user successfully!");
+                                    new File(rootPath.concat("/config/tokenRecords")).delete();
+                                    new File(rootPath.concat("/config/coinRecords")).delete();
                                     break;
                                 case 16:
                                     System.out.println("[ERROR] Unregister user failed! Verify phone num failed!!");

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.wifi.gui.v2.HomePage">
-  <grid id="27dc6" binding="rootPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="0" left="0" bottom="0" right="0"/>
+  <grid id="27dc6" binding="rootPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
       <xy x="20" y="20" width="710" height="651"/>
     </constraints>
@@ -11,12 +10,10 @@
     <border type="none"/>
     <children>
       <tabbedpane id="d3ab" binding="pageHomeTabbedPane">
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="341" height="200"/>
-          </grid>
-        </constraints>
-        <properties/>
+        <constraints border-constraint="North"/>
+        <properties>
+          <preferredSize width="450" height="490"/>
+        </properties>
         <border type="none"/>
         <children>
           <grid id="311b8" binding="connectPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -41,7 +38,7 @@
                 <children>
                   <component id="2a45a" class="javax.swing.JButton" binding="registerBtn">
                     <constraints>
-                      <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="登录"/>
@@ -66,7 +63,7 @@
                   </component>
                   <hspacer id="85233">
                     <constraints>
-                      <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </hspacer>
                   <vspacer id="79acf">
@@ -74,18 +71,9 @@
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="2" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </vspacer>
-                  <component id="59b16" class="javax.swing.JLabel" binding="launchTipLabel">
-                    <constraints>
-                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="launchTipLabel"/>
-                      <visible value="true"/>
-                    </properties>
-                  </component>
                   <component id="811c9" class="javax.swing.JButton" binding="breakConnBtn">
                     <constraints>
-                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="断开连接"/>
@@ -93,18 +81,18 @@
                   </component>
                   <vspacer id="93da1">
                     <constraints>
-                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="2" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="2" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </vspacer>
                   <hspacer id="d72ae">
                     <constraints>
-                      <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </hspacer>
                   <grid id="c5a3" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
-                      <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
@@ -139,7 +127,7 @@
                   </grid>
                   <component id="da889" class="javax.swing.JLabel" binding="wifiIconLabel">
                     <constraints>
-                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="wifiIconLabel"/>
@@ -162,6 +150,14 @@
                         </properties>
                       </component>
                     </children>
+                  </grid>
+                  <grid id="bd24b" binding="testLayoutPanel" layout-manager="GridBagLayout">
+                    <constraints>
+                      <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children/>
                   </grid>
                 </children>
               </grid>
@@ -252,7 +248,7 @@
                         <children>
                           <component id="83f8d" class="javax.swing.JLabel" binding="tokenHistoryLabel">
                             <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <text value="Label"/>
@@ -260,7 +256,7 @@
                           </component>
                           <component id="a4485" class="javax.swing.JLabel" binding="coinHistoryLabel">
                             <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <text value="Label"/>
@@ -291,7 +287,7 @@
                           <text value="      钱包余额:"/>
                         </properties>
                       </component>
-                      <grid id="87c8a" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="87c8a" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
                           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -309,7 +305,7 @@
                           </component>
                           <hspacer id="8a618">
                             <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                             </constraints>
                           </hspacer>
                           <component id="bf4e1" class="javax.swing.JLabel" binding="leftCoinLabel">
@@ -318,6 +314,22 @@
                             </constraints>
                             <properties>
                               <text value="00.0"/>
+                            </properties>
+                          </component>
+                          <component id="5586c" class="javax.swing.JLabel" binding="leftTokenIconLabel">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Label"/>
+                            </properties>
+                          </component>
+                          <component id="73a24" class="javax.swing.JLabel" binding="leftCoinIconLabel">
+                            <constraints>
+                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Label"/>
                             </properties>
                           </component>
                         </children>
@@ -390,7 +402,9 @@
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <horizontalScrollBarPolicy value="31"/>
+                    </properties>
                     <border type="none"/>
                     <children>
                       <grid id="6c902" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -437,23 +451,60 @@
                       </grid>
                     </children>
                   </scrollpane>
-                  <tabbedpane id="1a874" binding="allAdsPane">
+                  <grid id="a1dd2" binding="adsContainer" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <preferred-size width="200" height="200"/>
-                      </grid>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <scrollpane id="fcbdd">
+                      <grid id="f2028" layout-manager="GridBagLayout">
                         <constraints>
-                          <tabbedpane title="全部"/>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <grid id="79413" binding="allAdsPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                          <component id="92d55" class="javax.swing.JLabel" binding="allAdsTabLabel">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text value="全部"/>
+                            </properties>
+                          </component>
+                          <component id="fb998" class="javax.swing.JLabel" binding="tokenAdsTabLabel">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text value="积分"/>
+                            </properties>
+                          </component>
+                          <component id="cb712" class="javax.swing.JLabel" binding="coinAdsTabLabel">
+                            <constraints>
+                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text value="代币"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <scrollpane id="b3ec4" binding="allAdsScrollPane">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <horizontalScrollBarPolicy value="31"/>
+                        </properties>
+                        <border type="none"/>
+                        <children>
+                          <grid id="cd566" binding="allAdvPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints/>
                             <properties/>
@@ -462,14 +513,16 @@
                           </grid>
                         </children>
                       </scrollpane>
-                      <scrollpane id="e2f24">
+                      <scrollpane id="7ab45" binding="tokenAdsScrollPane">
                         <constraints>
-                          <tabbedpane title="积分"/>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <horizontalScrollBarPolicy value="31"/>
+                        </properties>
                         <border type="none"/>
                         <children>
-                          <grid id="24ce3" binding="tokenAdsPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                          <grid id="5c687" binding="tokenAdvPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints/>
                             <properties/>
@@ -478,14 +531,16 @@
                           </grid>
                         </children>
                       </scrollpane>
-                      <scrollpane id="3d1af">
+                      <scrollpane id="cf3d6" binding="coinAdsScrollPane">
                         <constraints>
-                          <tabbedpane title="代币"/>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <horizontalScrollBarPolicy value="31"/>
+                        </properties>
                         <border type="none"/>
                         <children>
-                          <grid id="d01b6" binding="coinAdsPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                          <grid id="ee18f" binding="coinAdvPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints/>
                             <properties/>
@@ -495,7 +550,7 @@
                         </children>
                       </scrollpane>
                     </children>
-                  </tabbedpane>
+                  </grid>
                 </children>
               </grid>
             </children>
@@ -508,7 +563,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <tabbedpane id="4ecf2" binding="allPurchasePanel">
+              <tabbedpane id="4ecf2" binding="purchaseTabPane">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <preferred-size width="200" height="200"/>
@@ -543,7 +598,7 @@
                           </component>
                         </children>
                       </grid>
-                      <grid id="20bb7" binding="pLoginPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="20bb7" binding="pLoginPanel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -553,14 +608,16 @@
                         <children>
                           <scrollpane id="82c7b" binding="purchaseDetailPane">
                             <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
                                 <preferred-size width="560" height="202"/>
                               </grid>
                             </constraints>
-                            <properties/>
+                            <properties>
+                              <horizontalScrollBarPolicy value="31"/>
+                            </properties>
                             <border type="none"/>
                             <children>
-                              <grid id="5a275" binding="purchaseDetailPanel" layout-manager="GridLayoutManager" row-count="7" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                              <grid id="5a275" binding="purchaseDetailPanel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                 <margin top="0" left="0" bottom="0" right="0"/>
                                 <constraints/>
                                 <properties/>
@@ -582,29 +639,6 @@
                                       <text value="Label"/>
                                     </properties>
                                   </component>
-                                  <component id="92e80" class="javax.swing.JButton" binding="purchaseBtn">
-                                    <constraints>
-                                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties>
-                                      <text value="下单"/>
-                                    </properties>
-                                  </component>
-                                  <component id="75e00" class="javax.swing.JButton" binding="purchaseRetBtn">
-                                    <constraints>
-                                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties>
-                                      <text value="返回"/>
-                                    </properties>
-                                  </component>
-                                  <vspacer id="fc3b4">
-                                    <constraints>
-                                      <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                                        <preferred-size width="295" height="14"/>
-                                      </grid>
-                                    </constraints>
-                                  </vspacer>
                                   <grid id="b979a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
                                     <constraints>
                                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -651,13 +685,6 @@
                                       </grid>
                                     </constraints>
                                   </vspacer>
-                                  <vspacer id="62381">
-                                    <constraints>
-                                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                                        <preferred-size width="295" height="14"/>
-                                      </grid>
-                                    </constraints>
-                                  </vspacer>
                                   <component id="32481" class="javax.swing.JLabel" binding="purchasePriceLabel">
                                     <constraints>
                                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -666,121 +693,29 @@
                                       <text value="Label"/>
                                     </properties>
                                   </component>
-                                </children>
-                              </grid>
-                            </children>
-                          </scrollpane>
-                          <scrollpane id="917fc" binding="orderDetailPane">
-                            <constraints>
-                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                                <preferred-size width="560" height="222"/>
-                              </grid>
-                            </constraints>
-                            <properties/>
-                            <border type="none"/>
-                            <children>
-                              <grid id="f4a57" layout-manager="GridLayoutManager" row-count="9" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                <margin top="0" left="0" bottom="0" right="0"/>
-                                <constraints/>
-                                <properties/>
-                                <border type="none"/>
-                                <children>
-                                  <component id="c9cd9" class="javax.swing.JLabel" binding="orderItemIcon">
+                                  <component id="92e80" class="javax.swing.JButton" binding="purchaseBtn">
                                     <constraints>
-                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                                     </constraints>
                                     <properties>
-                                      <text value=""/>
-                                    </properties>
-                                  </component>
-                                  <component id="d716e" class="javax.swing.JLabel" binding="orderItemTotal">
-                                    <constraints>
-                                      <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties>
-                                      <text value="Label"/>
-                                    </properties>
-                                  </component>
-                                  <vspacer id="7ae1e">
-                                    <constraints>
-                                      <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                  </vspacer>
-                                  <grid id="cd724" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                    <margin top="0" left="0" bottom="0" right="0"/>
-                                    <constraints>
-                                      <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties/>
-                                    <border type="none"/>
-                                    <children>
-                                      <component id="d3fd9" class="javax.swing.JButton" binding="purchaseDetailRetBtn">
-                                        <constraints>
-                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                        </constraints>
-                                        <properties>
-                                          <label value="返回"/>
-                                          <text value="返回"/>
-                                        </properties>
-                                      </component>
-                                    </children>
-                                  </grid>
-                                  <component id="b0be4" class="javax.swing.JLabel" binding="orderItemNum">
-                                    <constraints>
-                                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties>
-                                      <text value="Label"/>
-                                    </properties>
-                                  </component>
-                                  <component id="c40ef" class="javax.swing.JLabel" binding="orderTimestamp">
-                                    <constraints>
-                                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties>
-                                      <text value="Label"/>
-                                    </properties>
-                                  </component>
-                                  <component id="c8829" class="javax.swing.JLabel" binding="orderItemName">
-                                    <constraints>
-                                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties>
-                                      <text value="Label"/>
-                                    </properties>
-                                  </component>
-                                  <component id="a3863" class="javax.swing.JLabel" binding="orderSequence">
-                                    <constraints>
-                                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties>
-                                      <text value="Label"/>
-                                    </properties>
-                                  </component>
-                                  <component id="7e7f6" class="javax.swing.JLabel" binding="orderItemPrice">
-                                    <constraints>
-                                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties>
-                                      <text value="Label"/>
+                                      <text value="下单"/>
                                     </properties>
                                   </component>
                                 </children>
                               </grid>
                             </children>
                           </scrollpane>
-                          <tabbedpane id="f0e3c" binding="allPurchasePane">
+                          <grid id="fca13" binding="goodsContainerPanel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                                <preferred-size width="200" height="200"/>
-                              </grid>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <scrollpane id="e9136">
+                              <scrollpane id="e9136" binding="allGoodsScrollPane">
                                 <constraints>
-                                  <tabbedpane title="全部"/>
+                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties/>
                                 <border type="none"/>
@@ -794,9 +729,9 @@
                                   </grid>
                                 </children>
                               </scrollpane>
-                              <scrollpane id="f6bb0">
+                              <scrollpane id="f6bb0" binding="tokenGoodsScrollPane">
                                 <constraints>
-                                  <tabbedpane title="积分"/>
+                                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties/>
                                 <border type="none"/>
@@ -810,9 +745,9 @@
                                   </grid>
                                 </children>
                               </scrollpane>
-                              <scrollpane id="c4daa">
+                              <scrollpane id="c4daa" binding="coinGoodsScrollPane">
                                 <constraints>
-                                  <tabbedpane title="代币"/>
+                                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties/>
                                 <border type="none"/>
@@ -826,8 +761,60 @@
                                   </grid>
                                 </children>
                               </scrollpane>
+                              <grid id="b3b9b" layout-manager="GridBagLayout">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties/>
+                                <border type="none"/>
+                                <children>
+                                  <component id="9bb13" class="javax.swing.JLabel" binding="allGoodsTabLabel">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="0.0" weighty="1.0"/>
+                                    </constraints>
+                                    <properties>
+                                      <text value="全部"/>
+                                    </properties>
+                                  </component>
+                                  <component id="b0237" class="javax.swing.JLabel" binding="tokenGoodsTabLabel">
+                                    <constraints>
+                                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="0.0" weighty="1.0"/>
+                                    </constraints>
+                                    <properties>
+                                      <text value="积分"/>
+                                    </properties>
+                                  </component>
+                                  <component id="de390" class="javax.swing.JLabel" binding="coinGoodsTabLabel">
+                                    <constraints>
+                                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="0.0" weighty="1.0"/>
+                                    </constraints>
+                                    <properties>
+                                      <text value="代币"/>
+                                    </properties>
+                                  </component>
+                                </children>
+                              </grid>
                             </children>
-                          </tabbedpane>
+                          </grid>
+                          <component id="5202f" class="javax.swing.JLabel" binding="purchaseDetailRetLabel">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="返回"/>
+                            </properties>
+                          </component>
+                          <scrollpane id="94bb4" binding="orderDetailPane">
+                            <constraints>
+                              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none"/>
+                            <children/>
+                          </scrollpane>
                         </children>
                       </grid>
                     </children>
@@ -930,7 +917,9 @@
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>
-                            <properties/>
+                            <properties>
+                              <horizontalScrollBarPolicy value="31"/>
+                            </properties>
                             <border type="none"/>
                             <children>
                               <grid id="4c493" binding="orderDetailPanel" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -1007,11 +996,7 @@
       </tabbedpane>
       <grid id="dbabc" binding="loginAdsPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="444" height="24"/>
-          </grid>
-        </constraints>
+        <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
         <children>
