@@ -1,4 +1,0 @@
-Main-class: com.wifi.gui.index
-
-
-curl -X POST https://10.140.41.245:5005/user/create -H cache-control: no-cache -H content-type: application/json -d {"name":"jaijuyan","phone":"34312432","pub_key":"-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDXMVWZ6IcBTAWNLYRLGyMCxlUR\nxTMsUtXThmgKKvsmdi7UuY2XOHGhD4ZCTQLHelJX+cVdPNqkliZ0E9qZIho8uESi\n98B+xEdEQwMeyV0Z56qlDICHh+wvH/V/CjZXJvQ3YgPsUbGk1SuwyReb65zb/tQx\nZB5ysG2kKTYEMKRGNwIDAQAB\n-----END PUBLIC KEY-----"} -k

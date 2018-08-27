@@ -205,11 +205,18 @@ public class VerifyCodeDlg extends JDialog {
                                         preHomePage.setLeftToken(leftToken);
                                     }
                                     // get registration coin number
-//                                    new Thread(() -> {
+                                    if(Utils.getTestChain()) {
+                                        OutputStreamWriter tokenWriter = new OutputStreamWriter(new FileOutputStream(rootPath.concat("/wpa_setup/testLeftToken")));
+                                        OutputStreamWriter coinWriter = new OutputStreamWriter(new FileOutputStream(rootPath.concat("/wpa_setup/testLeftCoin")));
+                                        tokenWriter.write("registerReward:100");
+                                        coinWriter.write("0");
+                                        tokenWriter.close();
+                                        coinWriter.close();
+                                    } else {
                                         try {
                                             ArrayList<String> regCmd = new ArrayList<>();
                                             regCmd.add("node");
-                                            regCmd.add(rootPath.concat("/js_contact_chain/test.js"));
+                                            regCmd.add(rootPath.concat("/js_contact_chain/client.js"));
                                             regCmd.add("UserRegister");
                                             regCmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
                                             regCmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
@@ -221,7 +228,7 @@ public class VerifyCodeDlg extends JDialog {
                                             String regRewardCoin = "";
                                             System.out.println("========== register user ==========");
                                             while ((regRewardLine = regRewardReader.readLine()) != null) {
-                                                if(regRewardLine.contains("registerCoin")) {
+                                                if (regRewardLine.contains("registerCoin")) {
                                                     String[] tmpArry = regRewardLine.split(":");
                                                     regRewardCoin = tmpArry[tmpArry.length - 1];
                                                     File leftCoinFile = new File(rootPath.concat("/wpa_setup/testLeftCoin"));
@@ -233,13 +240,13 @@ public class VerifyCodeDlg extends JDialog {
                                                 System.out.println(regRewardLine);
                                             }
                                             regRewardPS.waitFor();
-                                            if(regRewardCoin.compareTo("") == 0) {
+                                            if (regRewardCoin.compareTo("") == 0) {
                                                 System.out.println("[ERROR] Get register reward failed!");
                                             }
                                         } catch (IOException ex) {
                                             System.out.println(ex.getMessage());
                                         }
-//                                    }).start();
+                                    }
                                 }
                             } else {
                                 regStatusCode = 404;
@@ -286,6 +293,8 @@ public class VerifyCodeDlg extends JDialog {
                             switch (unregStatusCode) {
                                 case 15:
                                     System.out.println("[INFO] Unregister user successfully!");
+                                    new File(rootPath.concat("/config/tokenRecords")).delete();
+                                    new File(rootPath.concat("/config/coinRecords")).delete();
                                     break;
                                 case 16:
                                     System.out.println("[ERROR] Unregister user failed! Verify phone num failed!!");

@@ -13,6 +13,7 @@ public class Utils {
 
     private static ObjectMapper objMapper = new ObjectMapper();
     private static boolean testFlag = false;
+    private static boolean testChain = false;
 
     public static void addCmdCode2File(int cmdCode,String filePath) {
         try {
@@ -145,5 +146,13 @@ public class Utils {
 
     public static void setTestFlag(boolean testFlag) {
         Utils.testFlag = testFlag;
+    }
+
+    public static boolean getTestChain() {
+        return testChain;
+    }
+
+    public static void setTestChain(boolean testChain) {
+        Utils.testChain = testChain;
     }
 }

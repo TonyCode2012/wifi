@@ -8,6 +8,7 @@ import com.wifi.gui.v2.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.regex.Pattern;
 import java.util.zip.Inflater;
 
 import static java.lang.Thread.sleep;
@@ -231,35 +233,45 @@ public class HomePage {
                     // set wallet left value
                     setLoginStatus(1);
                     //========== do deduction ==========//
-                    File file = new File(configSetting.getWpaCmdPath().concat("/testLeftCoin"));
+                    File file = new File(configSetting.getWpaCmdPath().concat("/testLeftToken"));
                     BufferedReader leftCoinReader = new BufferedReader(new FileReader(file));
                     String leftCoinStr = leftCoinReader.readLine();
                     if(! leftCoinStr.contains("registerReward")) {
                         //====== read balance from blockchain =====//
-                        try {
-                            ProcessBuilder pb = new ProcessBuilder(
-                                    "node",
-                                    rootPath.concat("/js_contact_chain/get_value.js")
-                            );
-                            pb.redirectErrorStream(true);
-                            Process process = pb.start();
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                            StringBuilder sb = new StringBuilder();
-                            String line;
-                            System.out.println("========== get reward from blockchain ==========");
-                            while ((line = reader.readLine()) != null) {
-                                sb.append(line);
-                                if(line.contains("Token")) {
-                                    leftToken = Double.valueOf(line.split(":")[1]);
+                        if(Utils.getTestChain()) {
+                            BufferedReader tokenReader = new BufferedReader(new FileReader(rootPath.concat("/wpa_setup/testLeftToken")));
+                            BufferedReader coinReader = new BufferedReader(new FileReader(rootPath.concat("/wpa_setup/testLeftCoin")));
+                            leftToken = Double.valueOf(tokenReader.readLine());
+                            leftCoin = Double.valueOf(coinReader.readLine());
+                            tokenReader.close();
+                            coinReader.close();
+                        } else {
+                            try {
+                                ProcessBuilder pb = new ProcessBuilder(
+                                        "node",
+                                        rootPath.concat("/js_contact_chain/get_value.js")
+                                );
+                                pb.redirectErrorStream(true);
+                                Process process = pb.start();
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                StringBuilder sb = new StringBuilder();
+                                String line;
+                                System.out.println("========== get reward from blockchain ==========");
+                                // tricky getting coin and token
+                                while ((line = reader.readLine()) != null) {
+                                    sb.append(line);
+                                    if (Pattern.matches("Token:[0-9]*",line)) {
+                                        leftToken = Double.valueOf(line.split(":")[1]);
+                                    }
+                                    if (Pattern.matches("Coin:[0-9]*",line)) {
+                                        leftCoin = Double.valueOf(line.split(":")[1]);
+                                    }
+                                    System.out.println("<reward>" + line + "<reward>");
                                 }
-                                if(line.contains("Coin")) {
-                                    leftCoin = Double.valueOf(line.split(":")[1]);
-                                }
-                                System.out.println("<reward>"+line+"<reward>");
+                                process.waitFor();
+                            } catch (IOException e) {
+                                System.out.println(e.getMessage());
                             }
-                            process.waitFor();
-                        } catch (IOException e) {
-                            System.out.println(e.getMessage());
                         }
                         leftToken = leftToken - 10;
                         // record item
@@ -269,7 +281,7 @@ public class HomePage {
                             try {
                                 ArrayList<String> cmd = new ArrayList<>();
                                 cmd.add("node");
-                                cmd.add(rootPath.concat("/js_contact_chain/test.js"));
+                                cmd.add(rootPath.concat("/js_contact_chain/client.js"));
                                 cmd.add("DeductionToken");
                                 cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
                                 cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
@@ -287,7 +299,8 @@ public class HomePage {
                         }).start();
                     } else {
                         String[] tmpStr = leftCoinStr.split(":");
-                        leftToken = Double.valueOf(tmpStr[0]);
+                        leftToken = Double.valueOf(tmpStr[1]);
+                        leftCoin = 0;
                         writeRecord("+"+leftToken+": 注册",tokenHistoryFP);
                     }
                     sleep(200);
@@ -696,7 +709,7 @@ public class HomePage {
             try {
                 ArrayList<String> cmd = new ArrayList<>();
                 cmd.add("node");
-                cmd.add(rootPath.concat("/js_contact_chain/test.js"));
+                cmd.add(rootPath.concat("/js_contact_chain/client.js"));
                 cmd.add("CommissionToken");
                 cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
                 cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
@@ -818,7 +831,7 @@ public class HomePage {
                     try {
                         ArrayList<String> syncCmd = new ArrayList<>();
                         syncCmd.add("node");
-                        syncCmd.add(rootPath.concat("/js_contact_chain/test.js"));
+                        syncCmd.add(rootPath.concat("/js_contact_chain/client.js"));
                         syncCmd.add(adsPaybackType);
                         syncCmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
                         syncCmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
@@ -938,7 +951,7 @@ public class HomePage {
                     try {
                         ArrayList<String> cmd = new ArrayList<>();
                         cmd.add("node");
-                        cmd.add(rootPath.concat("/js_contact_chain/test.js"));
+                        cmd.add(rootPath.concat("/js_contact_chain/client.js"));
                         cmd.add(buyGoodsCurrencyType);
                         cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
                         cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
@@ -1213,7 +1226,9 @@ public class HomePage {
             label.setBackground(releasedColor);
             label.setBorder(BorderFactory.createEtchedBorder());
             scrollPanel.setVisible(false);
-            innerPanel.setLayout(new GridLayout(dataLabelArry.size(),1));
+//            innerPanel.setLayout(new GridLayout(3,1));
+//            innerPanel.setLayout(new GridLayout(dataLabelArry.size(),1));
+            innerPanel.setLayout(new BoxLayout(innerPanel,BoxLayout.PAGE_AXIS));
             // add component listener
             label.addMouseListener(new MouseAdapter() {
                 @Override
@@ -1241,30 +1256,46 @@ public class HomePage {
     }
 
     private void getAdvertisement() {
-        try {
-            String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/stream";
-            URL url = new URL(urlStr);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            int statusCode = con.getResponseCode();
-            if(statusCode != 200) {
-                System.out.println("[ERROR] Get advertisement failed!");
-                return;
+        new Thread(()->{
+            try {
+//            String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/stream";
+                String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/xxxxxx";
+                URL url = new URL(urlStr);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
+                int statusCode = con.getResponseCode();
+                if(statusCode != 200) {
+                    System.out.println("[ERROR] Get advertisement failed!");
+                    return;
+                }
+                ObjectMapper objMapper = new ObjectMapper();
+                JsonNode jsonNode = objMapper.readTree(con.getInputStream());
+                JSONArray jsonArry = new JSONArray(jsonNode.toString());
+                for(int i=0;i<jsonArry.length();i++){
+                    JSONObject jsonObj = jsonArry.getJSONObject(i);
+                    try {
+                        String picStr = jsonObj.getString("picture");
+                        String imgPath = zlibDecompress(picStr.getBytes(), i + 1);
+                        String name = jsonObj.getString("itemName");
+                        String rewardType = "积分";
+                        Double payBack = jsonObj.getDouble("price");
+                        //set got advertisement
+                        JLabel label = new JLabel();
+                        setJLabelIcon(label,imgPath,rootWidth,0.3);
+                        label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+" "+rewardType+"</font></html>");
+                        label.setVerticalTextPosition(SwingConstants.TOP);
+                        tokenAdvPanel.add(label);
+                    } catch (JSONException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             }
-            ObjectMapper objMapper = new ObjectMapper();
-            JsonNode jsonNode = objMapper.readTree(con.getInputStream());
-            JSONArray jsonArry = new JSONArray(jsonNode.toString());
-            for(int i=0;i<jsonArry.length();i++){
-                JSONObject jsonObj = jsonArry.getJSONObject(i);
-                String picStr = jsonObj.getString("picture");
-                zlibDecompress(picStr.getBytes(),i+1);
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        }).start();
     }
 
-    private void zlibDecompress(byte[] data, int index) {
+    private String zlibDecompress(byte[] data, int index) {
 //        byte[] output = new byte[0];
 //
 //        Inflater decompresser = new Inflater();
@@ -1293,11 +1324,14 @@ public class HomePage {
 
         try {
             byte[] base64DecodeBytes = Base64.getDecoder().decode(data);
-            File file = new File(rootPath.concat("/config/testPicture"+index+".jpg"));
+            String filePath = rootPath.concat("/config/testPicture"+index+".jpg");
+            File file = new File(filePath);
             FileUtils.writeByteArrayToFile(file,base64DecodeBytes);
+            return filePath;
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        return null;
     }
 
     public JPanel getRootPanel() {
