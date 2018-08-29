@@ -2,11 +2,16 @@ package com.wifi.gui.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.javafx.fxml.builder.URLBuilder;
+import com.sun.org.apache.bcel.internal.generic.LADD;
 import com.wifi.configSetting;
 import com.wifi.gui.v2.utils.Arith;
 import com.wifi.gui.v2.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.ReversedLinesFileReader;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.ISODateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,12 +25,12 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.zip.Inflater;
+import org.apache.http.client.utils.URIBuilder;
 
 import static java.lang.Thread.sleep;
 
@@ -120,9 +125,8 @@ public class HomePage {
     private JTabbedPane purchaseTabPane;
     private JLabel leftTokenIconLabel;
     private JLabel leftCoinIconLabel;
-    private JScrollPane orderDetailScrollPane2;
-    private JPanel orderDetailPanel2;
-    private JScrollPane adsScrollPane;
+    private JLabel tokenGreenLabel;
+    private JLabel coinGreenLabel;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -131,6 +135,7 @@ public class HomePage {
     private int retStatus = -1;
     private double leftToken = 0.0;
     private double leftCoin = 10.0;
+    private HashMap<String,Double> currency = new HashMap<>();
     private ImageIcon launchIcon;
     private ImageIcon unLaunchIcon;
     private ImageIcon connectedIcon;
@@ -174,6 +179,10 @@ public class HomePage {
     // order page parameters
     private int orderSequenceNum = 0;
     private ArrayList<OrderSheet> myOrder = new ArrayList<>();
+    
+    // global parameters
+    private Dimension boxLayoutFiler = new Dimension(0,5);
+    private final Object objLock = new Object();
 
     public void setLaunchPage() {
         // reset launch img status
@@ -243,6 +252,8 @@ public class HomePage {
                             BufferedReader coinReader = new BufferedReader(new FileReader(rootPath.concat("/wpa_setup/testLeftCoin")));
                             leftToken = Double.valueOf(tokenReader.readLine());
                             leftCoin = Double.valueOf(coinReader.readLine());
+//                            currency.put("leftToken",Double.valueOf(tokenReader.readLine()));
+//                            currency.put("leftCoin",Double.valueOf(coinReader.readLine()));
                             tokenReader.close();
                             coinReader.close();
                         } else {
@@ -262,9 +273,11 @@ public class HomePage {
                                     sb.append(line);
                                     if (Pattern.matches("Token:[0-9]*",line)) {
                                         leftToken = Double.valueOf(line.split(":")[1]);
+//                                        currency.put("leftToken",Double.valueOf(line.split(":")[1]));
                                     }
                                     if (Pattern.matches("Coin:[0-9]*",line)) {
                                         leftCoin = Double.valueOf(line.split(":")[1]);
+//                                        currency.put("leftCoin",Double.valueOf(line.split(":")[1]));
                                     }
                                     System.out.println("<reward>" + line + "<reward>");
                                 }
@@ -276,31 +289,50 @@ public class HomePage {
                         leftToken = leftToken - 10;
                         // record item
                         writeRecord("-10: 登陆",tokenHistoryFP);
-                        // deduct 10 coin back up
+                        // deduct 10 coin in backend
                         new Thread(() -> {
-                            try {
-                                ArrayList<String> cmd = new ArrayList<>();
-                                cmd.add("node");
-                                cmd.add(rootPath.concat("/js_contact_chain/client.js"));
-                                cmd.add("DeductionToken");
-                                cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
-                                cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
-                                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
-                                ProcessBuilder pb = new ProcessBuilder(cmd);
-                                Process process = pb.start();
-                                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                                String line;
-                                while ((line = reader.readLine()) != null) {
-                                    System.out.println(line);
+                            int tryout = 3;
+                            while(tryout > 0) {
+                                try {
+                                    ArrayList<String> cmd = new ArrayList<>();
+                                    cmd.add("node");
+                                    cmd.add(rootPath.concat("/js_contact_chain/client.js"));
+                                    cmd.add("DeductionToken");
+                                    cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                                    cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                                    cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+                                    ProcessBuilder pb = new ProcessBuilder(cmd);
+                                    Process process = pb.start();
+                                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                    String line;
+                                    // tricky getting data
+                                    boolean isSuccess = false;
+                                    while ((line = reader.readLine()) != null) {
+                                        System.out.println(line);
+                                        if (line.contains("status")) {
+                                            String[] tmpArry = line.split(":");
+                                            String status = tmpArry[1];
+                                            status = status.substring(1, status.length() - 1);
+                                            isSuccess = Boolean.valueOf(status);
+                                        }
+                                    }
+                                    if(isSuccess) {
+                                        break;
+                                    }
+                                    System.out.println("[ERROR] Transaction failed! Deduct token failed!");
+                                    process.waitFor();
+                                } catch (IOException|InterruptedException e) {
+                                    System.out.println(e.getMessage());
                                 }
-                            } catch (IOException e) {
-                                System.out.println(e.getMessage());
+                                tryout--;
                             }
                         }).start();
                     } else {
                         String[] tmpStr = leftCoinStr.split(":");
                         leftToken = Double.valueOf(tmpStr[1]);
                         leftCoin = 0;
+//                        currency.put("leftToken",Double.valueOf(tmpStr[1]));
+//                        currency.put("leftCoin",0.0);
                         writeRecord("+"+leftToken+": 注册",tokenHistoryFP);
                     }
                     sleep(200);
@@ -378,14 +410,13 @@ public class HomePage {
         leftTokenIconLabel.setText("积分");
         setJLabelIcon(leftTokenIconLabel,rootPath + "/img/token.png",rWidth,0.08);
         leftTokenIconLabel.setHorizontalTextPosition(SwingConstants.LEFT);
-//        setJLabelIcon(leftTokenLabel,rootPath + "/img/token.png",rWidth,0.08);
-//        leftTokenLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         // set real coin image
         leftCoinIconLabel.setText("代币");
         setJLabelIcon(leftCoinIconLabel,rootPath + "/img/coin.png",rWidth,0.08);
         leftCoinIconLabel.setHorizontalTextPosition(SwingConstants.LEFT);
-//        setJLabelIcon(leftCoinLabel,rootPath + "/img/coin.png",rWidth,0.08);
-//        leftCoinLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+        // set green currency label
+        tokenGreenLabel.setText("");
+        coinGreenLabel.setText("");
     }
 
     /*
@@ -609,6 +640,8 @@ public class HomePage {
         if(status) {
             leftTokenLabel.setText(setLeftCoinFormat(leftToken));
             leftCoinLabel.setText(setLeftCoinFormat(leftCoin));
+//            leftTokenLabel.setText(setLeftCoinFormat(currency.get("leftToken")));
+//            leftCoinLabel.setText(setLeftCoinFormat(currency.get("leftCoin")));
         }
         walletLoginPanel.setVisible(status);
         walletLogoutPanel.setVisible(!status);
@@ -670,6 +703,9 @@ public class HomePage {
         breakConnBtn.setVisible(false);
         connectStatusL.setText("");
         connectStatusL.setVisible(false);
+        // initial currency value
+//        currency.put("leftToken",0.0);
+//        currency.put("leftCoin",0.0);
         // remove new panel
         setLaunchPageStatus();
         // set recognise ssid label text to space
@@ -706,24 +742,40 @@ public class HomePage {
         }).start();
         // deduct advertiser's coin when user login app
         new Thread(() -> {
-            try {
-                ArrayList<String> cmd = new ArrayList<>();
-                cmd.add("node");
-                cmd.add(rootPath.concat("/js_contact_chain/client.js"));
-                cmd.add("CommissionToken");
-                cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
-                cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
-                cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
-                cmd.add("0xeff1ec3378b7ee6dd1891b52ad46f281c7b9244e");
-                ProcessBuilder pb = new ProcessBuilder(cmd);
-                Process process = pb.start();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
+            int tryout = 3;
+            while(tryout > 0) {
+                try {
+                    ArrayList<String> cmd = new ArrayList<>();
+                    cmd.add("node");
+                    cmd.add(rootPath.concat("/js_contact_chain/client.js"));
+                    cmd.add("CommissionToken");
+                    cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                    cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                    cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+                    cmd.add("0xeff1ec3378b7ee6dd1891b52ad46f281c7b9244e");
+                    ProcessBuilder pb = new ProcessBuilder(cmd);
+                    Process process = pb.start();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    boolean isSuccess = false;
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line);
+                        if (line.contains("status")) {
+                            String[] tmpArry = line.split(":");
+                            String status = tmpArry[1];
+                            status = status.substring(1, status.length() - 1);
+                            isSuccess = Boolean.valueOf(status);
+                        }
+                    }
+                    if (isSuccess) {
+                        break;
+                    }
+                    System.out.println("[ERROR] Transaction failed! Commission token failed!");
+                    process.waitFor();
+                } catch (IOException|InterruptedException ex) {
+                    System.out.println(ex.getMessage());
                 }
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
+                tryout--;
             }
         }).start();
 
@@ -731,7 +783,7 @@ public class HomePage {
         adsContainer.setPreferredSize(new Dimension(purchaseTabPane.getWidth(),purchaseTabPane.getHeight()));
 
         // get advertisement
-        getAdvertisement();
+        getAdvertisement("");
     }
 
     public HomePage() {
@@ -802,23 +854,29 @@ public class HomePage {
                 String testApAdress;
                 switch (type) {
                     case "积分": {
-                        writeLeftToken(Arith.add(leftToken, 10));
-                        writeRecord("+" + 10 + ": 看广告", tokenHistoryFP);
-                        String historyStr = readRecord(historyReadlineNum, tokenHistoryFP);
-                        tokenHistoryLabel.setText(historyStr);
+//                        writeLeftToken(Arith.add(currency.get("leftToken"), 10));
+//                        writeLeftToken(Arith.add(leftToken, 10));
+//                        writeRecord("+" + 10 + ": 看广告", tokenHistoryFP);
+//                        String historyStr = readRecord(historyReadlineNum, tokenHistoryFP);
+//                        tokenHistoryLabel.setText(historyStr);
                         adsPaybackType = "WatchAdvToken";
                         testAdsAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ffbb";
                         testApAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33";
+                        // add token to green area
+                        changeGreenLabel("token","add",10,true);
                     }
                     break;
                     case "代币": {
-                        writeLeftCoin(Arith.add(leftCoin, 10));
-                        writeRecord("+" + 10 + ": 看广告", coinHistoryFP);
-                        String historyStr = readRecord(historyReadlineNum, coinHistoryFP);
-                        coinHistoryLabel.setText(historyStr);
+//                        writeLeftCoin(Arith.add(currency.get("leftCoin"), 10));
+//                        writeLeftCoin(Arith.add(leftCoin, 10));
+//                        writeRecord("+" + 10 + ": 看广告", coinHistoryFP);
+//                        String historyStr = readRecord(historyReadlineNum, coinHistoryFP);
+//                        coinHistoryLabel.setText(historyStr);
                         adsPaybackType = "WatchAdvCoin";
                         testAdsAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ffcc";
                         testApAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff44";
+                        // add coin to green area
+                        changeGreenLabel("coin","add",10,true);
                     }
                     break;
                     default:
@@ -828,25 +886,48 @@ public class HomePage {
                 adsContainer.setVisible(true);
                 // sync reward to blockchain
                 new Thread(() -> {
-                    try {
-                        ArrayList<String> syncCmd = new ArrayList<>();
-                        syncCmd.add("node");
-                        syncCmd.add(rootPath.concat("/js_contact_chain/client.js"));
-                        syncCmd.add(adsPaybackType);
-                        syncCmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
-                        syncCmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
-                        syncCmd.add(testAdsAdress);
-                        syncCmd.add(testApAdress);
-                        ProcessBuilder syncRewardPB = new ProcessBuilder(syncCmd);
-                        Process syncRewardPS = syncRewardPB.start();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(syncRewardPS.getInputStream()));
-                        String line;
-                        System.out.println("========== get reward by watching ads ==========");
-                        while ((line = reader.readLine()) != null) {
-                            System.out.println(line);
+                    int tryout = 3;
+                    boolean isSuccess = false;
+                    while(tryout > 0) {
+                        try {
+                            ArrayList<String> syncCmd = new ArrayList<>();
+                            syncCmd.add("node");
+                            syncCmd.add(rootPath.concat("/js_contact_chain/client.js"));
+                            syncCmd.add(adsPaybackType);
+                            syncCmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                            syncCmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                            syncCmd.add(testAdsAdress);
+                            syncCmd.add(testApAdress);
+                            ProcessBuilder syncRewardPB = new ProcessBuilder(syncCmd);
+                            Process syncRewardPS = syncRewardPB.start();
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(syncRewardPS.getInputStream()));
+                            String line;
+                            System.out.println("========== get reward by watching ads ==========");
+                            while ((line = reader.readLine()) != null) {
+                                System.out.println(line);
+                                if (line.contains("status: true")) {
+                                    isSuccess = true;
+                                }
+                            }
+                            if (isSuccess) {
+                                break;
+                            }
+                            System.out.println("[ERROR] Transaction failed! Get payback failed!");
+                            syncRewardPS.waitFor();
+                        } catch (IOException|InterruptedException ex) {
+                            System.out.println(ex.getMessage());
                         }
-                    } catch (IOException ex) {
-                        System.out.println(ex.getMessage());
+                        tryout--;
+                    }
+                    switch (type) {
+                        case "积分":
+                            changeGreenLabel("token","sub",10,isSuccess);
+                            break;
+                        case "代币":
+                            changeGreenLabel("coin","sub",10,isSuccess);
+                            break;
+                        default:
+                            System.out.println("[ERROR] Unknown advertisement type");
                     }
                 }).start();
             }
@@ -879,6 +960,7 @@ public class HomePage {
                 String purchaseName = purchaseDesLabel.getText();
                 String buyGoodsCurrencyType;
                 String testThingAddress;
+                String rType;
                 switch (purchaseExpenseType) {
                     case "积分":{
                         if(leftToken < cost) {
@@ -890,6 +972,10 @@ public class HomePage {
                         writeLeftToken(Arith.sub(leftToken,cost));
                         buyGoodsCurrencyType = "BuyThing";
                         testThingAddress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff88";
+                        rType = "leftToken";
+                        tokenGreenLabel.setText("+10");
+                        tokenGreenLabel.setOpaque(true);
+                        tokenGreenLabel.setForeground(Color.GREEN);
                     }break;
                     case "代币":{
                         if(leftCoin < cost) {
@@ -901,6 +987,10 @@ public class HomePage {
                         writeLeftCoin(Arith.sub(leftCoin,cost));
                         buyGoodsCurrencyType = "BuyThingCoin";
                         testThingAddress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff88";
+                        rType = "leftCoin";
+                        coinGreenLabel.setText("+10");
+                        coinGreenLabel.setOpaque(true);
+                        coinGreenLabel.setForeground(Color.GREEN);
                     }break;
                     default: System.out.println("[ERROR] Unknown currency type!");return;
                 }
@@ -948,23 +1038,40 @@ public class HomePage {
                 orderDetailPane.setVisible(true);
                 // send purchase transaction to blockchain
                 new Thread(() -> {
-                    try {
-                        ArrayList<String> cmd = new ArrayList<>();
-                        cmd.add("node");
-                        cmd.add(rootPath.concat("/js_contact_chain/client.js"));
-                        cmd.add(buyGoodsCurrencyType);
-                        cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
-                        cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
-                        cmd.add(testThingAddress);
-                        ProcessBuilder pb = new ProcessBuilder(cmd);
-                        Process process = pb.start();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            System.out.println(line);
+                    int tryout = 3;
+                    while(tryout > 0) {
+                        try {
+                            ArrayList<String> cmd = new ArrayList<>();
+                            cmd.add("node");
+                            cmd.add(rootPath.concat("/js_contact_chain/client.js"));
+                            cmd.add(buyGoodsCurrencyType);
+                            cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                            cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                            cmd.add(testThingAddress);
+                            ProcessBuilder pb = new ProcessBuilder(cmd);
+                            Process process = pb.start();
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                            String line;
+                            boolean isSuccess = false;
+                            while ((line = reader.readLine()) != null) {
+                                System.out.println(line);
+                                if (line.contains("status")) {
+                                    String[] tmpArry = line.split(":");
+                                    String status = tmpArry[1];
+                                    status = status.substring(1, status.length() - 1);
+                                    isSuccess = Boolean.valueOf(status);
+                                }
+                            }
+                            if (isSuccess) {
+                                currency.put(rType,currency.get(rType)+10);
+                                break;
+                            }
+                            System.out.println("[ERROR] Transaction failed! Purchase failed!");
+                            process.waitFor();
+                        } catch (IOException|InterruptedException ex) {
+                            System.out.println(ex.getMessage());
                         }
-                    } catch (IOException ex) {
-                        System.out.println(ex.getMessage());
+                        tryout--;
                     }
                 }).start();
             }
@@ -1166,12 +1273,14 @@ public class HomePage {
             int fontSize = 4;
             StringBuilder sb = new StringBuilder();
             String line;
+            String colorStr = "";
             sb.append("<html><body><table cellspacing='0' width='315'>");
             ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(filePath),100,"UTF-8");
             while(lineNum > 0) {
                 line = reader.readLine();
                 if(line == null) break;
-                sb.append("<tr><td style='border:1px solid black;'><font size='"+fontSize+"' color='#4A766E'>");
+                colorStr = line.contains("失败") ? "#da7262" : "#4A766E";
+                sb.append("<tr><td style='border:1px solid black;'><font size='"+fontSize+"' color='"+colorStr+"'>");
                 sb.append(line);
                 sb.append("<font size='"+fontSize+"' color='#4A766E'></td></tr>");
                 lineNum--;
@@ -1187,6 +1296,7 @@ public class HomePage {
     public void writeLeftToken(Double leftToken) {
         try {
             this.leftToken = leftToken;
+//            currency.put("leftToken",leftToken);
             leftTokenLabel.setText(setLeftCoinFormat(leftToken));
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftToken"))));
             writer.write(String.valueOf(leftToken));
@@ -1199,6 +1309,7 @@ public class HomePage {
     public void writeLeftCoin(Double leftCoin) {
         try {
             this.leftCoin = leftCoin;
+//            currency.put("leftCoin",leftCoin);
             leftCoinLabel.setText(setLeftCoinFormat(leftCoin));
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftCoin"))));
             writer.write(String.valueOf(leftCoin));
@@ -1234,6 +1345,7 @@ public class HomePage {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     super.mouseClicked(e);
+                    innerPanel.removeAll();
                     for(int j=0;j<labelArry.length;j++) {
                         JLabel nLabel = labelArry[j];
                         JScrollPane nScrollPanel = scrollPanelArry[j];
@@ -1242,60 +1354,100 @@ public class HomePage {
                         nLabel.setBackground(releasedColor);
                     }
                     scrollPanel.setVisible(true);
-                    dataLabelArry.forEach(innerPanel::add);
+                    dataLabelArry.forEach(item ->{
+                        innerPanel.add(item);
+                        innerPanel.add(Box.createRigidArea(boxLayoutFiler));
+                    });
                     label.setBorder(BorderFactory.createRaisedBevelBorder());
                     label.setBackground(pressedColor);
                     outerPanel.updateUI();
                 }
             });
         }
-        ((ArrayList<JLabel>)dataLabelArrys[0]).forEach(innerPanelArry[0]::add);
+        ((ArrayList<JLabel>)dataLabelArrys[0]).forEach(item -> {
+            innerPanelArry[0].add(item);
+            innerPanelArry[0].add(Box.createRigidArea(boxLayoutFiler));
+        });
         labelArry[0].setBackground(pressedColor);
         labelArry[0].setBorder(BorderFactory.createRaisedBevelBorder());
         scrollPanelArry[0].setVisible(true);
     }
 
-    private void getAdvertisement() {
+    private void getAdvertisement(String timestamp) {
         new Thread(()->{
-            try {
-//            String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/stream";
-                String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/xxxxxx";
-                URL url = new URL(urlStr);
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-                int statusCode = con.getResponseCode();
-                if(statusCode != 200) {
-                    System.out.println("[ERROR] Get advertisement failed!");
-                    return;
-                }
-                ObjectMapper objMapper = new ObjectMapper();
-                JsonNode jsonNode = objMapper.readTree(con.getInputStream());
-                JSONArray jsonArry = new JSONArray(jsonNode.toString());
-                for(int i=0;i<jsonArry.length();i++){
-                    JSONObject jsonObj = jsonArry.getJSONObject(i);
-                    try {
-                        String picStr = jsonObj.getString("picture");
-                        String imgPath = zlibDecompress(picStr.getBytes(), i + 1);
-                        String name = jsonObj.getString("itemName");
-                        String rewardType = "积分";
-                        Double payBack = jsonObj.getDouble("price");
-                        //set got advertisement
-                        JLabel label = new JLabel();
-                        setJLabelIcon(label,imgPath,rootWidth,0.3);
-                        label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+" "+rewardType+"</font></html>");
-                        label.setVerticalTextPosition(SwingConstants.TOP);
-                        tokenAdvPanel.add(label);
-                    } catch (JSONException e) {
-                        System.out.println(e.getMessage());
+            String orgTimestamp = timestamp;
+            String orgPath = "/advertisement/get_by_ap/fjkdjfa";
+            while(true) {
+                try {
+//                String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/stream";
+//                String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/xxxxxx";
+//                String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/fjkdjfa";
+                    String path = orgPath;
+                    if (orgTimestamp != null && !orgTimestamp.equals("")) {
+                        path = orgPath.concat("/").concat(orgTimestamp);
                     }
+                    URIBuilder urlb = new URIBuilder()
+                            .setScheme("http")
+                            .setHost("120.27.237.152:5000")
+                            .setPath(path);
+                    URL url = new URL(urlb.toString());
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("GET");
+                    int statusCode = con.getResponseCode();
+                    if (statusCode != 200) {
+                        System.out.println("[ERROR] Get advertisement failed!");
+                        return;
+                    }
+                    ObjectMapper objMapper = new ObjectMapper();
+                    JsonNode jsonNode = objMapper.readTree(con.getInputStream());
+                    JSONArray jsonArry = new JSONArray(jsonNode.toString());
+                    String lastTimestamp = "";
+                    for (int i = 0; i < jsonArry.length(); i++) {
+                        JSONObject jsonObj = jsonArry.getJSONObject(i);
+                        try {
+                            String picStr = jsonObj.getString("picture");
+                            String name = jsonObj.getString("itemName");
+                            String imgName = jsonObj.getString("imgName");
+                            String imgPath = zlibDecompress(picStr.getBytes(), imgName);
+                            String rewardType = "积分";
+                            Double payBack = jsonObj.getDouble("price");
+                            lastTimestamp = jsonObj.getString("timestamp");
+                            //set got advertisement
+                            JLabel label = new JLabel();
+                            setJLabelIcon(label, imgPath, rootWidth, 0.3);
+                            label.setText("<html><p>" + name + "</p><br/><font color='#5C4033'>报酬 " + payBack + " " + rewardType + "</font></html>");
+                            label.setVerticalTextPosition(SwingConstants.TOP);
+                            if(tokenAdsScrollPane.isVisible()) {
+                                tokenAdvPanel.add(label);
+                                tokenAdvPanel.add(Box.createRigidArea(boxLayoutFiler));
+                            }
+                            if(allAdsScrollPane.isVisible()) {
+                                allAdvPanel.add(label);
+                                allAdvPanel.add(Box.createRigidArea(boxLayoutFiler));
+                            }
+                            tokenAdsLabels.add(label);
+                            allAdsLabels.add(label);
+//                            adsContainer.updateUI();
+                            changeCursor(label, "advertisement");
+                        } catch (JSONException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    if(! lastTimestamp.equals("")) {
+                        lastTimestamp = lastTimestamp.substring(0, lastTimestamp.length() - 3);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                        DateTime dateTime = new DateTime(dateFormat.parse(lastTimestamp));
+                        orgTimestamp = dateFormat.format(dateTime.plusMillis(1).toDate());
+                    }
+                    sleep(1000);
+                } catch (IOException|InterruptedException|ParseException e) {
+                    System.out.println(e.getMessage());
                 }
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
             }
         }).start();
     }
 
-    private String zlibDecompress(byte[] data, int index) {
+    private String zlibDecompress(byte[] data, String imgName) {
 //        byte[] output = new byte[0];
 //
 //        Inflater decompresser = new Inflater();
@@ -1324,7 +1476,7 @@ public class HomePage {
 
         try {
             byte[] base64DecodeBytes = Base64.getDecoder().decode(data);
-            String filePath = rootPath.concat("/config/testPicture"+index+".jpg");
+            String filePath = rootPath.concat("/config/"+imgName);
             File file = new File(filePath);
             FileUtils.writeByteArrayToFile(file,base64DecodeBytes);
             return filePath;
@@ -1332,6 +1484,77 @@ public class HomePage {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    private void changeGreenLabel(String currencyType, String operator, double value, boolean isSuccess) {
+        String curVal;
+        JLabel greenLabel;
+        double notCommitVal;
+        String desp;
+        String historyStr;
+        synchronized (objLock) {
+            switch (currencyType) {
+                case "token":
+                    curVal = tokenGreenLabel.getText();
+                    greenLabel = tokenGreenLabel;
+                    break;
+                case "coin":
+                    curVal = coinGreenLabel.getText();
+                    greenLabel = coinGreenLabel;
+                    break;
+                default:
+                    System.out.println("[ERROR] Currency type must be token or coin!");
+                    return;
+            }
+            if (! Pattern.matches("\\+[0-9]+\\.?[0-9]*",curVal)) {
+                curVal = "0";
+            }
+            switch (operator) {
+                case "add":
+                    notCommitVal = Arith.add(value, Double.valueOf(curVal));
+                    break;
+                case "sub": {
+                    notCommitVal = Arith.sub(Double.valueOf(curVal), value);
+                    switch (currencyType) {
+                        case "token":
+                            if(isSuccess) {
+                                leftToken = Arith.add(value, leftToken);
+                                writeLeftToken(leftToken);
+                                desp = "+" + 10 + ": 看广告";
+                            } else {
+                                desp = "看广告失败";
+                            }
+                            writeRecord(desp, tokenHistoryFP);
+                            historyStr = readRecord(historyReadlineNum, tokenHistoryFP);
+                            tokenHistoryLabel.setText(historyStr);
+                            break;
+                        case "coin":
+                            if(isSuccess) {
+                                leftCoin = Arith.add(value, leftCoin);
+                                writeLeftCoin(leftCoin);
+                                desp = "+" + 10 + ": 看广告";
+                            } else {
+                                desp = "看广告失败";
+                            }
+                            writeRecord(desp, coinHistoryFP);
+                            historyStr = readRecord(historyReadlineNum, coinHistoryFP);
+                            coinHistoryLabel.setText(historyStr);
+                            break;
+                    }
+                }
+                break;
+                default:
+                    System.out.println("[ERROR] Green value's operator must be add or sub!");
+                    return;
+            }
+            if(notCommitVal != 0) {
+                greenLabel.setText("+" + notCommitVal);
+                greenLabel.setOpaque(true);
+                greenLabel.setForeground(new Color(55,175,88));
+            } else {
+                greenLabel.setText("");
+            }
+        }
     }
 
     public JPanel getRootPanel() {
@@ -1362,7 +1585,7 @@ public class HomePage {
         this.retStatus = retStatus;
     }
 
-    public void setLeftCoin(double leftToken) {
+    public void setLeftCoin(double leftCoin) {
         this.leftToken = leftToken;
     }
 
