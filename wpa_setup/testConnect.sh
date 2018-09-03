@@ -18,7 +18,7 @@ if [ -e $testLoginFile ]; then
         echo "[ERROR] left coin file lost!"
     fi
     leftCoin=`cat $testLeftTokenFile`
-    leftCoin=`echo "scale=2;$leftCoin*1-1" | bc`
+    #leftCoin=`echo "scale=2;$leftCoin*1-1" | bc`
     if [ "$leftCoin" = "0.00" ] || [[ "$leftCoin" =~ -.* ]]; then
        echo "[ERROR] your coin has been cost over!"
        echo "0" > $testLeftTokenFile
