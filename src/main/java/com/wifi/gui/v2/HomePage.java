@@ -2,16 +2,12 @@ package com.wifi.gui.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.javafx.fxml.builder.URLBuilder;
-import com.sun.org.apache.bcel.internal.generic.LADD;
 import com.wifi.configSetting;
 import com.wifi.gui.v2.utils.Arith;
 import com.wifi.gui.v2.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.ISODateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.zip.Inflater;
+
 import org.apache.http.client.utils.URIBuilder;
 
 import static java.lang.Thread.sleep;
@@ -125,8 +121,10 @@ public class HomePage {
     private JTabbedPane purchaseTabPane;
     private JLabel leftTokenIconLabel;
     private JLabel leftCoinIconLabel;
-    private JLabel tokenGreenLabel;
-    private JLabel coinGreenLabel;
+    private JLabel tokenAddGreenLabel;
+    private JLabel coinAddGreenLabel;
+    private JLabel tokenSubGreenLabel;
+    private JLabel coinSubGreenLabel;
 
     private JFrame fJFrame;
     private Register nextRegister;
@@ -285,48 +283,48 @@ public class HomePage {
                             } catch (IOException e) {
                                 System.out.println(e.getMessage());
                             }
+                            // deduct 10 coin in backend
+                            new Thread(() -> {
+                                int tryout = 3;
+                                while(tryout > 0) {
+                                    try {
+                                        ArrayList<String> cmd = new ArrayList<>();
+                                        cmd.add("node");
+                                        cmd.add(rootPath.concat("/js_contact_chain/client.js"));
+                                        cmd.add("DeductionToken");
+                                        cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
+                                        cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
+                                        cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
+                                        ProcessBuilder pb = new ProcessBuilder(cmd);
+                                        Process process = pb.start();
+                                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                        String line;
+                                        // tricky getting data
+                                        boolean isSuccess = false;
+                                        while ((line = reader.readLine()) != null) {
+                                            System.out.println(line);
+                                            if (line.contains("status")) {
+                                                String[] tmpArry = line.split(":");
+                                                String status = tmpArry[1];
+                                                status = status.substring(1, status.length() - 1);
+                                                isSuccess = Boolean.valueOf(status);
+                                            }
+                                        }
+                                        if(isSuccess) {
+                                            break;
+                                        }
+                                        System.out.println("[ERROR] Transaction failed! Deduct token failed!");
+                                        process.waitFor();
+                                    } catch (IOException|InterruptedException e) {
+                                        System.out.println(e.getMessage());
+                                    }
+                                    tryout--;
+                                }
+                            }).start();
                         }
-                        leftToken = leftToken - 10;
+                        leftToken = Arith.sub(leftToken,10);
                         // record item
                         writeRecord("-10: 登陆",tokenHistoryFP);
-                        // deduct 10 coin in backend
-                        new Thread(() -> {
-                            int tryout = 3;
-                            while(tryout > 0) {
-                                try {
-                                    ArrayList<String> cmd = new ArrayList<>();
-                                    cmd.add("node");
-                                    cmd.add(rootPath.concat("/js_contact_chain/client.js"));
-                                    cmd.add("DeductionToken");
-                                    cmd.add("0x01c96e4d9be1f4aef473dc5dcf13d8bd1d4133cd");
-                                    cmd.add("e16a1130062b37f038b9df02f134d7ddd9009c54c62bd92d4ed42c0dba1189a8");
-                                    cmd.add("0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33");
-                                    ProcessBuilder pb = new ProcessBuilder(cmd);
-                                    Process process = pb.start();
-                                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                                    String line;
-                                    // tricky getting data
-                                    boolean isSuccess = false;
-                                    while ((line = reader.readLine()) != null) {
-                                        System.out.println(line);
-                                        if (line.contains("status")) {
-                                            String[] tmpArry = line.split(":");
-                                            String status = tmpArry[1];
-                                            status = status.substring(1, status.length() - 1);
-                                            isSuccess = Boolean.valueOf(status);
-                                        }
-                                    }
-                                    if(isSuccess) {
-                                        break;
-                                    }
-                                    System.out.println("[ERROR] Transaction failed! Deduct token failed!");
-                                    process.waitFor();
-                                } catch (IOException|InterruptedException e) {
-                                    System.out.println(e.getMessage());
-                                }
-                                tryout--;
-                            }
-                        }).start();
                     } else {
                         String[] tmpStr = leftCoinStr.split(":");
                         leftToken = Double.valueOf(tmpStr[1]);
@@ -415,8 +413,10 @@ public class HomePage {
         setJLabelIcon(leftCoinIconLabel,rootPath + "/img/coin.png",rWidth,0.08);
         leftCoinIconLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         // set green currency label
-        tokenGreenLabel.setText("");
-        coinGreenLabel.setText("");
+        tokenAddGreenLabel.setText("");
+        tokenSubGreenLabel.setText("");
+        coinAddGreenLabel.setText("");
+        coinSubGreenLabel.setText("");
     }
 
     /*
@@ -462,8 +462,8 @@ public class HomePage {
                 setJLabelIcon(label,imgPath,rootWidth,0.3);
                 label.setText("<html><p>"+name+"</p><br/><font color='#5C4033'>报酬 "+payBack+" "+rewardType+"</font></html>");
                 label.setVerticalTextPosition(SwingConstants.TOP);
-                typeArry.add(label);
-                allAdsLabels.add(label);
+//                typeArry.add(label);
+//                allAdsLabels.add(label);
             }
         }
 
@@ -783,7 +783,7 @@ public class HomePage {
         adsContainer.setPreferredSize(new Dimension(purchaseTabPane.getWidth(),purchaseTabPane.getHeight()));
 
         // get advertisement
-        getAdvertisement("");
+        getAdvertisement();
     }
 
     public HomePage() {
@@ -818,6 +818,12 @@ public class HomePage {
                     ArrayList<String> cmds = new ArrayList<>();
                     if(Utils.getTestFlag()) {
                         cmds.add(rootPath.concat("/wpa_setup/testDisconnect.sh"));
+                        OutputStreamWriter coinWriter = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftCoin"))));
+                        OutputStreamWriter tokenWriter = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftToken"))));
+                        coinWriter.write(String.valueOf(leftCoin));
+                        tokenWriter.write(String.valueOf(leftToken));
+                        coinWriter.close();
+                        tokenWriter.close();
                     } else {
                         cmds.add("wlan.sh");
                         cmds.add("disconnect");
@@ -854,29 +860,19 @@ public class HomePage {
                 String testApAdress;
                 switch (type) {
                     case "积分": {
-//                        writeLeftToken(Arith.add(currency.get("leftToken"), 10));
-//                        writeLeftToken(Arith.add(leftToken, 10));
-//                        writeRecord("+" + 10 + ": 看广告", tokenHistoryFP);
-//                        String historyStr = readRecord(historyReadlineNum, tokenHistoryFP);
-//                        tokenHistoryLabel.setText(historyStr);
                         adsPaybackType = "WatchAdvToken";
                         testAdsAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ffbb";
                         testApAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33";
                         // add token to green area
-                        changeGreenLabel("token","add",10,true);
+                        changeGreenLabel("token","ads",10,true,false,"看广告");
                     }
                     break;
                     case "代币": {
-//                        writeLeftCoin(Arith.add(currency.get("leftCoin"), 10));
-//                        writeLeftCoin(Arith.add(leftCoin, 10));
-//                        writeRecord("+" + 10 + ": 看广告", coinHistoryFP);
-//                        String historyStr = readRecord(historyReadlineNum, coinHistoryFP);
-//                        coinHistoryLabel.setText(historyStr);
                         adsPaybackType = "WatchAdvCoin";
                         testAdsAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ffcc";
                         testApAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff44";
                         // add coin to green area
-                        changeGreenLabel("coin","add",10,true);
+                        changeGreenLabel("coin","ads",10,true,false,"看广告");
                     }
                     break;
                     default:
@@ -914,6 +910,7 @@ public class HomePage {
                             }
                             System.out.println("[ERROR] Transaction failed! Get payback failed!");
                             syncRewardPS.waitFor();
+                            sleep(500);
                         } catch (IOException|InterruptedException ex) {
                             System.out.println(ex.getMessage());
                         }
@@ -921,10 +918,10 @@ public class HomePage {
                     }
                     switch (type) {
                         case "积分":
-                            changeGreenLabel("token","sub",10,isSuccess);
+                            changeGreenLabel("token","ads",-10,false,isSuccess,"看广告");
                             break;
                         case "代币":
-                            changeGreenLabel("coin","sub",10,isSuccess);
+                            changeGreenLabel("coin","ads",-10,false,isSuccess,"看广告");
                             break;
                         default:
                             System.out.println("[ERROR] Unknown advertisement type");
@@ -958,6 +955,7 @@ public class HomePage {
                 double cost = 15;
                 // deduct left currency
                 String purchaseName = purchaseDesLabel.getText();
+                String purchaseDescription = "购买".concat(purchaseName);
                 String buyGoodsCurrencyType;
                 String testThingAddress;
                 String rType;
@@ -967,30 +965,18 @@ public class HomePage {
                             System.out.println("[ERROR] Left token is not enough");
                             return;
                         }
-                        writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName,tokenHistoryFP);
-                        tokenHistoryLabel.setText(readRecord(historyReadlineNum,tokenHistoryFP));
-                        writeLeftToken(Arith.sub(leftToken,cost));
                         buyGoodsCurrencyType = "BuyThing";
                         testThingAddress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff88";
-                        rType = "leftToken";
-                        tokenGreenLabel.setText("+10");
-                        tokenGreenLabel.setOpaque(true);
-                        tokenGreenLabel.setForeground(Color.GREEN);
+                        changeGreenLabel("token","buy",-10,true,false,purchaseDescription);
                     }break;
                     case "代币":{
                         if(leftCoin < cost) {
                             System.out.println("[ERROR] Left coin is not enough");
                             return;
                         }
-                        writeRecord("-"+cost+"="+purchasePrice+"x"+purchaseNum+": 购买"+purchaseName,coinHistoryFP);
-                        coinHistoryLabel.setText(readRecord(historyReadlineNum,coinHistoryFP));
-                        writeLeftCoin(Arith.sub(leftCoin,cost));
                         buyGoodsCurrencyType = "BuyThingCoin";
                         testThingAddress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff88";
-                        rType = "leftCoin";
-                        coinGreenLabel.setText("+10");
-                        coinGreenLabel.setOpaque(true);
-                        coinGreenLabel.setForeground(Color.GREEN);
+                        changeGreenLabel("coin","buy",-10,true,false,purchaseDescription);
                     }break;
                     default: System.out.println("[ERROR] Unknown currency type!");return;
                 }
@@ -1039,6 +1025,7 @@ public class HomePage {
                 // send purchase transaction to blockchain
                 new Thread(() -> {
                     int tryout = 3;
+                    boolean isSuccess = false;
                     while(tryout > 0) {
                         try {
                             ArrayList<String> cmd = new ArrayList<>();
@@ -1052,7 +1039,6 @@ public class HomePage {
                             Process process = pb.start();
                             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                             String line;
-                            boolean isSuccess = false;
                             while ((line = reader.readLine()) != null) {
                                 System.out.println(line);
                                 if (line.contains("status")) {
@@ -1063,7 +1049,6 @@ public class HomePage {
                                 }
                             }
                             if (isSuccess) {
-                                currency.put(rType,currency.get(rType)+10);
                                 break;
                             }
                             System.out.println("[ERROR] Transaction failed! Purchase failed!");
@@ -1073,13 +1058,22 @@ public class HomePage {
                         }
                         tryout--;
                     }
+                    switch (purchaseExpenseType) {
+                        case "积分":
+                            changeGreenLabel("token","buy",10,false,isSuccess,purchaseDescription);
+                            break;
+                        case "代币":
+                            changeGreenLabel("coin","buy",10,false,isSuccess,purchaseDescription);
+                            break;
+                        default:
+                            System.out.println("[ERROR] Unknown advertisement type");
+                    }
                 }).start();
             }
         });
         //========== set reward and purchase page ==========//
         // set advertisement events in "make money" page
         ArrayList[] adsArrys = {tokenAdsLabels,coinAdsLabels,giftAdsLabels};
-//        for(int i=0;i<adsArrys.length;i++) {
         for(ArrayList<JLabel> adsArry: adsArrys) {
             adsArry.forEach(item->changeCursor(item,"advertisement"));
         }
@@ -1373,9 +1367,9 @@ public class HomePage {
         scrollPanelArry[0].setVisible(true);
     }
 
-    private void getAdvertisement(String timestamp) {
+    private void getAdvertisement() {
         new Thread(()->{
-            String orgTimestamp = timestamp;
+            String orgTimestamp = "";
             String orgPath = "/advertisement/get_by_ap/fjkdjfa";
             while(true) {
                 try {
@@ -1383,7 +1377,7 @@ public class HomePage {
 //                String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/xxxxxx";
 //                String urlStr = "http://120.27.237.152:5000/advertisement/get_by_ap/fjkdjfa";
                     String path = orgPath;
-                    if (orgTimestamp != null && !orgTimestamp.equals("")) {
+                    if (!orgTimestamp.equals("")) {
                         path = orgPath.concat("/").concat(orgTimestamp);
                     }
                     URIBuilder urlb = new URIBuilder()
@@ -1418,15 +1412,16 @@ public class HomePage {
                             label.setText("<html><p>" + name + "</p><br/><font color='#5C4033'>报酬 " + payBack + " " + rewardType + "</font></html>");
                             label.setVerticalTextPosition(SwingConstants.TOP);
                             if(tokenAdsScrollPane.isVisible()) {
-                                tokenAdvPanel.add(label);
-                                tokenAdvPanel.add(Box.createRigidArea(boxLayoutFiler));
+                                tokenAdvPanel.add(label,0);
+//                                tokenAdvPanel.add(label);
+                                tokenAdvPanel.add(Box.createRigidArea(boxLayoutFiler),1);
                             }
                             if(allAdsScrollPane.isVisible()) {
-                                allAdvPanel.add(label);
-                                allAdvPanel.add(Box.createRigidArea(boxLayoutFiler));
+                                allAdvPanel.add(label,0);
+                                allAdvPanel.add(Box.createRigidArea(boxLayoutFiler),1);
                             }
-                            tokenAdsLabels.add(label);
-                            allAdsLabels.add(label);
+                            tokenAdsLabels.add(0,label);
+                            allAdsLabels.add(0,label);
 //                            adsContainer.updateUI();
                             changeCursor(label, "advertisement");
                         } catch (JSONException e) {
@@ -1486,71 +1481,76 @@ public class HomePage {
         return null;
     }
 
-    private void changeGreenLabel(String currencyType, String operator, double value, boolean isSuccess) {
-        String curVal;
-        JLabel greenLabel;
-        double notCommitVal;
-        String desp;
-        String historyStr;
+    private void changeGreenLabel(String currencyType, String operator, double greenValue, boolean isShow, boolean isSuccess, String desc) {
+        if(currencyType.compareTo("token") != 0 && currencyType.compareTo("coin") != 0) {
+            System.out.println("[ERROR] Please give right currency type(token/coin)!");
+            return;
+        }
+        if(operator.compareTo("ads") != 0 && operator.compareTo("buy") != 0) {
+            System.out.println("[ERROR] Please give right operator type(ads/buy)!");
+            return;
+        }
+        if(desc == null || desc.compareTo("") == 0) {
+            System.out.println("[ERROR] Purchase description can't be null!");
+            return;
+        }
         synchronized (objLock) {
-            switch (currencyType) {
-                case "token":
-                    curVal = tokenGreenLabel.getText();
-                    greenLabel = tokenGreenLabel;
-                    break;
-                case "coin":
-                    curVal = coinGreenLabel.getText();
-                    greenLabel = coinGreenLabel;
-                    break;
-                default:
-                    System.out.println("[ERROR] Currency type must be token or coin!");
-                    return;
-            }
-            if (! Pattern.matches("\\+[0-9]+\\.?[0-9]*",curVal)) {
-                curVal = "0";
-            }
+            String curVal;
+            JLabel greenLabel;
+            double notCommitVal;
+            String description;
+            String descSymbol;
+            boolean isTokenType = (currencyType.compareTo("token") == 0);
             switch (operator) {
-                case "add":
-                    notCommitVal = Arith.add(value, Double.valueOf(curVal));
-                    break;
-                case "sub": {
-                    notCommitVal = Arith.sub(Double.valueOf(curVal), value);
-                    switch (currencyType) {
-                        case "token":
-                            if(isSuccess) {
-                                leftToken = Arith.add(value, leftToken);
-                                writeLeftToken(leftToken);
-                                desp = "+" + 10 + ": 看广告";
-                            } else {
-                                desp = "看广告失败";
-                            }
-                            writeRecord(desp, tokenHistoryFP);
-                            historyStr = readRecord(historyReadlineNum, tokenHistoryFP);
-                            tokenHistoryLabel.setText(historyStr);
-                            break;
-                        case "coin":
-                            if(isSuccess) {
-                                leftCoin = Arith.add(value, leftCoin);
-                                writeLeftCoin(leftCoin);
-                                desp = "+" + 10 + ": 看广告";
-                            } else {
-                                desp = "看广告失败";
-                            }
-                            writeRecord(desp, coinHistoryFP);
-                            historyStr = readRecord(historyReadlineNum, coinHistoryFP);
-                            coinHistoryLabel.setText(historyStr);
-                            break;
+                case "ads":
+                    curVal = (isTokenType ? tokenAddGreenLabel.getText() : coinAddGreenLabel.getText());
+                    if (! Pattern.matches("\\+[0-9]+\\.?[0-9]*",curVal)) {
+                        curVal = "0";
                     }
-                }
-                break;
+                    notCommitVal = Arith.add(Double.valueOf(curVal), greenValue);
+                    descSymbol = "+";
+                    greenLabel = (isTokenType ? tokenAddGreenLabel : coinAddGreenLabel);
+                    break;
+                case "buy":
+                    curVal = (isTokenType ? tokenSubGreenLabel.getText() : coinSubGreenLabel.getText());
+                    if (! Pattern.matches("-[0-9]+\\.?[0-9]*",curVal)) {
+                        curVal = "0";
+                    }
+                    notCommitVal = Arith.add(Double.valueOf(curVal), greenValue);
+                    descSymbol = "-";
+                    greenLabel = (isTokenType ? tokenSubGreenLabel : coinSubGreenLabel);
+                    break;
                 default:
                     System.out.println("[ERROR] Green value's operator must be add or sub!");
                     return;
             }
+            if(! isShow) {
+                if (isTokenType) {
+                    if (isSuccess) {
+                        leftToken = Arith.add(-greenValue, leftToken);
+                        writeLeftToken(leftToken);
+                        description = descSymbol.concat(Math.abs(greenValue) + ":").concat(desc);
+                    } else {
+                        description = desc.concat("失败");
+                    }
+                    writeRecord(description, tokenHistoryFP);
+                    tokenHistoryLabel.setText(readRecord(historyReadlineNum, tokenHistoryFP));
+                } else {
+                    if (isSuccess) {
+                        leftCoin = Arith.add(-greenValue, leftCoin);
+                        writeLeftCoin(leftCoin);
+                        description = descSymbol.concat(Math.abs(greenValue) + ":").concat(desc);
+                    } else {
+                        description = desc.concat("失败");
+                    }
+                    writeRecord(description, coinHistoryFP);
+                    coinHistoryLabel.setText(readRecord(historyReadlineNum, coinHistoryFP));
+                }
+            }
             if(notCommitVal != 0) {
-                greenLabel.setText("+" + notCommitVal);
+                greenLabel.setText(descSymbol.concat(String.valueOf(Math.abs(notCommitVal))));
                 greenLabel.setOpaque(true);
-                greenLabel.setForeground(new Color(55,175,88));
+                greenLabel.setForeground(new Color(83,120,89));
             } else {
                 greenLabel.setText("");
             }
