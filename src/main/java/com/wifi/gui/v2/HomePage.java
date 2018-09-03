@@ -1290,7 +1290,6 @@ public class HomePage {
     public void writeLeftToken(Double leftToken) {
         try {
             this.leftToken = leftToken;
-//            currency.put("leftToken",leftToken);
             leftTokenLabel.setText(setLeftCoinFormat(leftToken));
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftToken"))));
             writer.write(String.valueOf(leftToken));
@@ -1303,7 +1302,6 @@ public class HomePage {
     public void writeLeftCoin(Double leftCoin) {
         try {
             this.leftCoin = leftCoin;
-//            currency.put("leftCoin",leftCoin);
             leftCoinLabel.setText(setLeftCoinFormat(leftCoin));
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(rootPath.concat("/wpa_setup/testLeftCoin"))));
             writer.write(String.valueOf(leftCoin));
@@ -1500,6 +1498,7 @@ public class HomePage {
             double notCommitVal;
             String description;
             String descSymbol;
+            int dynamicShowFreq = 80;
             boolean isTokenType = (currencyType.compareTo("token") == 0);
             switch (operator) {
                 case "ads":
@@ -1524,11 +1523,27 @@ public class HomePage {
                     System.out.println("[ERROR] Green value's operator must be add or sub!");
                     return;
             }
+            // l
             if(! isShow) {
                 if (isTokenType) {
                     if (isSuccess) {
-                        leftToken = Arith.add(-greenValue, leftToken);
-                        writeLeftToken(leftToken);
+                        // dynamic display start {{
+                        int intLeftToken = new Double(leftToken).intValue();
+                        int intGreenValue = new Double(-greenValue).intValue();
+                        int intResult = intLeftToken + intGreenValue;
+                        int intStep = (intResult > intLeftToken ? 1 : -1);
+                        int intLen = Math.abs(intResult - intLeftToken);
+                        for(int i=0,j=intStep;i<intLen;i++,j+=intStep) {
+                            writeLeftToken((double)(intLeftToken+j));
+                            Double absCurVal = Math.abs(Arith.sub(Double.valueOf(curVal),j));
+                            greenLabel.setText(descSymbol.concat(String.valueOf(absCurVal)));
+                            try {
+                                sleep(dynamicShowFreq);
+                            } catch (InterruptedException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                        // }} end
                         description = descSymbol.concat(Math.abs(greenValue) + ":").concat(desc);
                     } else {
                         description = desc.concat("失败");
@@ -1537,8 +1552,23 @@ public class HomePage {
                     tokenHistoryLabel.setText(readRecord(historyReadlineNum, tokenHistoryFP));
                 } else {
                     if (isSuccess) {
-                        leftCoin = Arith.add(-greenValue, leftCoin);
-                        writeLeftCoin(leftCoin);
+                        // dynamic display start {{
+                        int intLeftCoin = new Double(leftCoin).intValue();
+                        int intGreenValue = new Double(-greenValue).intValue();
+                        int intResult = intLeftCoin + intGreenValue;
+                        int intStep = (intResult > intLeftCoin ? 1 : -1);
+                        int intLen = Math.abs(intResult - intLeftCoin);
+                        for(int i=0,j=intStep;i<intLen;i++,j+=intStep) {
+                            writeLeftCoin((double)(intLeftCoin+j));
+                            Double absCurVal = Math.abs(Arith.sub(Double.valueOf(curVal),j));
+                            greenLabel.setText(descSymbol.concat(String.valueOf(absCurVal)));
+                            try {
+                                sleep(dynamicShowFreq);
+                            } catch (InterruptedException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                        // }} end
                         description = descSymbol.concat(Math.abs(greenValue) + ":").concat(desc);
                     } else {
                         description = desc.concat("失败");
