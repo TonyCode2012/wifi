@@ -1,0 +1,10 @@
+//nohup geth --datadir node1/ --syncmode "full" --port 30111 --rpc --rpcport 16801 --rpcapi "personal,db,eth,net,web3,txpool" --bootnodes "enode://1ea2bf6eadf5dfdce3e28d4016f855c48db26aa4d5be01997feb89a0af00aa107424ef9361bd2e52ce2a4ee63f1ab1319c8d524a552af8d59aa639cb19dcc419@127.0.0.1:30333" --networkid 62858 --unlock '0xf94b240a026f541f55983401784d8da5325c7687' --password node1/password.txt --gasprice "2" --rpcaddr 0.0.0.0  --mine >> ./node1out.txt 2>&1 &
+
+//nohup geth --datadir node2/ --syncmode "full" --port 30222 --rpc --rpcport 16802 --rpcapi "personal,db,eth,net,web3,txpool" --bootnodes "enode://1ea2bf6eadf5dfdce3e28d4016f855c48db26aa4d5be01997feb89a0af00aa107424ef9361bd2e52ce2a4ee63f1ab1319c8d524a552af8d59aa639cb19dcc419@127.0.0.1:30333" --networkid 62858 --unlock '0xf439bf68fc695b4a62f9e3322c75229ba5a0ff3c' --password node2/password.txt --gasprice "2" --rpcaddr 0.0.0.0  --mine >> ./node2out.txt 2>&1 &
+
+nohup geth --datadir node3/ --syncmode "full" --port 30633 --rpc --rpcport 16803 --rpcapi "personal,db,eth,net,web3,txpool" --bootnodes "enode://1ea2bf6eadf5dfdce3e28d4016f855c48db26aa4d5be01997feb89a0af00aa107424ef9361bd2e52ce2a4ee63f1ab1319c8d524a552af8d59aa639cb19dcc419@127.0.0.1:30333" --networkid 62858 --gasprice "2" --rpcaddr 0.0.0.0 >> ./node3out.txt 2>&1 &
+0xa01647fb44d2f6f1985a734b7c53d7bd4b44cde7
+
+nohup geth --datadir node1/ --syncmode "full" --port 30111 --bootnodes "enode://1ea2bf6eadf5dfdce3e28d4016f855c48db26aa4d5be01997feb89a0af00aa107424ef9361bd2e52ce2a4ee63f1ab1319c8d524a552af8d59aa639cb19dcc419@127.0.0.1:30333" --networkid 62858 --unlock '0xf94b240a026f541f55983401784d8da5325c7687' --password node1/password.txt --gasprice "2" --rpcaddr 0.0.0.0  --mine >> ./node1out.txt 2>&1 &
+
+nohup geth --datadir node2/ --syncmode "full" --port 30222 --bootnodes "enode://1ea2bf6eadf5dfdce3e28d4016f855c48db26aa4d5be01997feb89a0af00aa107424ef9361bd2e52ce2a4ee63f1ab1319c8d524a552af8d59aa639cb19dcc419@127.0.0.1:30333" --networkid 62858 --unlock '0xf439bf68fc695b4a62f9e3322c75229ba5a0ff3c' --password node2/password.txt --gasprice "2" --rpcaddr 0.0.0.0  --mine >> ./node2out.txt 2>&1 &
