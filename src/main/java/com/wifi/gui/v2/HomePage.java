@@ -851,7 +851,7 @@ public class HomePage {
                 Document doc = Jsoup.parse(adsDetailText.getText());
                 Elements adsText = doc.getElementsByTag("font");
                 String[] desSession = adsText.text().split(" ");
-                String price = desSession[1];
+                Double price = Double.valueOf(desSession[1]);
                 String type = desSession[2];
                 // write reward to local file
 //                writeLeftCoin(Arith.add(leftToken,Double.valueOf(price)));
@@ -864,7 +864,7 @@ public class HomePage {
                         testAdsAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ffbb";
                         testApAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff33";
                         // add token to green area
-                        changeGreenLabel("token","ads",10,true,false,"看广告");
+                        changeGreenLabel("token","ads",price,true,false,"看广告");
                     }
                     break;
                     case "代币": {
@@ -872,7 +872,7 @@ public class HomePage {
                         testAdsAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ffcc";
                         testApAdress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff44";
                         // add coin to green area
-                        changeGreenLabel("coin","ads",10,true,false,"看广告");
+                        changeGreenLabel("coin","ads",price,true,false,"看广告");
                     }
                     break;
                     default:
@@ -918,10 +918,10 @@ public class HomePage {
                     }
                     switch (type) {
                         case "积分":
-                            changeGreenLabel("token","ads",-10,false,isSuccess,"看广告");
+                            changeGreenLabel("token","ads",-price,false,isSuccess,"看广告");
                             break;
                         case "代币":
-                            changeGreenLabel("coin","ads",-10,false,isSuccess,"看广告");
+                            changeGreenLabel("coin","ads",-price,false,isSuccess,"看广告");
                             break;
                         default:
                             System.out.println("[ERROR] Unknown advertisement type");
@@ -951,8 +951,8 @@ public class HomePage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // set left coin
-//              double cost = Arith.mul(purchasePrice,purchaseNum);
-                double cost = 15;
+              double cost = Arith.mul(purchasePrice,purchaseNum);
+//                double cost = 15;
                 // deduct left currency
                 String purchaseName = purchaseDesLabel.getText();
                 String purchaseDescription = "购买".concat(purchaseName);
@@ -967,7 +967,7 @@ public class HomePage {
                         }
                         buyGoodsCurrencyType = "BuyThing";
                         testThingAddress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff88";
-                        changeGreenLabel("token","buy",-10,true,false,purchaseDescription);
+                        changeGreenLabel("token","buy",-cost,true,false,purchaseDescription);
                     }break;
                     case "代币":{
                         if(leftCoin < cost) {
@@ -976,7 +976,7 @@ public class HomePage {
                         }
                         buyGoodsCurrencyType = "BuyThingCoin";
                         testThingAddress = "0xf439bf68fc695b4a62f9e3322c75229ba5a0ff88";
-                        changeGreenLabel("coin","buy",-10,true,false,purchaseDescription);
+                        changeGreenLabel("coin","buy",-cost,true,false,purchaseDescription);
                     }break;
                     default: System.out.println("[ERROR] Unknown currency type!");return;
                 }
@@ -1060,10 +1060,10 @@ public class HomePage {
                     }
                     switch (purchaseExpenseType) {
                         case "积分":
-                            changeGreenLabel("token","buy",10,false,isSuccess,purchaseDescription);
+                            changeGreenLabel("token","buy",cost,false,isSuccess,purchaseDescription);
                             break;
                         case "代币":
-                            changeGreenLabel("coin","buy",10,false,isSuccess,purchaseDescription);
+                            changeGreenLabel("coin","buy",cost,false,isSuccess,purchaseDescription);
                             break;
                         default:
                             System.out.println("[ERROR] Unknown advertisement type");
@@ -1580,7 +1580,7 @@ public class HomePage {
             if(notCommitVal != 0) {
                 greenLabel.setText(descSymbol.concat(String.valueOf(Math.abs(notCommitVal))));
                 greenLabel.setOpaque(true);
-                greenLabel.setForeground(new Color(83,120,89));
+                greenLabel.setForeground(new Color(5,144,63));
             } else {
                 greenLabel.setText("");
             }
